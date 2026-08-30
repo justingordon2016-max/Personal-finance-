@@ -1,0 +1,641 @@
+<title>Where the R70,000 Goes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F6F7F6; --surface:#FFFFFF; --surface-2:#EFF2F1;
+  --ink:#141C1B; --ink-2:#3D4B49; --muted:#5C6866; --faint:#8A9694;
+  --rule:#DDE3E1; --rule-2:#C8D2D0;
+  --accent:#0A6E62; --accent-deep:#0D4F47; --accent-wash:#E4EFED;
+  --critical:#B02F2F; --critical-dot:#d03b3b; --critical-wash:#F8E9E9;
+  --warning:#8A5D08; --warning-dot:#fab219; --warning-wash:#FBF0DA;
+  --good:#0A6B22; --good-dot:#0ca30c; --good-wash:#E4F2E4;
+  --shadow:0 1px 2px rgba(20,28,27,.05),0 8px 24px -16px rgba(20,28,27,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1413; --surface:#161E1D; --surface-2:#1E2827;
+    --ink:#E7EEEC; --ink-2:#C3CFCC; --muted:#93A29F; --faint:#6E7C7A;
+    --rule:#26312F; --rule-2:#33413F;
+    --accent:#4FB3A8; --accent-deep:#7FCEC4; --accent-wash:#17302D;
+    --critical:#E7827F; --critical-dot:#d03b3b; --critical-wash:#33201F;
+    --warning:#E2AF52; --warning-dot:#fab219; --warning-wash:#2E2617;
+    --good:#5FC46A; --good-dot:#0ca30c; --good-wash:#172B18;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1413; --surface:#161E1D; --surface-2:#1E2827;
+  --ink:#E7EEEC; --ink-2:#C3CFCC; --muted:#93A29F; --faint:#6E7C7A;
+  --rule:#26312F; --rule-2:#33413F;
+  --accent:#4FB3A8; --accent-deep:#7FCEC4; --accent-wash:#17302D;
+  --critical:#E7827F; --critical-dot:#d03b3b; --critical-wash:#33201F;
+  --warning:#E2AF52; --warning-dot:#fab219; --warning-wash:#2E2617;
+  --good:#5FC46A; --good-dot:#0ca30c; --good-wash:#172B18;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:17px; line-height:1.6; margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 96px}
+h1,h2,h3,h4{font-family:"Archivo",system-ui,-apple-system,sans-serif;text-wrap:balance;margin:0}
+.num,.eyebrow,th,td.n,.tag{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+}
+p{margin:0 0 1em;max-width:66ch;color:var(--ink-2)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--rule);
+  padding:44px 0 30px;margin-bottom:44px;
+  display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end;justify-content:space-between;
+}
+.masthead h1{
+  font-size:clamp(34px,5.4vw,54px);font-weight:700;line-height:1.02;
+  letter-spacing:-.025em;margin:12px 0 10px;
+}
+.masthead .sub{color:var(--muted);font-size:15px;margin:0;max-width:52ch}
+.stampcol{display:flex;flex-direction:column;gap:6px;align-items:flex-end;text-align:right}
+.stamp{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--faint);
+}
+.stamp b{color:var(--ink-2);font-weight:500}
+
+/* ---------- verdict ---------- */
+.verdict{
+  background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:var(--shadow);padding:32px 34px;margin-bottom:56px;
+  display:grid;grid-template-columns:minmax(0,190px) 1fr;gap:34px;align-items:center;
+}
+.verdict .fig{
+  font-family:"Archivo",sans-serif;font-size:76px;font-weight:700;line-height:.9;
+  letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums;
+}
+.verdict .figlabel{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-top:12px;line-height:1.5;
+}
+.verdict p{font-size:19px;line-height:1.55;color:var(--ink);margin:0}
+.verdict p + p{margin-top:.7em;font-size:16px;color:var(--ink-2)}
+.verdict strong{font-weight:500;color:var(--ink);background:var(--accent-wash);
+  padding:1px 5px;border-radius:2px;box-decoration-break:clone}
+
+/* ---------- sections ---------- */
+section{margin-bottom:60px;scroll-margin-top:20px}
+.shead{
+  display:flex;align-items:baseline;gap:10px 14px;flex-wrap:wrap;
+  border-bottom:1px solid var(--rule-2);padding-bottom:10px;margin-bottom:22px;
+}
+.shead h2{font-size:23px;font-weight:600;letter-spacing:-.015em}
+.shead .eyebrow{margin-left:auto;text-align:right}
+
+/* ---------- stat tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.tile{background:var(--surface);padding:20px 22px}
+.tile .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.tile .v{font-family:"Archivo",sans-serif;font-size:clamp(24px,2.2vw,30px);font-weight:600;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.05}
+.tile .d{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+.v.neg{color:var(--critical)} .v.pos{color:var(--good)} .v.acc{color:var(--accent)}
+
+/* ---------- chart ---------- */
+.chartcard{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:var(--shadow);padding:24px 22px 16px}
+.chartwrap{position:relative;overflow-x:auto}
+svg.chart{display:block;width:100%;height:auto;min-width:520px}
+.gridline{stroke:var(--rule);stroke-width:1}
+.zeroline{stroke:var(--rule-2);stroke-width:1;stroke-dasharray:3 3}
+.axlabel{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--faint)}
+.balline{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.endcap{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.odband{fill:var(--critical-dot);opacity:.10}
+.odlabel{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--critical);font-weight:500}
+.hitline{stroke:var(--accent-deep);stroke-width:1;stroke-dasharray:2 3;opacity:0}
+.hitdot{fill:var(--accent);stroke:var(--surface);stroke-width:2;opacity:0}
+.tip{
+  position:absolute;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--surface);border:1px solid var(--rule-2);border-radius:3px;
+  box-shadow:var(--shadow);padding:8px 11px;font-family:"IBM Plex Mono",monospace;
+  font-size:12px;line-height:1.5;white-space:nowrap;z-index:5;color:var(--ink);
+}
+.tip .t-d{color:var(--muted);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.tip .t-v{font-weight:600;font-size:14px}
+.caption{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  margin:14px 2px 0;line-height:1.6;max-width:78ch}
+
+/* ---------- bars ---------- */
+.bars{display:flex;flex-direction:column;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.bar{display:grid;grid-template-columns:minmax(150px,1.15fr) minmax(0,3fr) 92px 58px;
+  gap:14px;align-items:center;background:var(--surface);padding:11px 18px;
+  transition:background .12s}
+.bar:hover,.bar:focus-within{background:var(--surface-2)}
+.bar .lbl{font-size:15px;color:var(--ink);line-height:1.3}
+.bar .track{height:16px;background:var(--surface-2);border-radius:2px;position:relative;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);border-radius:0 3px 3px 0}
+.bar .fill.dim{background:var(--rule-2)}
+.bar .fill.flag{background:var(--warning-dot)}
+.bar .amt{font-family:"IBM Plex Mono",monospace;font-size:13.5px;text-align:right;
+  font-variant-numeric:tabular-nums;color:var(--ink);font-weight:500}
+.bar .pct{font-family:"IBM Plex Mono",monospace;font-size:12px;text-align:right;color:var(--muted)}
+.barlegend{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted)}
+.barlegend span{display:inline-flex;align-items:center;gap:7px}
+.swatch{width:11px;height:11px;border-radius:2px;flex:none}
+
+/* ---------- table ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:660px;font-size:14px}
+th{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  font-weight:500;text-align:right;padding:13px 14px;border-bottom:1px solid var(--rule-2);
+  background:var(--surface-2);white-space:nowrap}
+th.l{text-align:left}
+td{padding:10px 14px;border-bottom:1px solid var(--rule);text-align:right;
+  font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+td.l{text-align:left;font-family:"Newsreader",serif;font-size:15px;color:var(--ink)}
+td.avg{color:var(--ink);font-weight:600}
+tbody tr:hover td{background:var(--surface-2)}
+tr.total td{border-top:2px solid var(--rule-2);border-bottom:none;
+  font-weight:600;color:var(--ink);background:var(--accent-wash)}
+tr.total td.l{font-family:"Archivo",sans-serif;font-size:14px;font-weight:600}
+.grp{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted)}
+.tag{display:inline-block;font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;background:var(--warning-wash);color:var(--warning);
+  font-weight:500;margin-left:8px;vertical-align:1px}
+
+/* ---------- notes / actions ---------- */
+.actions{display:flex;flex-direction:column;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.action{background:var(--surface);padding:20px 24px;display:grid;
+  grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.action .amt{font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;
+  color:var(--accent);white-space:nowrap;padding-top:3px;min-width:104px;text-align:right;
+  font-variant-numeric:tabular-nums}
+.action h3{font-size:17px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em}
+.action p{font-size:15.5px;margin:0;color:var(--ink-2)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;
+  padding:3px 8px;border-radius:2px;margin-left:9px;vertical-align:2px}
+.pill.crit{background:var(--critical-wash);color:var(--critical)}
+.pill.warn{background:var(--warning-wash);color:var(--warning)}
+.pill.good{background:var(--good-wash);color:var(--good)}
+.pill .swatch{width:7px;height:7px;border-radius:50%}
+.pill.crit .swatch{background:var(--critical-dot)}
+.pill.warn .swatch{background:var(--warning-dot)}
+.pill.good .swatch{background:var(--good-dot)}
+
+.callout{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent);border-radius:0 3px 3px 0;padding:22px 26px;margin:26px 0}
+.callout p:last-child{margin-bottom:0}
+.callout h3{font-size:16px;font-weight:600;margin-bottom:9px}
+
+footer{border-top:1px solid var(--rule);padding-top:26px;margin-top:70px;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint);line-height:1.75}
+footer p{max-width:78ch;color:var(--faint);font-family:inherit;font-size:inherit}
+
+@media (max-width:900px){
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .tiles{grid-template-columns:1fr}
+  .shead .eyebrow{margin-left:0;text-align:left;flex-basis:100%}
+  .verdict{grid-template-columns:1fr;gap:20px;padding:26px 22px}
+  .verdict .fig{font-size:60px}
+  .bar{grid-template-columns:minmax(120px,1fr) 84px 52px;gap:10px;padding:12px 14px}
+  .bar .track{display:none}
+  .action{grid-template-columns:1fr;gap:8px}
+  .action .amt{text-align:left;min-width:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <div>
+    <div class="eyebrow">FNB Fusion Private Wealth &middot; acct &hellip;8756</div>
+    <h1>Where the R70,000 Goes</h1>
+    <p class="sub">A budget overview built from three consecutive statements &mdash;
+      16 May to 17 August 2026 &mdash; every one of the 140 transactions categorised
+      and reconciled to the printed balances.</p>
+  </div>
+  <div class="stampcol">
+    <div class="stamp">Statements <b>135 &middot; 136 &middot; 137</b></div>
+    <div class="stamp">Opening 16 May <b>R49,838.10</b></div>
+    <div class="stamp">Closing 17 Aug <b>R4,677.25</b></div>
+    <div class="stamp">Reconciled <b>to the cent</b></div>
+  </div>
+</header>
+
+<div class="verdict">
+  <div>
+    <div class="fig">94%</div>
+    <div class="figlabel">of net salary is<br>already committed</div>
+  </div>
+  <div>
+    <p>Your salary is <strong>R70,000</strong> a month, steady across all three cycles.
+      Fixed debit orders take <strong>R66,100</strong> of it before you buy a single
+      thing &mdash; leaving about <strong>R3,900</strong> for food, fuel, family and
+      everything else.</p>
+    <p>That gap is why the cash buffer went from R49,838 to R4,677 in three months,
+      and why the account sat overdrawn for five days in late July.</p>
+  </div>
+</div>
+
+<section>
+  <div class="shead">
+    <h2>The buffer, day by day</h2>
+    <div class="eyebrow">Closing balance &middot; 16 May – 17 Aug 2026</div>
+  </div>
+  <div class="chartcard">
+    <div class="chartwrap">
+      <svg class="chart" id="balchart" viewBox="0 0 900 300" role="img"
+           aria-label="Running account balance from 16 May to 17 August 2026, showing three salary spikes that each drain within days, a dip below zero in late July, and a closing balance of R4,677."></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+    <p class="caption">Each spike is payday; each cliff is the 1st of the month, when
+      roughly R50,000 of debit orders clear at once. The peak after payday falls a
+      little lower every cycle &mdash; R112,184 in May, R74,535 in June, R76,254 in July
+      &mdash; while the trough goes from R42,792 to below zero.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2>The month in five numbers</h2>
+    <div class="eyebrow">3-cycle averages</div>
+  </div>
+  <div class="tiles">
+    <div class="tile">
+      <div class="k">Income / month</div>
+      <div class="v">R76,070</div>
+      <div class="d">R70,000 salary + lumpy<br>refunds and reimbursements</div>
+    </div>
+    <div class="tile">
+      <div class="k">Outflow / month</div>
+      <div class="v">R91,123</div>
+      <div class="d">Including credit-card<br>paydowns from savings</div>
+    </div>
+    <div class="tile">
+      <div class="k">Net cash / month</div>
+      <div class="v neg">&minus;R15,054</div>
+      <div class="d">R45,161 of buffer<br>consumed over 3 cycles</div>
+    </div>
+    <div class="tile">
+      <div class="k">Fixed commitments</div>
+      <div class="v acc">R66,100</div>
+      <div class="d">19 recurring debit orders,<br>94% of net salary</div>
+    </div>
+    <div class="tile">
+      <div class="k">Net worth / month</div>
+      <div class="v pos">+R14,110</div>
+      <div class="d">Cash fell, but debt fell<br>faster &mdash; see below</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2>Where it goes</h2>
+    <div class="eyebrow">Average monthly outflow by category</div>
+  </div>
+  <div class="bars" id="bars"></div>
+  <div class="barlegend">
+    <span><i class="swatch" style="background:var(--accent)"></i> Categorised spending</span>
+    <span><i class="swatch" style="background:var(--warning-dot)"></i> Beneficiary not identifiable from the statement</span>
+    <span><i class="swatch" style="background:var(--rule-2)"></i> Money moved to savings or the credit card, not spent</span>
+  </div>
+  <p class="caption">Debt servicing alone is 39.5% of net salary. The two grey rows are
+    not consumption &mdash; they are cash moving into savings or onto the credit card
+    &mdash; but they compete for the same rand as everything above them.</p>
+</section>
+
+<section>
+  <div class="shead">
+    <h2>The 19 debit orders that run your month</h2>
+    <div class="eyebrow">Present in all three cycles</div>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="l">Commitment</th><th class="l">Category</th>
+          <th>Cycle 1</th><th>Cycle 2</th><th>Cycle 3</th><th>Avg / month</th>
+        </tr>
+      </thead>
+      <tbody id="fixedbody"></tbody>
+    </table>
+  </div>
+  <p class="caption">Cycle 1 = 16 May–17 Jun &middot; Cycle 2 = 17 Jun–17 Jul &middot;
+    Cycle 3 = 17 Jul–17 Aug. FNB Invest is collected on the 17th, so four collections
+    of R2,500 landed inside three statement periods &mdash; the true run rate is
+    R2,500/month, not R3,333. Electricity is prepaid and genuinely variable.</p>
+</section>
+
+<section>
+  <div class="shead">
+    <h2>What actually happened to your buffer</h2>
+    <div class="eyebrow">The R45,161 question</div>
+  </div>
+  <p>The headline looks alarming &mdash; R45,161 of cash gone in three months &mdash;
+    but the money did not evaporate. Almost all of it went somewhere useful:</p>
+  <div class="tablewrap" style="margin-bottom:24px">
+    <table>
+      <thead><tr><th class="l">Where the R45,161 went</th><th>3 cycles</th><th>Per month</th></tr></thead>
+      <tbody>
+        <tr><td class="l">Credit-card paydown from your own cash</td><td>R50,490</td><td>R16,830</td></tr>
+        <tr><td class="l">Into savings and FNB Invest</td><td>R37,000</td><td>R12,333</td></tr>
+        <tr><td class="l">Funded by income over the same period</td><td>&minus;R42,329</td><td>&minus;R14,110</td></tr>
+        <tr class="total"><td class="l">Net drawdown of cash</td><td>R45,161</td><td>R15,054</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>So your <em>net worth</em> improved by roughly <strong>R14,110 a month</strong>:
+    you converted a cash pile into a smaller credit-card balance and a bigger savings
+    balance. That is a good trade on paper.</p>
+  <div class="callout">
+    <h3>The problem is liquidity, not solvency</h3>
+    <p>The cushion that made that trade possible is now spent. You closed August at
+      R4,677 against R66,100 of debit orders that hit on the 25th and the 1st. In late
+      July the account was already overdrawn for five days, bottoming around R3,200
+      below zero before payday, and you paid overdraft interest plus a R35 fee for it.</p>
+    <p style="margin-top:.8em">There is no longer any margin for a burst geyser, a car
+      repair or a late salary. The next unexpected R10,000 has to go on the credit card
+      or the R20,000 overdraft facility &mdash; which starts the cycle over at 21%.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2>Six things worth doing</h2>
+    <div class="eyebrow">Ordered by rand impact</div>
+  </div>
+  <div class="actions">
+
+    <div class="action">
+      <div class="amt">R6,842<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>Find out who JAC and FWT are
+          <span class="pill crit"><i class="swatch"></i> Unidentified</span></h3>
+        <p>Two debit orders &mdash; JAC at R3,836.27 and FWT at R3,006.22 &mdash; clear
+          on the 1st of every month through Netcash, and the statement gives no
+          beneficiary name. That is <strong>R82,100 a year</strong> leaving an account
+          with no buffer. If you know what they are, label them; if you do not,
+          this is the first phone call.</p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R21,850<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>The structured loan <em>is</em> the budget</h3>
+        <p>The FNB Structured Loan takes 31% of your net salary on its own, and it crept
+          up from R21,828.65 to R21,891.23 in July. Nothing else on this page moves the
+          needle the way a restructure, a term extension or a rate review would. Prime
+          dropped to 10.50% on 29 May &mdash; worth asking whether that was passed
+          through. Get the balance, rate and remaining term.</p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R6,013<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>Eight separate connectivity debits
+          <span class="pill warn"><i class="swatch"></i> Likely duplication</span></h3>
+        <p>Three FNB Connect debit orders (R579, R499, R749), two Connect top-ups
+          (R415, R145), <strong>two RSAWEB fibre lines</strong> (R1,299 and R1,728),
+          Stratum at R390 and about R209 of airtime. R72,000 a year on connectivity for
+          one household. Two fibre lines and five FNB Connect charges is the obvious
+          place to look for something you are paying for twice.</p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R11,500<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>You are saving into an overdraft
+          <span class="pill warn"><i class="swatch"></i> Timing</span></h3>
+        <p>R9,000 goes to savings on the 27th and R2,500 to FNB Invest on the 17th &mdash;
+          both before the month's debit orders clear. In July that sequence is precisely
+          what pushed the account below zero. The saving itself is right; the
+          <em>timing</em> is wrong. Move the R9,000 to the 2nd, after the 1st-of-month
+          run, and it stops manufacturing an overdraft.</p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R16,830<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>Half your spending is invisible here
+          <span class="pill crit"><i class="swatch"></i> Blind spot</span></h3>
+        <p>R50,490 of your own cash went to the credit card over three cycles &mdash;
+          R37,000 in one transfer on 25 June alone &mdash; but the card statements are
+          not in this pack. Everything charged to that card is missing from every number
+          on this page. The R2,809/month of groceries and eating out shown below is
+          almost certainly not the real figure. <strong>Pull the card statements next.</strong></p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R7,578<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>Check what the Discovery premium covers
+          <span class="pill good"><i class="swatch"></i> Verify only</span></h3>
+        <p>R7,578 to Discovery plus R4,106.61 to FNB Life plus R33.58 on a second FNB Life
+          policy &mdash; R11,718 a month, 17% of salary, on cover. Refunds came back at
+          R2,500 in May and R6,245.62 in June, so the medical side is being used. Worth
+          confirming the two life policies are not overlapping cover you already have
+          through Discovery.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="shead">
+    <h2>Two things that are not what they look like</h2>
+    <div class="eyebrow">Netted out of every figure above</div>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th class="l">Date</th><th class="l">What it looks like</th><th class="l">What it is</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td class="l">24 Jul</td><td class="l">R15,280 in from Christian Scribe</td>
+            <td class="l">Paid straight out again the same day &mdash; a pass-through, not income</td><td>R15,280.00</td></tr>
+        <tr><td class="l">7 Aug</td><td class="l">R10,000 in from "August"</td>
+            <td class="l">Paid to the credit card the same day &mdash; funded the paydown, not your salary</td><td>R10,000.00</td></tr>
+        <tr><td class="l">30 Jun</td><td class="l">R6,245.62 Discovery refund</td>
+            <td class="l">Paid on to family on 9 Jul to the cent &mdash; treated as income, then as support</td><td>R6,245.62</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">The first two are excluded from income and outflow entirely, which is
+    why the net position ties exactly to the printed closing balances. The third is shown
+    on both sides because it genuinely landed and genuinely left.</p>
+</section>
+
+<footer>
+  <p><b>How this was built.</b> All 140 transactions from FNB statements 135, 136 and 137
+  were transcribed to <code>data/transactions.csv</code> and categorised by hand.
+  <code>scripts/analyze.py</code> checks each cycle against the opening and closing
+  balances printed on the statement: all three tie to R0.00, and the transaction counts
+  match the turnover lines (45 / 45 / 50). Category assignments are judgement calls
+  &mdash; edit the <code>category</code> column and re-run to change any of them.</p>
+  <p style="margin-top:1em"><b>What this does not cover.</b> Credit-card spending,
+  the savings and investment account balances, the structured-loan and vehicle-finance
+  balances, and any account other than the cheque account. This is a cash-flow view of
+  one account, not a full financial position. Nothing here is financial advice &mdash;
+  it is your own data, added up.</p>
+</footer>
+
+</div>
+
+<script>
+const fmt = n => "R" + Math.round(n).toLocaleString("en-ZA");
+const fmt2 = n => n.toLocaleString("en-ZA",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+/* ---------------- balance chart ---------------- */
+const series = [{"date": "2026-05-16", "balance": 49838.1}, {"date": "2026-05-18", "balance": 44841.9}, {"date": "2026-05-22", "balance": 44371.3}, {"date": "2026-05-23", "balance": 44370.1}, {"date": "2026-05-25", "balance": 109684.49}, {"date": "2026-05-26", "balance": 112184.49}, {"date": "2026-05-27", "balance": 100684.49}, {"date": "2026-05-28", "balance": 100609.5}, {"date": "2026-05-29", "balance": 100180.3}, {"date": "2026-05-30", "balance": 100179.49}, {"date": "2026-05-31", "balance": 100079.44}, {"date": "2026-06-01", "balance": 51241.24}, {"date": "2026-06-05", "balance": 50216.13}, {"date": "2026-06-06", "balance": 48516.24}, {"date": "2026-06-08", "balance": 47144.56}, {"date": "2026-06-09", "balance": 46259.56}, {"date": "2026-06-13", "balance": 45465.28}, {"date": "2026-06-15", "balance": 45292.28}, {"date": "2026-06-17", "balance": 42792.28}, {"date": "2026-06-18", "balance": 42087.28}, {"date": "2026-06-20", "balance": 42087.24}, {"date": "2026-06-23", "balance": 41535.1}, {"date": "2026-06-25", "balance": 68859.02}, {"date": "2026-06-27", "balance": 59566.16}, {"date": "2026-06-30", "balance": 37564.48}, {"date": "2026-07-01", "balance": 17255.02}, {"date": "2026-07-02", "balance": 17066.02}, {"date": "2026-07-03", "balance": 17011.03}, {"date": "2026-07-04", "balance": 16975.02}, {"date": "2026-07-09", "balance": 8429.4}, {"date": "2026-07-10", "balance": 8372.2}, {"date": "2026-07-11", "balance": 8371.4}, {"date": "2026-07-14", "balance": 7994.4}, {"date": "2026-07-16", "balance": 4994.4}, {"date": "2026-07-17", "balance": 2494.4}, {"date": "2026-07-18", "balance": 1789.4}, {"date": "2026-07-20", "balance": -170.6}, {"date": "2026-07-21", "balance": -1170.6}, {"date": "2026-07-22", "balance": -1670.6}, {"date": "2026-07-23", "balance": -3047.15}, {"date": "2026-07-24", "balance": 71053.75}, {"date": "2026-07-25", "balance": 64877.79}, {"date": "2026-07-27", "balance": 55877.79}, {"date": "2026-07-29", "balance": 55817.79}, {"date": "2026-07-31", "balance": 28004.46}, {"date": "2026-08-01", "balance": 11101.71}, {"date": "2026-08-03", "balance": 7696.49}, {"date": "2026-08-04", "balance": 7612.89}, {"date": "2026-08-07", "balance": 7612.89}, {"date": "2026-08-08", "balance": 7298.49}, {"date": "2026-08-11", "balance": 7214.49}, {"date": "2026-08-17", "balance": 4677.25}];
+
+(function drawChart(){
+  const svg = document.getElementById("balchart"), tip = document.getElementById("tip");
+  const W=900,H=300,ml=62,mr=18,mt=18,mb=30;
+  const iw=W-ml-mr, ih=H-mt-mb;
+  const t0=new Date(series[0].date).getTime(), t1=new Date(series[series.length-1].date).getTime();
+  const vals=series.map(p=>p.balance);
+  const vmax=Math.max(...vals), vmin=Math.min(...vals);
+  const hi=Math.ceil(vmax/25000)*25000, lo=Math.min(0,Math.floor(vmin/25000)*25000);
+  const X=d=>ml+((new Date(d).getTime()-t0)/(t1-t0))*iw;
+  const Y=v=>mt+ih-((v-lo)/(hi-lo))*ih;
+  const ns="http://www.w3.org/2000/svg";
+  const el=(n,a)=>{const e=document.createElementNS(ns,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+  // overdraft band
+  if(lo<0){
+    svg.appendChild(el("rect",{class:"odband",x:ml,y:Y(0),width:iw,height:Y(lo)-Y(0)}));
+    svg.appendChild(Object.assign(el("text",{class:"odlabel",x:ml+6,y:Y(0)+15}),
+      {textContent:"overdrawn"}));
+  }
+  // gridlines
+  for(let v=lo;v<=hi;v+=25000){
+    svg.appendChild(el(v===0?"line":"line",
+      {class:v===0?"zeroline":"gridline",x1:ml,x2:W-mr,y1:Y(v),y2:Y(v)}));
+    svg.appendChild(Object.assign(el("text",{class:"axlabel",x:ml-9,y:Y(v)+3.5,"text-anchor":"end"}),
+      {textContent:v===0?"R0":"R"+(v/1000)+"k"}));
+  }
+  // month ticks
+  ["2026-06-01","2026-07-01","2026-08-01"].forEach(d=>{
+    svg.appendChild(Object.assign(el("text",{class:"axlabel",x:X(d),y:H-9,"text-anchor":"middle"}),
+      {textContent:new Date(d).toLocaleDateString("en-ZA",{month:"short"})+" 1"}));
+  });
+  svg.appendChild(Object.assign(el("text",{class:"axlabel",x:ml,y:H-9,"text-anchor":"start"}),
+    {textContent:"16 May"}));
+  svg.appendChild(Object.assign(el("text",{class:"axlabel",x:W-mr,y:H-9,"text-anchor":"end"}),
+    {textContent:"17 Aug"}));
+
+  // line
+  const d = series.map((p,i)=>(i?"L":"M")+X(p.date).toFixed(1)+" "+Y(p.balance).toFixed(1)).join(" ");
+  svg.appendChild(el("path",{class:"balline",d}));
+  const last=series[series.length-1];
+  svg.appendChild(el("circle",{class:"endcap",cx:X(last.date),cy:Y(last.balance),r:4.5}));
+
+  // hover layer
+  const hl=el("line",{class:"hitline",y1:mt,y2:mt+ih}), hd=el("circle",{class:"hitdot",r:4.5});
+  svg.appendChild(hl); svg.appendChild(hd);
+  const overlay=el("rect",{x:ml,y:mt,width:iw,height:ih,fill:"transparent"});
+  svg.appendChild(overlay);
+  const show=(evt)=>{
+    const r=svg.getBoundingClientRect(), sx=(evt.clientX-r.left)*(W/r.width);
+    let best=series[0],bd=1e9;
+    for(const p of series){const dd=Math.abs(X(p.date)-sx); if(dd<bd){bd=dd;best=p;}}
+    const px=X(best.date), py=Y(best.balance);
+    hl.setAttribute("x1",px); hl.setAttribute("x2",px); hl.style.opacity=1;
+    hd.setAttribute("cx",px); hd.setAttribute("cy",py); hd.style.opacity=1;
+    tip.innerHTML='<div class="t-d">'+new Date(best.date).toLocaleDateString("en-ZA",
+      {day:"numeric",month:"short"})+'</div><div class="t-v">R'+fmt2(best.balance)+'</div>';
+    tip.style.opacity=1;
+    const lx=(px/W)*r.width, ly=(py/H)*r.height;
+    tip.style.left=Math.min(Math.max(lx-tip.offsetWidth/2,0),r.width-tip.offsetWidth)+"px";
+    tip.style.top=Math.max(ly-tip.offsetHeight-14,0)+"px";
+  };
+  const hide=()=>{tip.style.opacity=0;hl.style.opacity=0;hd.style.opacity=0;};
+  svg.addEventListener("pointermove",show);
+  svg.addEventListener("pointerleave",hide);
+})();
+
+/* ---------------- category bars ---------------- */
+const cats=[
+  ["Debt & loans",27662,"","Structured loan, WesBank vehicle finance, home-loan fee"],
+  ["Credit-card paydown",16830,"dim","Your own cash moved onto the card"],
+  ["Savings & investments",12333,"dim","R9,000 scheduled transfer + FNB Invest"],
+  ["Insurance & medical",11950,"","Discovery, two FNB Life policies, Netstar"],
+  ["JAC and FWT",6842,"flag","Two unnamed Netcash debit orders"],
+  ["Connectivity & subs",6013,"","FNB Connect ×5, RSAWEB ×2, Stratum, airtime"],
+  ["Family support",3382,"","Transfers to family and individuals"],
+  ["Groceries & eating out",2809,"","Card spend on this account only"],
+  ["Home & utilities",1299,"","Prepaid electricity and Edgekloof levies"],
+  ["Shopping & other",794,"","Takealot, pets, retail"],
+  ["Bank charges & interest",750,"","Service fees, overdraft interest"],
+  ["Transport & fuel",459,"","One fuel purchase in three months"],
+];
+const SAL=70000, mx=Math.max(...cats.map(c=>c[1]));
+document.getElementById("bars").innerHTML = cats.map(([lbl,v,cls,note])=>`
+  <div class="bar" tabindex="0" title="${note}">
+    <div class="lbl">${lbl}</div>
+    <div class="track"><div class="fill ${cls}" style="width:${(v/mx*100).toFixed(1)}%"></div></div>
+    <div class="amt">${fmt(v)}</div>
+    <div class="pct">${(v/SAL*100).toFixed(0)}%</div>
+  </div>`).join("");
+
+/* ---------------- fixed commitments ---------------- */
+const fixed=[
+  ["FNB Structured Loan","Debt",21828.65,21828.65,21891.23,false],
+  ["Scheduled transfer to savings","Savings",9000,9000,9000,false],
+  ["Discovery premium","Insurance",7578,7578,7578,false],
+  ["WesBank vehicle finance","Debt",5732.59,5749.60,5749.60,false],
+  ["FNB Life (Fl105Gz98)","Insurance",4106.61,4106.61,4106.61,false],
+  ["JAC","Unidentified",3836.27,3836.27,3836.27,true],
+  ["FNB Invest","Savings",5000,2500,2500,false],
+  ["FWT","Unidentified",3006.22,3006.22,3006.22,true],
+  ["FNB Connect (3 debit orders)","Connectivity",1827,1827,1827,false],
+  ["RSAWEB fibre line 2","Connectivity",1728,1728.01,1728,false],
+  ["RSAWEB fibre line 1","Connectivity",1299.01,1299,1299.01,false],
+  ["Prepaid electricity","Utilities",1000,1000,500,false],
+  ["Connect top-ups (2)","Connectivity",560,560,560,false],
+  ["Edgekloof levies","Utilities",597.50,399,399,false],
+  ["Stratum","Connectivity",390,390,390,false],
+  ["Netstar vehicle tracking","Insurance",231.38,231.38,231.38,false],
+  ["Airtime top-ups","Connectivity",125,189,314,false],
+  ["FNB Home admin fee","Debt",69,69,69,false],
+  ["FNB Life (Fl68Zw53)","Insurance",33.58,33.58,33.58,false],
+];
+const tb=document.getElementById("fixedbody");
+tb.innerHTML = fixed.map(([n,g,a,b,c,flag])=>{
+  const avg=(a+b+c)/3;
+  return `<tr>
+    <td class="l">${n}${flag?'<span class="tag">unidentified</span>':''}</td>
+    <td class="l grp">${g}</td>
+    <td>${fmt2(a)}</td><td>${fmt2(b)}</td><td>${fmt2(c)}</td>
+    <td class="avg">${fmt2(avg)}</td></tr>`;
+}).join("") + (()=>{
+  const t=fixed.reduce((s,r)=>[s[0]+r[2],s[1]+r[3],s[2]+r[4]],[0,0,0]);
+  return `<tr class="total"><td class="l">Total fixed commitments</td><td></td>
+    <td>${fmt2(t[0])}</td><td>${fmt2(t[1])}</td><td>${fmt2(t[2])}</td>
+    <td>${fmt2((t[0]+t[1]+t[2])/3)}</td></tr>`;
+})();
+</script>
