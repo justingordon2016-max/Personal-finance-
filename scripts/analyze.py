@@ -24,7 +24,6 @@ CATEGORY_ORDER = [
     "Insurance & Medical",
     "Savings & Investments",
     "Credit Card Payments",
-    "Unidentified Recurring",
     "Connectivity & Subscriptions",
     "Home & Utilities",
     "Groceries & Eating Out",
@@ -136,11 +135,22 @@ def report(rows):
     print(f"  {'TOTAL FIXED (excl. card & variable)':<57} {total:>12,.2f}")
 
     print("\n" + "=" * 74)
-    print("FLAGGED FOR YOU TO IDENTIFY")
+    print("SAVINGS RATE vs COVER (the two biggest reviewable blocks)")
     print("=" * 74)
-    for r in rows:
-        if r["note"].startswith("UNCONFIRMED"):
-            print(f"  {r['date']}  {r['description']:<42} {r['amount']:>10,.2f}")
+    sal = 70000.0
+    for label, subs in (("Savings & investments", {"Savings transfer", "FNB Invest",
+                                                   "EasyEquities TFSA"}),
+                        ("Insurance & cover", {"Discovery premium", "FNB Life",
+                                               "JAC insurance", "FNB Life (small policy)",
+                                               "Vehicle tracking"})):
+        items = defaultdict(float)
+        for r in rows:
+            if r["subcategory"] in subs and r["direction"] == "Dr":
+                items[r["subcategory"]] += r["amount"] / 3
+        tot = sum(items.values())
+        print(f"\n  {label}: {tot:,.2f}/month = {tot/sal*100:.1f}% of net salary")
+        for k, v in sorted(items.items(), key=lambda kv: -kv[1]):
+            print(f"    {k:<28} {v:>10,.2f}  ({v*12:>11,.2f}/yr)")
 
 
 if __name__ == "__main__":

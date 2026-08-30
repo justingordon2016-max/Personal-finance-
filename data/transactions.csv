@@ -31,8 +31,8 @@ statement,period,date,description,amount,direction,category,subcategory,note
 135,2026-05-16..2026-06-17,2026-06-01,Magtape Debit Edgekloof Kl17057,198.50,Dr,Home & Utilities,Edgekloof levy,
 135,2026-05-16..2026-06-17,2026-06-01,Magtape Debit Netstar,231.38,Dr,Insurance & Medical,Vehicle tracking,
 135,2026-05-16..2026-06-17,2026-06-01,Magtape Debit Edgekloof Kl1705701,399.00,Dr,Home & Utilities,Edgekloof levy,
-135,2026-05-16..2026-06-17,2026-06-01,Magtape Debit FWT Ri-3744255,3006.22,Dr,Unidentified Recurring,FWT,UNCONFIRMED - please identify this beneficiary
-135,2026-05-16..2026-06-17,2026-06-01,Magtape Debit JAC U260619678,3836.27,Dr,Unidentified Recurring,JAC,UNCONFIRMED - please identify this beneficiary
+135,2026-05-16..2026-06-17,2026-06-01,Magtape Debit FWT Ri-3744255,3006.22,Dr,Savings & Investments,EasyEquities TFSA,Tax-free savings account contribution
+135,2026-05-16..2026-06-17,2026-06-01,Magtape Debit JAC U260619678,3836.27,Dr,Insurance & Medical,JAC insurance,Insurance premium
 135,2026-05-16..2026-06-17,2026-06-05,POS Purchase Learnlogic TheSite,1025.11,Dr,Shopping & Other,Education/online,
 135,2026-05-16..2026-06-17,2026-06-06,POS Purchase Payfast Stompies Br,1699.00,Dr,Groceries & Eating Out,Eating out / bar,
 135,2026-05-16..2026-06-17,2026-06-06,Byc Debit 63026278118,0.89,Dr,Bank Charges & Interest,Misc bank debit,
@@ -76,8 +76,8 @@ statement,period,date,description,amount,direction,category,subcategory,note
 136,2026-06-17..2026-07-17,2026-07-01,Magtape Debit Discovery Premium,7578.00,Dr,Insurance & Medical,Discovery premium,
 136,2026-06-17..2026-07-17,2026-07-01,Magtape Debit Netstar,231.38,Dr,Insurance & Medical,Vehicle tracking,
 136,2026-06-17..2026-07-17,2026-07-01,Magtape Debit Edgekloof Kl17057,399.00,Dr,Home & Utilities,Edgekloof levy,
-136,2026-06-17..2026-07-17,2026-07-01,Magtape Debit FWT Ri-3787862,3006.22,Dr,Unidentified Recurring,FWT,UNCONFIRMED - please identify this beneficiary
-136,2026-06-17..2026-07-17,2026-07-01,Magtape Debit JAC U260716666,3836.27,Dr,Unidentified Recurring,JAC,UNCONFIRMED - please identify this beneficiary
+136,2026-06-17..2026-07-17,2026-07-01,Magtape Debit FWT Ri-3787862,3006.22,Dr,Savings & Investments,EasyEquities TFSA,Tax-free savings account contribution
+136,2026-06-17..2026-07-17,2026-07-01,Magtape Debit JAC U260716666,3836.27,Dr,Insurance & Medical,JAC insurance,Insurance premium
 136,2026-06-17..2026-07-17,2026-07-02,Airtime Topup 27745894636,189.00,Dr,Connectivity & Subscriptions,Airtime,
 136,2026-06-17..2026-07-17,2026-07-03,POS Purchase Woolworths,54.99,Dr,Groceries & Eating Out,Groceries,
 136,2026-06-17..2026-07-17,2026-07-04,POS Purchase Yoco SE Supermarket,36.00,Dr,Groceries & Eating Out,Groceries,
@@ -125,9 +125,9 @@ statement,period,date,description,amount,direction,category,subcategory,note
 137,2026-07-17..2026-08-17,2026-08-01,Magtape Debit RSAWEB (Netcash),1728.00,Dr,Connectivity & Subscriptions,RSAWEB fibre 2,
 137,2026-07-17..2026-08-17,2026-08-01,Magtape Debit Discovery Premium,7578.00,Dr,Insurance & Medical,Discovery premium,
 137,2026-07-17..2026-08-17,2026-08-01,Magtape Debit Netstar,231.38,Dr,Insurance & Medical,Vehicle tracking,
-137,2026-07-17..2026-08-17,2026-08-01,Magtape Debit JAC U260813622,3836.27,Dr,Unidentified Recurring,JAC,UNCONFIRMED - please identify this beneficiary
+137,2026-07-17..2026-08-17,2026-08-01,Magtape Debit JAC U260813622,3836.27,Dr,Insurance & Medical,JAC insurance,Insurance premium
 137,2026-07-17..2026-08-17,2026-08-03,Magtape Debit Edgekloof Kl17057,399.00,Dr,Home & Utilities,Edgekloof levy,
-137,2026-07-17..2026-08-17,2026-08-03,Magtape Debit FWT Ri-3830091,3006.22,Dr,Unidentified Recurring,FWT,UNCONFIRMED - please identify this beneficiary
+137,2026-07-17..2026-08-17,2026-08-03,Magtape Debit FWT Ri-3830091,3006.22,Dr,Savings & Investments,EasyEquities TFSA,Tax-free savings account contribution
 137,2026-07-17..2026-08-17,2026-08-04,POS Purchase Yoco Hoghouse Br,83.60,Dr,Groceries & Eating Out,Eating out,
 137,2026-07-17..2026-08-17,2026-08-07,FNB App Transfer From August,10000.00,Cr,Pass-through,Money in,Immediately paid to the credit card
 137,2026-07-17..2026-08-17,2026-08-07,FNB App Payment To Credit Card,10000.00,Dr,Credit Card Payments,Credit card,Funded by the transfer received the same day

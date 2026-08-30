@@ -9,17 +9,30 @@ credit card `…4002` — built from six consecutive statements covering
 | | |
 |---|---|
 | Net salary | **R70,000** / month, steady across all three cycles |
-| Recurring commitments | **R73,017** / month at today's rates — 104% of net salary |
-| Of which paid to yourself | R12,333 into savings and FNB Invest |
-| Living costs | R11,325 / month against the R9,317 that leaves — about **R2,000 short** |
+| Fixed costs, excluding savings | **R57,677** / month — 82% of net salary |
+| Savings & investments | **R14,506** / month — 21% of net salary |
+| Insurance & cover | **R15,786** / month — 23% of net salary, R189,430 / year |
+| Living costs | R11,325 / month against the R12,323 that's left — roughly break-even |
 | Cash buffer | R49,838 → R4,677 (down R45,161 in three months) |
 | Card debt | R16,972 → R10,770 (down R6,201) |
-| Net worth | roughly **flat** (−R653 / month), before loan principal |
+| Net worth | up about **R2,353 / month**, before loan principal |
 
-The cheque account was overdrawn for five days in late July, bottoming around
-R3,200 below zero before payday.
+This is an allocation problem, not a spending problem. Discretionary living —
+food, shopping, travel and fuel across both accounts — is R5,786 / month. The
+cash buffer went into savings, a TFSA and one R26,061 medical event, leaving
+nothing liquid: the cheque account was overdrawn for five days in late July,
+bottoming around R3,200 below zero before payday.
 
-Two commitments were invisible until the card statements arrived: a **weekly**
+### Two beneficiaries, confirmed by the account holder
+
+- `FWT` R3,006.22 / month — **EasyEquities tax-free savings account**. Counts as
+  savings, not spending. Note R3,006.22 × 12 = R36,074.64, R74.64 over the R36,000
+  annual TFSA limit; SARS taxes the excess at 40%. An even R3,000 lands on the limit.
+- `JAC` R3,836.27 / month — **insurance**. With FNB Life (R4,140.19) this is
+  R7,976.46 / month of life and risk cover across two providers, on top of the
+  R7,578 Discovery premium.
+
+Two further commitments were invisible until the card statements arrived: a **weekly**
 `Paystack *Happy Houn` charge (R1,317.44, raised to R1,417.74 on 20 July —
 R73,722/year at the current rate) and a **R773.47/month iStore budget facility**
 at 11.50% p.a. with R9,868.11 outstanding.
@@ -71,13 +84,9 @@ statements — six reconciliations, all tying to R0.00:
 Categories are judgement calls, not bank data. To change one, edit the `category`
 or `subcategory` column in `data/transactions.csv` and re-run `analyze.py`.
 
-Two recurring Netcash debit orders totalling **R6,842.49/month** are marked
-`Unidentified Recurring` because the statement gives no beneficiary name:
-
-- `JAC` — R3,836.27 on the 1st
-- `FWT` — R3,006.22 on the 1st
-
-Label these once you know what they are.
+Every recurring beneficiary is now identified. The two Netcash debit orders that
+the statements name only as `JAC` and `FWT` were confirmed by the account holder as
+insurance and an EasyEquities TFSA respectively, and are categorised accordingly.
 
 ## Known gaps
 
