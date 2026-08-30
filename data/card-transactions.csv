@@ -1,0 +1,53 @@
+statement,period,date,description,card,amount,direction,facility,category,note
+130,2026-05-30..2026-06-29,2026-06-01,Paystack Happy Houn,...4051,1317.44,Dr,Straight,Weekly Subscription,Weekly recurring charge on a dedicated card
+130,2026-05-30..2026-06-29,2026-06-02,Sonja Britz Endodontic Greenpoint,...5192,16973.50,Dr,Straight,Medical Out-of-Pocket,
+130,2026-05-30..2026-06-29,2026-06-02,Yoco Dr A Le Roux,...5192,8900.00,Dr,Straight,Medical Out-of-Pocket,
+130,2026-05-30..2026-06-29,2026-06-07,The Real Rerepair Co,...5192,299.00,Dr,Straight,Shopping & Other,
+130,2026-05-30..2026-06-29,2026-06-08,Paystack Happy Houn,...4051,1317.44,Dr,Straight,Weekly Subscription,
+130,2026-05-30..2026-06-29,2026-06-09,Mediplace Pharmacy,...5192,187.16,Dr,Straight,Medical Out-of-Pocket,
+130,2026-05-30..2026-06-29,2026-06-10,Bootlegger Harrington,...5192,35.88,Dr,Straight,Groceries & Eating Out,
+130,2026-05-30..2026-06-29,2026-06-11,Woolworths,...5192,74.99,Dr,Straight,Groceries & Eating Out,
+130,2026-05-30..2026-06-29,2026-06-15,Paystack Happy Houn,...4051,1317.44,Dr,Straight,Weekly Subscription,
+130,2026-05-30..2026-06-29,2026-06-22,Paystack Happy Houn,...4051,1317.44,Dr,Straight,Weekly Subscription,
+130,2026-05-30..2026-06-29,2026-06-25,Payment - Thank You,,990.47,Cr,Straight,Payment,Matches DebiCheck Fnbcc on the cheque account
+130,2026-05-30..2026-06-29,2026-06-25,Credit Vodsy8mgy,,37000.00,Cr,Straight,Payment,Matches FNB App Transfer To Credit 25 Jun
+130,2026-05-30..2026-06-29,2026-06-29,Budget instalment to straight facility,,773.47,Dr,Straight,Budget Instalment,iStore - moved from budget to straight facility
+130,2026-05-30..2026-06-29,2026-06-29,Budget instalment credited to budget facility,,773.47,Cr,Budget,Budget Instalment,
+130,2026-05-30..2026-06-29,2026-06-29,Interest On Budget,,119.61,Dr,Budget,Interest,11.50% p.a. on the iStore budget facility
+130,2026-05-30..2026-06-29,2026-06-29,Interest On Credit Balance,,0.04,Cr,Straight,Interest,
+131,2026-06-30..2026-07-29,2026-06-29,Paystack Happy Houn,...4051,1317.44,Dr,Straight,Weekly Subscription,
+131,2026-06-30..2026-07-29,2026-07-06,Paystack Happy Houn,...4051,1317.44,Dr,Straight,Weekly Subscription,
+131,2026-06-30..2026-07-29,2026-07-09,Credit Vodsddlpm,,2300.00,Cr,Straight,Payment,Matches FNB App Transfer To Credit 9 Jul
+131,2026-06-30..2026-07-29,2026-07-13,Paystack Happy Houn,...4051,1317.44,Dr,Straight,Weekly Subscription,
+131,2026-06-30..2026-07-29,2026-07-16,Wl Ritz Kaapstad,...5192,711.60,Dr,Straight,Travel & Leisure,
+131,2026-06-30..2026-07-29,2026-07-18,Ik Welcome Cafe Robertson,...5192,45.00,Dr,Straight,Travel & Leisure,Weekend away - McGregor / Robertson
+131,2026-06-30..2026-07-29,2026-07-18,Marlen 125684 Mcgregor,...5192,210.00,Dr,Straight,Travel & Leisure,
+131,2026-06-30..2026-07-29,2026-07-18,S2s Farihatakeaways Langeberg,...5192,83.00,Dr,Straight,Travel & Leisure,
+131,2026-06-30..2026-07-29,2026-07-18,Yoco Clever Girl Mcgregor,...5192,1120.00,Dr,Straight,Travel & Leisure,
+131,2026-06-30..2026-07-29,2026-07-18,Yoco Refind Mcgregor,...5192,30.00,Dr,Straight,Travel & Leisure,
+131,2026-06-30..2026-07-29,2026-07-20,Yoco Kleinskys Cape Town,...5192,41.80,Dr,Straight,Groceries & Eating Out,
+131,2026-06-30..2026-07-29,2026-07-20,Paystack Happy Houn,...4051,1417.74,Dr,Straight,Weekly Subscription,Price increased from 1317.44 to 1417.74 (+7.6%)
+131,2026-06-30..2026-07-29,2026-07-21,Woolworths,...5192,54.99,Dr,Straight,Groceries & Eating Out,
+131,2026-06-30..2026-07-29,2026-07-21,Yoco Hoghouse Brewi,...5192,169.40,Dr,Straight,Groceries & Eating Out,
+131,2026-06-30..2026-07-29,2026-07-22,Yoco Se Supermarket,...5192,54.00,Dr,Straight,Groceries & Eating Out,
+131,2026-06-30..2026-07-29,2026-07-24,Terra Cape Town,...5192,225.00,Dr,Straight,Groceries & Eating Out,
+131,2026-06-30..2026-07-29,2026-07-24,Credit Vods7tscb,,5200.00,Cr,Straight,Payment,Matches FNB App Transfer To Credit 24 Jul
+131,2026-06-30..2026-07-29,2026-07-27,Paystack Happy Houn,...4051,1417.74,Dr,Straight,Weekly Subscription,
+131,2026-06-30..2026-07-29,2026-07-29,Budget instalment to straight facility,,773.47,Dr,Straight,Budget Instalment,
+131,2026-06-30..2026-07-29,2026-07-29,Budget instalment credited to budget facility,,773.47,Cr,Budget,Budget Instalment,
+131,2026-06-30..2026-07-29,2026-07-29,Interest On Budget,,105.95,Dr,Budget,Interest,
+132,2026-07-30..2026-08-28,2026-08-03,Paystack Happy Houn,...4051,1417.74,Dr,Straight,Weekly Subscription,
+132,2026-07-30..2026-08-28,2026-08-10,Paystack Happy Houn,...4051,1417.74,Dr,Straight,Weekly Subscription,
+132,2026-07-30..2026-08-28,2026-08-16,Mrd Cape Town,...5192,278.06,Dr,Straight,Groceries & Eating Out,
+132,2026-07-30..2026-08-28,2026-08-16,Yuppiechef Online,...5192,1505.00,Dr,Straight,Shopping & Other,
+132,2026-07-30..2026-08-28,2026-08-17,Woolworths,...5192,54.99,Dr,Straight,Groceries & Eating Out,
+132,2026-07-30..2026-08-28,2026-08-17,Yoco Se Supermarket,...5192,36.00,Dr,Straight,Groceries & Eating Out,
+132,2026-07-30..2026-08-28,2026-08-17,Paystack Happy Houn,...4051,1417.74,Dr,Straight,Weekly Subscription,
+132,2026-07-30..2026-08-28,2026-08-19,Yoco Hoghouse Brewi,...5192,91.30,Dr,Straight,Groceries & Eating Out,
+132,2026-07-30..2026-08-28,2026-08-20,Woolworths,...5192,54.99,Dr,Straight,Groceries & Eating Out,
+132,2026-07-30..2026-08-28,2026-08-20,Credit Vodsd8prg,,10000.00,Cr,Straight,Payment,Cheque account shows this payment on 7 Aug - date differs
+132,2026-07-30..2026-08-28,2026-08-24,Paystack Happy Houn,...4051,1417.74,Dr,Straight,Weekly Subscription,
+132,2026-07-30..2026-08-28,2026-08-28,Budget instalment to straight facility,,773.47,Dr,Straight,Budget Instalment,
+132,2026-07-30..2026-08-28,2026-08-28,Budget instalment credited to budget facility,,773.47,Cr,Budget,Budget Instalment,
+132,2026-07-30..2026-08-28,2026-08-28,Interest On Budget,,99.64,Dr,Budget,Interest,
+132,2026-07-30..2026-08-28,2026-08-28,Interest On Credit Balance,,0.03,Cr,Straight,Interest,
