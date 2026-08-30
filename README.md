@@ -6,22 +6,57 @@ credit card `…4002` — built from six consecutive statements covering
 
 ## The short version
 
+**What is left after the debit orders and fixed payments: R12,625.81.**
+
+| On salary alone | Per month | Running |
+|---|---|---|
+| Salary | 70,000.00 | 70,000.00 |
+| Less fixed costs | −57,374.19 | **12,625.81** |
+| Less variable spending | −10,333.17 | 2,292.64 |
+| Less savings debit orders | −14,506.22 | **−12,213.58** |
+
+Fixed costs are 82% of salary. After them *and* normal living you genuinely have
+about **R2,293/month spare** — but R14,506 of savings instructions then clear on
+top, so the plan runs **R12,214/month** beyond what salary supports. That gap is
+what drained R45,161 of buffer in three months, not overspending: discretionary
+living (food, shopping, travel, fuel) is R5,786/month.
+
+### Fixed — R57,374/month, 82% of salary
+
+| Category | Per month | % of salary |
+|---|---|---|
+| Debt (structured loan, WesBank, iStore, home-loan fee) | 28,483.30 | 40.7% |
+| Insurance & cover (Discovery, FNB Life ×2, JAC, Netstar) | 15,785.84 | 22.6% |
+| Subscription (Happy Hound, weekly) | 6,143.54 | 8.8% |
+| Connectivity (FNB Connect ×3, top-ups ×2, RSAWEB ×2, Stratum) | 5,804.01 | 8.3% |
+| Bank charges | 758.50 | 1.1% |
+| Home (Edgekloof levy) | 399.00 | 0.6% |
+
+Two days do almost all of it: the **31st** takes R27,813 (R21,891 of it the
+structured loan) and the **1st** takes R16,905, mostly insurance and fibre. By the
+3rd you are down to R11,598.
+
+### Savings — R14,506/month, shown separately
+
+R9,000 scheduled transfer + R2,500 FNB Invest + R3,006.22 EasyEquities TFSA.
+Money you keep, not money you spend — but it competes for the same rand.
+
+### Variable — R10,333/month
+
+Family support R3,382 · food R3,199 · shopping R1,395 · electricity R833 ·
+travel R733 · fuel R459 · airtime R209 · interest R123.
+
+### Other headlines
+
 | | |
 |---|---|
-| Net salary | **R70,000** / month, steady across all three cycles |
-| Fixed costs, excluding savings | **R57,677** / month — 82% of net salary |
-| Savings & investments | **R14,506** / month — 21% of net salary |
-| Insurance & cover | **R15,786** / month — 23% of net salary, R189,430 / year |
-| Living costs | R11,325 / month against the R12,323 that's left — roughly break-even |
 | Cash buffer | R49,838 → R4,677 (down R45,161 in three months) |
 | Card debt | R16,972 → R10,770 (down R6,201) |
 | Net worth | up about **R2,353 / month**, before loan principal |
 
-This is an allocation problem, not a spending problem. Discretionary living —
-food, shopping, travel and fuel across both accounts — is R5,786 / month. The
-cash buffer went into savings, a TFSA and one R26,061 medical event, leaving
-nothing liquid: the cheque account was overdrawn for five days in late July,
-bottoming around R3,200 below zero before payday.
+The cheque account was overdrawn for five days in late July, bottoming around
+R3,200 below zero before payday — the R9,000 savings transfer leaves on the 27th,
+four days ahead of the month-end run.
 
 ### Two beneficiaries, confirmed by the account holder
 
@@ -32,18 +67,20 @@ bottoming around R3,200 below zero before payday.
   R7,976.46 / month of life and risk cover across two providers, on top of the
   R7,578 Discovery premium.
 
-Two further commitments were invisible until the card statements arrived: a **weekly**
-`Paystack *Happy Houn` charge (R1,317.44, raised to R1,417.74 on 20 July —
-R73,722/year at the current rate) and a **R773.47/month iStore budget facility**
-at 11.50% p.a. with R9,868.11 outstanding.
+Two further commitments were invisible until the card statements arrived: a
+**weekly** `Paystack *Happy Houn` charge (R1,317.44, raised to R1,417.74 on
+20 July — R73,722/year at the current rate) and a **R773.47/month iStore budget
+facility** at 11.50% p.a. with R9,868.11 outstanding.
 
 ## Layout
 
 ```
 data/transactions.csv         Cheque account, 140 transactions, hand-categorised
 data/card-transactions.csv    Credit card, 52 rows across both facilities
+data/monthly-commitments.csv  The standing fixed/savings schedule, at current rates
 scripts/analyze.py            Cheque reconciliation + category/commitment summaries
 scripts/analyze_card.py       Card reconciliation, spending mix, payment cross-check
+scripts/monthly_plan.py       Fixed vs variable split and the payday-to-payday walk
 scripts/balance_series.py     Running daily balance as JSON (feeds the chart)
 reports/budget-overview.html  The published overview
 ```
@@ -53,6 +90,7 @@ reports/budget-overview.html  The published overview
 ```sh
 python3 scripts/analyze.py        # cheque summary tables + reconciliation check
 python3 scripts/analyze_card.py   # card facilities, spending mix, payment cross-check
+python3 scripts/monthly_plan.py   # what's left after fixed costs, step by step
 python3 scripts/balance_series.py # daily balance series as JSON
 ```
 
@@ -78,6 +116,13 @@ statements — six reconciliations, all tying to R0.00:
 | 130 | 30 May – 29 Jun | 368.53 Cr | 11,209.46 |
 | 131 | 30 Jun – 29 Jul | 2,437.53 | 10,541.94 |
 | 132 | 30 Jul – 28 Aug | 902.27 | 9,868.11 |
+
+## Fixed versus variable
+
+Fixed means a standing instruction at a rate you cannot change this month, and lives
+in `data/monthly-commitments.csv`. Prepaid electricity and airtime are treated as
+variable — they recur, but you choose when and how much. Savings debit orders are
+kept separate from fixed costs throughout, because they are money you keep.
 
 ## Categorisation
 

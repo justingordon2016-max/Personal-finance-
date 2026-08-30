@@ -1,0 +1,426 @@
+{
+  "salary": 70000.0,
+  "totalFixed": 57374.19,
+  "totalSavings": 14506.22,
+  "totalVariable": 10333.17,
+  "leftAfterFixed": 12625.81,
+  "leftAfterSavings": -1880.41,
+  "gap": -12213.58,
+  "fixedByCategory": {
+    "Debt": 28483.3,
+    "Insurance & cover": 15785.84,
+    "Subscription": 6143.54,
+    "Connectivity": 5804.01,
+    "Bank charges": 758.5,
+    "Home": 399.0
+  },
+  "variable": [
+    {
+      "name": "Family support",
+      "amount": 3381.87,
+      "account": "Cheque"
+    },
+    {
+      "name": "Food, groceries and eating out",
+      "amount": 3199.02,
+      "account": "Both"
+    },
+    {
+      "name": "Shopping and other retail",
+      "amount": 1395.03,
+      "account": "Both"
+    },
+    {
+      "name": "Prepaid electricity",
+      "amount": 833.33,
+      "account": "Cheque"
+    },
+    {
+      "name": "Travel and leisure",
+      "amount": 733.2,
+      "account": "Card"
+    },
+    {
+      "name": "Transport and fuel",
+      "amount": 458.85,
+      "account": "Cheque"
+    },
+    {
+      "name": "Airtime top-ups",
+      "amount": 209.33,
+      "account": "Cheque"
+    },
+    {
+      "name": "Overdraft and card interest",
+      "amount": 122.54,
+      "account": "Both"
+    }
+  ],
+  "fixed": [
+    {
+      "day": "25th",
+      "what": "DebiCheck FNB Connect 8872638615",
+      "amount": 579.0,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "25th",
+      "what": "Internal D/O FNB Life (Fl105Gz98)",
+      "amount": 4106.61,
+      "category": "Insurance & cover",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "31st",
+      "what": "Service charges from 62724872339",
+      "amount": 103.5,
+      "category": "Bank charges",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "31st",
+      "what": "DebiCheck FNB Home 3000017271",
+      "amount": 69.0,
+      "category": "Debt",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "31st",
+      "what": "Internal D/O WesBank vehicle finance",
+      "amount": 5749.6,
+      "category": "Debt",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "31st",
+      "what": "Internal D/O FNB Structured Loan",
+      "amount": 21891.23,
+      "category": "Debt",
+      "account": "Cheque",
+      "note": "Largest single commitment"
+    },
+    {
+      "day": "1st",
+      "what": "DebiCheck FNB Connect 8858332521",
+      "amount": 499.0,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "DebiCheck FNB Connect 8858332324",
+      "amount": 749.0,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Hybrid subscription Connect top-up",
+      "amount": 145.0,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Hybrid subscription Connect top-up",
+      "amount": 415.0,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Internal D/O FNB Life (Fl68Zw53)",
+      "amount": 33.58,
+      "category": "Insurance & cover",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Magtape Stratum",
+      "amount": 390.0,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Magtape RSAWEB fibre line 1",
+      "amount": 1299.01,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Magtape RSAWEB fibre line 2",
+      "amount": 1728.0,
+      "category": "Connectivity",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Magtape Discovery premium",
+      "amount": 7578.0,
+      "category": "Insurance & cover",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Magtape Netstar vehicle tracking",
+      "amount": 231.38,
+      "category": "Insurance & cover",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "1st",
+      "what": "Magtape JAC insurance",
+      "amount": 3836.27,
+      "category": "Insurance & cover",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "3rd",
+      "what": "Magtape Edgekloof levy",
+      "amount": 399.0,
+      "category": "Home",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "18th",
+      "what": "Monthly account service fee",
+      "amount": 655.0,
+      "category": "Bank charges",
+      "account": "Cheque",
+      "note": ""
+    },
+    {
+      "day": "on the card",
+      "what": "Happy Hound (weekly x 52/12)",
+      "amount": 6143.54,
+      "category": "Subscription",
+      "account": "Card",
+      "note": "R1417.74 every week - settled via the card"
+    },
+    {
+      "day": "on the card",
+      "what": "iStore budget facility instalment",
+      "amount": 773.47,
+      "category": "Debt",
+      "account": "Card",
+      "note": "11.50% p.a. - settled via the card"
+    }
+  ],
+  "savingsItems": [
+    {
+      "day": "27th",
+      "what": "Scheduled transfer to savings",
+      "amount": 9000.0,
+      "note": "Clears before the month-end run"
+    },
+    {
+      "day": "3rd",
+      "what": "Magtape EasyEquities TFSA",
+      "amount": 3006.22,
+      "note": "R74.64/yr over the annual limit"
+    },
+    {
+      "day": "17th",
+      "what": "FNB Invest collection",
+      "amount": 2500.0,
+      "note": ""
+    }
+  ],
+  "steps": [
+    {
+      "day": "25th",
+      "what": "Salary",
+      "amount": 70000.0,
+      "type": "Income",
+      "left": 70000.0
+    },
+    {
+      "day": "25th",
+      "what": "DebiCheck FNB Connect 8872638615",
+      "amount": 579.0,
+      "type": "Fixed",
+      "left": 69421.0
+    },
+    {
+      "day": "25th",
+      "what": "Internal D/O FNB Life (Fl105Gz98)",
+      "amount": 4106.61,
+      "type": "Fixed",
+      "left": 65314.39
+    },
+    {
+      "day": "27th",
+      "what": "Scheduled transfer to savings",
+      "amount": 9000.0,
+      "type": "Savings",
+      "left": 56314.39
+    },
+    {
+      "day": "31st",
+      "what": "Service charges from 62724872339",
+      "amount": 103.5,
+      "type": "Fixed",
+      "left": 56210.89
+    },
+    {
+      "day": "31st",
+      "what": "DebiCheck FNB Home 3000017271",
+      "amount": 69.0,
+      "type": "Fixed",
+      "left": 56141.89
+    },
+    {
+      "day": "31st",
+      "what": "Internal D/O WesBank vehicle finance",
+      "amount": 5749.6,
+      "type": "Fixed",
+      "left": 50392.29
+    },
+    {
+      "day": "31st",
+      "what": "Internal D/O FNB Structured Loan",
+      "amount": 21891.23,
+      "type": "Fixed",
+      "left": 28501.06
+    },
+    {
+      "day": "1st",
+      "what": "DebiCheck FNB Connect 8858332521",
+      "amount": 499.0,
+      "type": "Fixed",
+      "left": 28002.06
+    },
+    {
+      "day": "1st",
+      "what": "DebiCheck FNB Connect 8858332324",
+      "amount": 749.0,
+      "type": "Fixed",
+      "left": 27253.06
+    },
+    {
+      "day": "1st",
+      "what": "Hybrid subscription Connect top-up",
+      "amount": 145.0,
+      "type": "Fixed",
+      "left": 27108.06
+    },
+    {
+      "day": "1st",
+      "what": "Hybrid subscription Connect top-up",
+      "amount": 415.0,
+      "type": "Fixed",
+      "left": 26693.06
+    },
+    {
+      "day": "1st",
+      "what": "Internal D/O FNB Life (Fl68Zw53)",
+      "amount": 33.58,
+      "type": "Fixed",
+      "left": 26659.48
+    },
+    {
+      "day": "1st",
+      "what": "Magtape Stratum",
+      "amount": 390.0,
+      "type": "Fixed",
+      "left": 26269.48
+    },
+    {
+      "day": "1st",
+      "what": "Magtape RSAWEB fibre line 1",
+      "amount": 1299.01,
+      "type": "Fixed",
+      "left": 24970.47
+    },
+    {
+      "day": "1st",
+      "what": "Magtape RSAWEB fibre line 2",
+      "amount": 1728.0,
+      "type": "Fixed",
+      "left": 23242.47
+    },
+    {
+      "day": "1st",
+      "what": "Magtape Discovery premium",
+      "amount": 7578.0,
+      "type": "Fixed",
+      "left": 15664.47
+    },
+    {
+      "day": "1st",
+      "what": "Magtape Netstar vehicle tracking",
+      "amount": 231.38,
+      "type": "Fixed",
+      "left": 15433.09
+    },
+    {
+      "day": "1st",
+      "what": "Magtape JAC insurance",
+      "amount": 3836.27,
+      "type": "Fixed",
+      "left": 11596.82
+    },
+    {
+      "day": "3rd",
+      "what": "Magtape Edgekloof levy",
+      "amount": 399.0,
+      "type": "Fixed",
+      "left": 11197.82
+    },
+    {
+      "day": "3rd",
+      "what": "Magtape EasyEquities TFSA",
+      "amount": 3006.22,
+      "type": "Savings",
+      "left": 8191.6
+    },
+    {
+      "day": "17th",
+      "what": "FNB Invest collection",
+      "amount": 2500.0,
+      "type": "Savings",
+      "left": 5691.6
+    },
+    {
+      "day": "18th",
+      "what": "Monthly account service fee",
+      "amount": 655.0,
+      "type": "Fixed",
+      "left": 5036.6
+    },
+    {
+      "day": "on the card",
+      "what": "Happy Hound (weekly x 52/12)",
+      "amount": 6143.54,
+      "type": "Fixed",
+      "left": -1106.94
+    },
+    {
+      "day": "on the card",
+      "what": "iStore budget facility instalment",
+      "amount": 773.47,
+      "type": "Fixed",
+      "left": -1880.41
+    }
+  ]
+}
