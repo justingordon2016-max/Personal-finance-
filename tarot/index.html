@@ -259,6 +259,45 @@ footer{position:relative;z-index:1;text-align:center;color:var(--dim);font-style
 
 input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appearance:none}
 
+/* pull by hand */
+.entry-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.entry-head-row{display:flex;flex-direction:column;gap:.15rem;padding:.7rem .9rem .5rem;border-bottom:1px solid var(--line-soft)}
+.erow{display:grid;grid-template-columns:2rem 1.2fr 2fr auto auto;gap:.6rem;align-items:center;padding:.4rem .8rem;border-bottom:1px solid var(--line-soft)}
+.erow:last-child{border-bottom:0}
+.erow.filled input{border-color:var(--gold-dim);color:var(--gold-bright)}
+.erow.bad input{border-color:var(--rose)}
+.revtog{background:none;border:1px solid var(--line);border-radius:6px;padding:.35rem .6rem;font-family:var(--display);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.revtog.on{background:var(--rose);border-color:var(--rose);color:var(--ground)}
+.cloth.manual .slot.empty .card{border-color:var(--gold-dim);cursor:pointer}
+.cloth.manual .slot.empty .card::after{content:"+";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:1.6rem;color:var(--gold-dim)}
+.cloth.manual .slot.empty .card:hover{border-color:var(--gold)}
+.slot.preview .card{opacity:.92}
+.picker{display:flex;flex-direction:column;gap:.8rem}
+.picker-tools{display:flex;gap:.5rem;flex-wrap:wrap}
+.picker-tools input{flex:1;min-width:160px}
+.picker-tools .seg{flex:none}
+.pk-filters button{font-size:.58rem;padding:.35rem .2rem}
+.pk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:.6rem}
+.pk-card{background:none;border:0;padding:0;display:flex;flex-direction:column;gap:.25rem;color:var(--ivory);text-align:center}
+.pk-card span{font-family:var(--display);font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;line-height:1.2}
+.pk-card .deck-art{box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.pk-card .deck-art.rev{transform:rotate(180deg)}
+.pk-card:hover .deck-art{transform:translateY(-3px)}
+.pk-card:hover .deck-art.rev{transform:rotate(180deg) translateY(3px)}
+.pk-card.used{opacity:.3}
+/* interpretation */
+.interp-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem}
+.interp-actions .primary[disabled],.interp-actions .ghost[disabled]{opacity:.45;cursor:default;transform:none}
+.interp-out{display:flex;flex-direction:column;gap:.8rem;max-width:68ch;font-size:1.12rem;line-height:1.6}
+.interp-out:empty{display:none}
+.interp-out .thinking{color:var(--gold);font-style:italic;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.followup{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+.followup input{flex:1;min-width:200px}
+.entry-interp summary{cursor:pointer;font-family:var(--display);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.entry-interp p{color:var(--muted);margin-top:.5rem;max-width:68ch}
+@media (max-width:600px){.erow{grid-template-columns:1.6rem 1fr auto;grid-auto-flow:dense}.erow .row-pos{grid-column:2/4}.erow input{grid-column:2/3}.erow .browse{display:none}}
+
 </style>
 </head>
 <body>
@@ -280,6 +319,9 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
     <aside class="setup" id="setup" aria-label="Prepare the reading">
       <div class="setup-head"><h2 class="eyebrow">Prepare the table</h2><button type="button" id="setup-toggle" aria-controls="setup">Show or hide</button></div>
       <div class="field"><span class="lbl">Spread</span><div class="spreads" id="spreads" role="radiogroup" aria-label="Spread"></div><p class="hint" id="spread-blurb"></p></div>
+      <div class="field"><span class="lbl">How the cards arrive</span>
+        <div class="seg" id="mode" role="radiogroup" aria-label="How the cards arrive"><button type="button" data-m="deal" class="on" role="radio" aria-checked="true">Shuffle here</button><button type="button" data-m="manual" role="radio" aria-checked="false">Pull by hand</button></div>
+        <p class="hint" id="mode-hint"></p></div>
       <div class="field"><label for="question">Your question</label><textarea id="question" rows="2" placeholder="What do I need to understand about..."></textarea></div>
       <div class="row">
         <div class="field"><label for="date">Date</label><input type="date" id="date"></div>
@@ -311,12 +353,16 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
       <div class="toolbar" id="toolbar" hidden>
         <button type="button" id="turnall" class="ghost">Turn the cards</button>
         <button type="button" id="linkmode" class="ghost" aria-pressed="false">Find links</button>
+        <button type="button" id="editpull" class="ghost" hidden>Edit the pull</button>
         <span class="spacer"></span>
         <button type="button" id="save" class="ghost">Save to journal</button>
         <button type="button" id="copy" class="ghost">Copy as text</button>
         <button type="button" id="newreading" class="ghost">New reading</button>
       </div>
+      <div class="entry-list" id="entrylist" hidden></div>
+      <datalist id="cardnames"></datalist>
       <div class="reading-list" id="readinglist" aria-label="Cards in this reading"></div>
+      <section class="links-panel interp" id="interp" hidden></section>
       <section class="links-panel" id="linkspanel" aria-live="polite"></section>
       <div class="notes" id="notes-wrap" hidden><label class="eyebrow" for="notes">Your interpretation</label><textarea id="notes" placeholder="What the cards are saying to you. Saved with the reading."></textarea></div>
     </section>
@@ -334,7 +380,7 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
     <div class="journal" id="journal"></div>
   </section>
 </main>
-<footer>Card meanings follow the Rider Waite Smith tradition. Reversals, elemental dignities and pairings are one reader’s approach: trust your own.</footer>
+<footer>Card meanings follow the Rider Waite Smith tradition. Reversals, dignities, pairings and written interpretations are one reader’s approach: trust your own.</footer>
 <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Card meaning">
   <div class="drawer-top"><span class="eyebrow">Card meaning</span><button type="button" id="drawer-close" aria-label="Close">×</button></div>
   <div id="drawer-body"></div>
@@ -1113,7 +1159,7 @@ function miniDiagram(sp){
 }
 function renderSpreads(){
   $('#spreads').innerHTML=SPREADS.map(s=>`<button type="button" class="spread-btn${s.id===state.spreadId?' on':''}" data-id="${s.id}" role="radio" aria-checked="${s.id===state.spreadId}">${miniDiagram(s)}<span class="sp-name">${s.name}</span><span class="sp-n">${s.positions.length} card${s.positions.length>1?'s':''}</span></button>`).join('');
-  $$('.spread-btn').forEach(b=>b.onclick=()=>{state.spreadId=b.dataset.id;renderSpreads();if(!state.dealt||confirm('Start a new reading with this spread? The current cards will be cleared.')){clearReading();layoutSpread();}else{renderSpreads();}});
+  $$('.spread-btn').forEach(b=>b.onclick=()=>{const prev=state.spreadId;if(state.dealt&&!confirm('Start a new reading with this spread? The current cards will be cleared.'))return;state.spreadId=b.dataset.id;renderSpreads();clearReading();state.entries=[];layoutSpread();updateToolbar();});
   $('#spread-blurb').textContent=spread().blurb;
 }
 
@@ -1129,8 +1175,8 @@ function layoutSpread(){
   area.style.paddingTop=(H/W*100)+'%';
   const overlay=$('#linksvg');
   area.innerHTML=P.map((p,i)=>{
-    const drawn=state.cards[i];
-    const cls=['slot',p.rot?'crossing':'',drawn?'':'empty',drawn&&drawn.faceUp?'faceup':'',drawn&&drawn.reversed?'reversed':'',state.selected.has(i)?'selected':''].join(' ');
+    const drawn=state.cards[i]||(state.mode==='manual'&&!state.dealt&&state.entries[i]&&state.entries[i].card?{card:state.entries[i].card,reversed:state.entries[i].reversed,faceUp:true,preview:true}:null);
+    const cls=['slot',p.rot?'crossing':'',drawn?'':'empty',drawn&&drawn.preview?'preview':'',drawn&&drawn.faceUp?'faceup':'',drawn&&drawn.reversed?'reversed':'',state.selected.has(i)?'selected':''].join(' ');
     return `<div class="${cls}" data-i="${i}" style="left:${(p.x/W*100).toFixed(3)}%;top:${(p.y/H*100).toFixed(3)}%;width:${(1/W*100).toFixed(3)}%;--rot:${p.rot||0}deg;z-index:${p.rot?3:2}">
       <div class="card" role="button" tabindex="0" aria-label="${esc(p.label)}${drawn?': '+esc(drawn.card.name)+(drawn.reversed?' reversed':''):' (empty)'}">
         <div class="flip"><div class="back">${drawn?BACK:''}</div><div class="face">${drawn?artFor(drawn.card):''}</div></div>
@@ -1140,14 +1186,15 @@ function layoutSpread(){
   area.appendChild(overlay);
   $$('.slot .card').forEach(el=>{el.onclick=()=>onCardTap(+el.parentElement.dataset.i);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onCardTap(+el.parentElement.dataset.i);}};});
   $('#cloth').classList.toggle('has-cards',state.dealt);
+  $('#cloth').classList.toggle('manual',state.mode==='manual'&&!state.dealt);
   $('#table-hint').hidden=state.dealt;
-  requestAnimationFrame(drawLinks);
+  requestAnimationFrame(()=>drawLinks(pinned));
 }
 
 /* ---------- Dealing ---------- */
 function rng(n){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n;}
 function shuffleDeck(){const d=DECK.slice();for(let i=d.length-1;i>0;i--){const j=rng(i+1);[d[i],d[j]]=[d[j],d[i]];}return d;}
-function clearReading(){state.cards=[];state.dealt=false;state.selected.clear();state.linkMode=false;$('#linkmode').classList.remove('on');$('#linkmode').setAttribute('aria-pressed','false');$('#notes').value='';state.notes='';$('#linkspanel').innerHTML='';renderList();closeDrawer();}
+function clearReading(){state.cards=[];state.dealt=false;state.interp={text:'',source:null,turns:[]};state.selected.clear();state.linkMode=false;$('#linkmode').classList.remove('on');$('#linkmode').setAttribute('aria-pressed','false');$('#notes').value='';state.notes='';$('#linkspanel').innerHTML='';renderList();closeDrawer();}
 async function deal(){
   if(state.dealing)return;
   if(state.dealt&&!confirm('Shuffle again and deal a fresh reading?'))return;
@@ -1179,12 +1226,12 @@ function flipCard(i,open=false){
   if(open)setTimeout(()=>openCard(i),reduced?0:700);
 }
 async function turnAll(){
-  for(let i=0;i<state.cards.length;i++){if(!state.cards[i].faceUp){flipCard(i);await wait(reduced?30:650);}}
+  for(let i=0;i<state.cards.length;i++){if(state.cards[i]&&!state.cards[i].faceUp){flipCard(i);await wait(reduced?30:650);}}
   analyseLinks();
 }
 function onCardTap(i){
-  const c=state.cards[i]; if(!c)return;
-  if(!c.faceUp){flipCard(i,!state.linkMode);if(state.cards.every(x=>x.faceUp))analyseLinks();return;}
+  const c=state.cards[i]; if(!c){if(state.mode==='manual'&&!state.dealt)openPicker(i);return;}
+  if(!c.faceUp){flipCard(i,!state.linkMode);if(state.cards.every(x=>!x||x.faceUp))analyseLinks();return;}
   if(state.linkMode){toggleSelect(i);return;}
   openCard(i);
 }
@@ -1194,17 +1241,21 @@ function toggleSelect(i){
   analyseLinks();
 }
 function updateToolbar(){
-  const anyDown=state.cards.some(c=>!c.faceUp);
+  if(!state.cards.length&&state.dealt)state.dealt=false;
+  const anyDown=state.cards.some(c=>c&&!c.faceUp);
   $('#turnall').hidden=!state.dealt||!anyDown;
   $('#toolbar').hidden=!state.dealt;
   $('#notes-wrap').hidden=!state.dealt;
+  $('#editpull').hidden=!state.dealt||state.mode!=='manual';
+  if(typeof renderEntries==='function')renderEntries();
+  if(typeof renderInterp==='function')renderInterp();
 }
 
 /* ---------- Reading list ---------- */
 function renderList(){
   const P=positionLabels();
-  $('#readinglist').innerHTML=state.dealt?state.cards.map((c,i)=>`<button type="button" class="rrow${c.faceUp?'':' down'}" data-i="${i}"><span class="row-n">${i+1}</span><span class="row-pos">${esc(P[i].label)}</span><span class="row-card">${c.faceUp?esc(c.card.name):'Face down'}</span><span class="row-or ${c.reversed?'rev':''}">${c.faceUp?(c.reversed?'Reversed':'Upright'):''}</span><span class="row-kw">${c.faceUp?esc((c.reversed?c.card.kwRev:c.card.kwUp).slice(0,3).join(' · ')):''}</span></button>`).join(''):'';
-  $$('#readinglist .rrow').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(!state.cards[i].faceUp)flipCard(i,true);else openCard(i);});
+  $('#readinglist').innerHTML=state.dealt?state.cards.map((c,i)=>!c?`<div class="rrow down"><span class="row-n">${i+1}</span><span class="row-pos">${esc(P[i].label)}</span><span class="row-card">No card</span></div>`:`<button type="button" class="rrow${c.faceUp?'':' down'}" data-i="${i}"><span class="row-n">${i+1}</span><span class="row-pos">${esc(P[i].label)}</span><span class="row-card">${c.faceUp?esc(c.card.name):'Face down'}</span><span class="row-or ${c.reversed?'rev':''}">${c.faceUp?(c.reversed?'Reversed':'Upright'):''}</span><span class="row-kw">${c.faceUp?esc((c.reversed?c.card.kwRev:c.card.kwUp).slice(0,3).join(' · ')):''}</span></button>`).join(''):'';
+  $$('#readinglist button.rrow').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(!state.cards[i].faceUp)flipCard(i,true);else openCard(i);});
 }
 
 /* ---------- Drawer ---------- */
@@ -1243,8 +1294,8 @@ function renderDrawer(card,rev,pos,i){
     </dl>
     <div class="d-actions">
       ${pos?`<button type="button" class="ghost" id="d-link">${state.selected.has(i)?'Remove from links':'Add to links'}</button>`:`<button type="button" class="ghost" id="d-flip">Show ${other}</button>`}
-      ${pos&&i<state.cards.length-1?`<button type="button" class="ghost" id="d-next">Next card</button>`:''}
-      ${pos&&i>0?`<button type="button" class="ghost" id="d-prev">Previous card</button>`:''}
+      ${pos&&i<state.cards.length-1&&state.cards[i+1]?`<button type="button" class="ghost" id="d-next">Next card</button>`:''}
+      ${pos&&i>0&&state.cards[i-1]?`<button type="button" class="ghost" id="d-prev">Previous card</button>`:''}
     </div>
    </div>`;
   $('#drawer').classList.add('open'); $('#scrim').classList.add('on'); $('#drawer').setAttribute('aria-hidden','false');
@@ -1265,7 +1316,7 @@ function analyseLinks(){
   if(!state.dealt){$('#linkspanel').innerHTML='';return;}
   const P=positionLabels();
   const useSel=state.selected.size>=2;
-  const pool=state.cards.map((c,i)=>({...c,i,pos:P[i]})).filter(c=>c.faceUp&&(!useSel||state.selected.has(c.i)));
+  const pool=state.cards.map((c,i)=>c?{...c,i,pos:P[i]}:null).filter(c=>c&&c.faceUp&&(!useSel||state.selected.has(c.i)));
   findings=[];
   if(pool.length>=2)findings=findPatterns(pool);
   renderFindings(pool,useSel);
@@ -1315,9 +1366,9 @@ const useSelOnly=()=>state.selected.size>=2;
 function renderFindings(pool,useSel){
   const el=$('#linkspanel');
   if(!state.dealt){el.innerHTML='';return;}
-  if(pool.length<2){el.innerHTML=`<div class="lp-head"><h3>Links between the cards</h3><p class="hint">${state.dealt&&state.cards.some(c=>!c.faceUp)?'Turn over at least two cards to see how they speak to each other.':'Select two or more cards to compare them.'}</p></div>`;return;}
+  if(pool.length<2){el.innerHTML=`<div class="lp-head"><h3>Links between the cards</h3><p class="hint">${state.dealt&&state.cards.some(c=>c&&!c.faceUp)?'Turn over at least two cards to see how they speak to each other.':'Select two or more cards to compare them.'}</p></div>`;return;}
   el.innerHTML=`<div class="lp-head"><h3>Links between the cards</h3><p class="hint">${useSel?`Comparing the ${pool.length} cards you selected. `:`Reading all ${pool.length} face up cards. `}${state.linkMode?'Tap cards on the table to add or remove them.':'Turn on Find links to choose specific cards.'}</p></div>
-   ${findings.length?`<ul class="findings">${findings.map((f,k)=>`<li class="finding f-${f.type}" data-k="${k}" tabindex="0"><span class="f-dot" style="background:${LINK_COLORS[f.type]}"></span><div><strong>${esc(f.title)}</strong><p>${esc(f.text)}</p>${f.members.length?`<p class="f-members">${f.members.map(i=>`<span>${i+1} · ${esc(state.cards[i].card.name)}</span>`).join('')}</p>`:''}${f.quint?`<button type="button" class="ghost small" data-quint="${f.quint.id}">See ${esc(f.quint.name)}</button>`:''}</div></li>`).join('')}</ul>`:'<p class="hint">No strong patterns between these cards. Read them individually and trust the story they tell in order.</p>'}
+   ${findings.length?`<ul class="findings">${findings.map((f,k)=>`<li class="finding f-${f.type}" data-k="${k}" tabindex="0"><span class="f-dot" style="background:${LINK_COLORS[f.type]}"></span><div><strong>${esc(f.title)}</strong><p>${esc(f.text)}</p>${f.members.length?`<p class="f-members">${f.members.map(i=>`<span>${i+1} · ${esc(state.cards[i]?state.cards[i].card.name:'')}</span>`).join('')}</p>`:''}${f.quint?`<button type="button" class="ghost small" data-quint="${f.quint.id}">See ${esc(f.quint.name)}</button>`:''}</div></li>`).join('')}</ul>`:'<p class="hint">No strong patterns between these cards. Read them individually and trust the story they tell in order.</p>'}
    <p class="legend">${Object.entries(LINK_COLORS).map(([k,v])=>`<span><i style="background:${v}"></i>${{pair:'classic pairing',number:'shared number',suit:'shared suit or element',dignity:'friendly elements',clash:'clashing elements',sequence:'sequence',major:'whole reading'}[k]}</span>`).join('')}</p>`;
   $$('.finding').forEach(li=>{const k=+li.dataset.k;const hi=()=>highlight(findings[k]);const un=()=>highlight(null);li.onmouseenter=hi;li.onmouseleave=un;li.onfocus=hi;li.onblur=un;li.onclick=()=>{highlight(findings[k],true);};});
   $$('[data-quint]').forEach(b=>b.onclick=()=>openDeckCard(byId[b.dataset.quint]));
@@ -1397,7 +1448,7 @@ function saveJournal(list){try{localStorage.setItem(JKEY,JSON.stringify(list));r
 function saveReading(){
   if(!state.dealt)return; readSetup();
   const d=readingDate();
-  const entry={id:Date.now(),savedAt:new Date().toISOString(),when:d.toISOString(),place:state.place,lat:state.lat,lon:state.lon,question:state.question,spreadId:state.spreadId,revProb:state.revProb,cards:state.cards.map(c=>({id:c.card.id,r:c.reversed})),notes:$('#notes').value};
+  const entry={id:Date.now(),savedAt:new Date().toISOString(),when:d.toISOString(),place:state.place,lat:state.lat,lon:state.lon,question:state.question,spreadId:state.spreadId,revProb:state.revProb,cards:state.cards.map(c=>c?{id:c.card.id,r:c.reversed}:null),notes:$('#notes').value,mode:state.mode,interp:state.interp.source?{text:state.interp.text,source:state.interp.source}:null};
   const list=loadJournal(); const existing=list.findIndex(e=>e.id===state.journalId);
   if(existing>=0){entry.id=state.journalId;list[existing]=entry;}else{list.unshift(entry);state.journalId=entry.id;}
   if(saveJournal(list)){toast(existing>=0?'Reading updated in your journal':'Reading saved to your journal');renderJournal();}else toast('Could not save. Your browser is blocking storage.');
@@ -1405,7 +1456,8 @@ function saveReading(){
 function renderJournal(){
   const list=loadJournal();
   $('#journal').innerHTML=list.length?list.map(e=>{const sp=SPREADS.find(s=>s.id===e.spreadId);const d=new Date(e.when);return `<article class="entry"><div class="entry-head"><div><p class="eyebrow">${sp?esc(sp.name):''} · ${d.toLocaleDateString([],{day:'numeric',month:'long',year:'numeric'})}${e.place?' · '+esc(e.place):''}</p><h3>${e.question?esc(e.question):'No question written'}</h3></div><div class="entry-actions"><button type="button" class="ghost small" data-open="${e.id}">Open</button><button type="button" class="ghost small danger" data-del="${e.id}">Delete</button></div></div>
-    <div class="entry-cards">${e.cards.map((c,i)=>{const card=byId[c.id];return `<div class="thumb ${c.r?'rev':''}" title="${esc(card.name)}${c.r?' reversed':''}">${artFor(card)}</div>`;}).join('')}</div>
+    <div class="entry-cards">${e.cards.map((c,i)=>{if(!c)return '';const card=byId[c.id];return `<div class="thumb ${c.r?'rev':''}" title="${esc(card.name)}${c.r?' reversed':''}">${artFor(card)}</div>`;}).join('')}</div>
+    ${e.interp&&e.interp.text?`<details class="entry-interp"><summary>Interpretation${e.interp.source==='ai'?'':' (composed)'}</summary>${e.interp.text.split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join('')}</details>`:''}
     ${e.notes?`<p class="entry-notes">${esc(e.notes)}</p>`:''}</article>`;}).join(''):'<p class="hint">Nothing saved yet. Lay a reading and press Save to journal, and it will appear here. Readings stay in this browser only.</p>';
   $$('[data-open]').forEach(b=>b.onclick=()=>openEntry(+b.dataset.open));
   $$('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Delete this reading from the journal?')){saveJournal(loadJournal().filter(e=>e.id!==+b.dataset.del));renderJournal();}});
@@ -1417,15 +1469,17 @@ function openEntry(id){
   const d=new Date(e.when); $('#date').value=d.toISOString().slice(0,10); $('#time').value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
   $('#place').value=e.place||''; $('#lat').value=e.lat??''; $('#lon').value=e.lon??''; $('#question').value=e.question||''; $('#notes').value=e.notes||'';
   $$('#reversals button').forEach(b=>b.classList.toggle('on',+b.dataset.v===state.revProb));
-  state.cards=e.cards.map(c=>({card:byId[c.id],reversed:c.r,faceUp:true})); state.dealt=true;
+  state.cards=e.cards.map(c=>c?{card:byId[c.id],reversed:c.r,faceUp:true}:null); state.dealt=true;
+  state.mode=e.mode||'deal'; setMode(state.mode); state.interp=e.interp?{text:e.interp.text,source:e.interp.source,turns:[]}:{text:'',source:null,turns:[]};
   renderSpreads(); renderSky(); layoutSpread(); renderList(); updateToolbar(); analyseLinks(); showView('reading');
   $('#cloth').scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
 }
 function copyReading(){
   if(!state.dealt)return; readSetup(); const d=readingDate(),P=positionLabels(),sp=spread();
   const lines=[`${sp.name} · ${d.toLocaleDateString([],{day:'numeric',month:'long',year:'numeric'})} ${fmtTime(d)}${state.place?' · '+state.place:''}`,state.question?`Question: ${state.question}`:'',''];
-  state.cards.forEach((c,i)=>{lines.push(`${i+1}. ${P[i].label}: ${c.faceUp?c.card.name+(c.reversed?' (reversed)':''):'face down'}`);if(c.faceUp)lines.push('   '+(c.reversed?c.card.kwRev:c.card.kwUp).join(', '));});
+  state.cards.forEach((c,i)=>{if(!c){lines.push(`${i+1}. ${P[i].label}: no card`);return;}lines.push(`${i+1}. ${P[i].label}: ${c.faceUp?c.card.name+(c.reversed?' (reversed)':''):'face down'}`);if(c.faceUp)lines.push('   '+(c.reversed?c.card.kwRev:c.card.kwUp).join(', '));});
   if(findings.length){lines.push('','Links:');findings.forEach(f=>lines.push(`- ${f.title}: ${f.text}`));}
+  if(state.interp.text){lines.push('','Interpretation:',state.interp.text);}
   if($('#notes').value.trim()){lines.push('','Notes:',$('#notes').value.trim());}
   navigator.clipboard?.writeText(lines.filter(l=>l!==undefined).join('\n')).then(()=>toast('Reading copied as text'),()=>toast('Could not copy'));
 }
@@ -1451,12 +1505,13 @@ function init(){
   $('#time').value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
   $('#deckstack').innerHTML=[0,1,2,3,4].map(i=>`<div class="stack-card" style="--k:${i}">${BACK}</div>`).join('');
   renderSpreads(); setupLocation(); renderSky(); layoutSpread(); updateToolbar();
-  $('#deal').onclick=deal;
+  $('#deal').onclick=()=>state.mode==='manual'?layManual():deal();
+  initManual();
   $('#turnall').onclick=turnAll;
   $('#linkmode').onclick=()=>setLinkMode(!state.linkMode);
   $('#save').onclick=saveReading;
   $('#copy').onclick=copyReading;
-  $('#newreading').onclick=()=>{if(!state.dealt||confirm('Clear the table for a new reading?')){clearReading();state.journalId=null;layoutSpread();updateToolbar();}};
+  $('#newreading').onclick=()=>{if(!state.dealt||confirm('Clear the table for a new reading?')){clearReading();state.journalId=null;state.entries=[];layoutSpread();updateToolbar();}};
   $$('#reversals button').forEach(b=>b.onclick=()=>{state.revProb=+b.dataset.v;$$('#reversals button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',String(x===b));});});
   ['#date','#time'].forEach(s=>$(s).addEventListener('change',()=>{renderSky();if(!state.dealt)layoutSpread();}));
   $('#question').addEventListener('input',()=>state.question=$('#question').value);
@@ -1469,6 +1524,170 @@ function init(){
   starfield();
 }
 document.addEventListener('DOMContentLoaded',init);
+
+/* ---------- Pull by hand: enter the cards she drew ---------- */
+state.mode='deal'; state.entries=[]; state.interp={text:'',source:null,turns:[]};
+let sampleFn=null, pickerPos=null, pickerRev=false, pickerQuery='', pickerFilter='all';
+const NAME_INDEX=DECK.map(c=>[c.name.toLowerCase(),c]);
+function findCardByName(s){
+  const q=s.trim().toLowerCase().replace(/\s+/g,' '); if(!q)return null;
+  let hit=NAME_INDEX.find(([n])=>n===q); if(hit)return hit[1];
+  const q2=q.replace(/^the /,'');
+  hit=NAME_INDEX.find(([n])=>n.replace(/^the /,'')===q2); if(hit)return hit[1];
+  const cands=NAME_INDEX.filter(([n])=>n.includes(q2)); return cands.length===1?cands[0][1]:null;
+}
+function setMode(m){
+  state.mode=m; $$('#mode button').forEach(b=>{b.classList.toggle('on',b.dataset.m===m);b.setAttribute('aria-checked',String(b.dataset.m===m));});
+  $('#deal').textContent=m==='manual'?'Lay the cards':'Shuffle and deal';
+  $('#mode-hint').textContent=m==='manual'?'Shuffle and pull with your own deck, then enter each card below the table. The app lays them out and interprets.':'The app shuffles a full deck and deals for you.';
+  $('#table-hint').textContent=m==='manual'?'Tap a position on the table, or fill in the list below, to enter the cards you pulled.':'Choose a spread, hold your question, then shuffle and deal.';
+  renderEntries(); updateToolbar();
+}
+function ensureEntries(){const n=spread().positions.length;while(state.entries.length<n)state.entries.push({card:null,reversed:false,text:''});state.entries.length=n;}
+function renderEntries(){
+  const wrap=$('#entrylist'); const show=state.mode==='manual'&&!state.dealt; wrap.hidden=!show; if(!show)return;
+  ensureEntries(); const P=positionLabels();
+  wrap.innerHTML=`<div class="entry-head-row"><span class="eyebrow">The cards you pulled</span><span class="hint">Type a name (Ten of Cups, Tower, Knight of Wands) or browse. Mark any that fell reversed.</span></div>`+state.entries.map((e,i)=>`<div class="erow${e.card?' filled':''}${e.text&&!e.card?' bad':''}" data-i="${i}">
+     <span class="row-n">${i+1}</span><span class="row-pos">${esc(P[i].label)}</span>
+     <input type="text" list="cardnames" value="${esc(e.card?e.card.name:e.text)}" placeholder="Card" aria-label="Card for ${esc(P[i].label)}" autocomplete="off" data-i="${i}">
+     <button type="button" class="revtog${e.reversed?' on':''}" aria-pressed="${e.reversed}" data-i="${i}" title="Reversed">Rev</button>
+     <button type="button" class="ghost small browse" data-i="${i}">Browse</button></div>`).join('');
+  $$('#entrylist input').forEach(inp=>{const i=+inp.dataset.i;const commit=()=>{const c=findCardByName(inp.value);state.entries[i].text=inp.value;state.entries[i].card=c;inp.parentElement.classList.toggle('filled',!!c);inp.parentElement.classList.toggle('bad',!!inp.value.trim()&&!c);if(c)inp.value=c.name;previewSlot(i);};inp.addEventListener('change',commit);inp.addEventListener('blur',commit);inp.addEventListener('keydown',ev=>{if(ev.key==='Enter'){commit();const nx=$(`#entrylist input[data-i="${i+1}"]`);if(nx)nx.focus();}});});
+  $$('#entrylist .revtog').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;state.entries[i].reversed=!state.entries[i].reversed;b.classList.toggle('on',state.entries[i].reversed);b.setAttribute('aria-pressed',String(state.entries[i].reversed));previewSlot(i);});
+  $$('#entrylist .browse').forEach(b=>b.onclick=()=>openPicker(+b.dataset.i));
+}
+function previewSlot(i){
+  const slot=$(`.slot[data-i="${i}"]`); if(!slot)return; const e=state.entries[i];
+  slot.classList.toggle('preview',!!e.card); slot.classList.toggle('reversed',!!(e.card&&e.reversed));
+  slot.querySelector('.face').innerHTML=e.card?artFor(e.card):''; slot.querySelector('.back').innerHTML=e.card?BACK:'';
+  slot.classList.toggle('empty',!e.card); slot.classList.toggle('faceup',!!e.card);
+}
+function openPicker(i){
+  pickerPos=i; pickerRev=state.entries[i]?.reversed||false; pickerQuery=''; pickerFilter='all';
+  drawerCtx={mode:'picker'};
+  $('#drawer-body').innerHTML=`<div class="picker">
+    <p class="eyebrow">Position ${i+1} · ${esc(positionLabels()[i].label)}</p>
+    <h2 class="d-name">Which card fell here?</h2>
+    <div class="picker-tools"><input type="search" id="pk-q" placeholder="Search by name or keyword" aria-label="Search cards" autofocus>
+      <div class="seg" id="pk-rev"><button type="button" data-r="0" class="${pickerRev?'':'on'}">Upright</button><button type="button" data-r="1" class="${pickerRev?'on':''}">Reversed</button></div></div>
+    <div class="seg pk-filters" id="pk-f"><button type="button" data-f="all" class="on">All</button><button type="button" data-f="major">Major</button><button type="button" data-f="wands">Wands</button><button type="button" data-f="cups">Cups</button><button type="button" data-f="swords">Swords</button><button type="button" data-f="pentacles">Pentacles</button></div>
+    <div class="pk-grid" id="pk-grid"></div></div>`;
+  $('#drawer').classList.add('open');$('#scrim').classList.add('on');$('#drawer').setAttribute('aria-hidden','false');
+  const grid=()=>{const q=pickerQuery.toLowerCase();const used=new Set(state.entries.map((e,k)=>k!==i&&e.card?e.card.id:null));
+    const list=DECK.filter(c=>(pickerFilter==='all'||(pickerFilter==='major'?c.arcana==='major':c.suit===pickerFilter))&&(!q||c.name.toLowerCase().includes(q)||c.kwUp.join(' ').includes(q)));
+    $('#pk-grid').innerHTML=list.map(c=>`<button type="button" class="pk-card${used.has(c.id)?' used':''}" data-id="${c.id}" title="${used.has(c.id)?'Already in this pull':''}"><div class="deck-art${pickerRev?' rev':''}">${artFor(c)}</div><span>${esc(c.name)}</span></button>`).join('')||'<p class="hint">No cards match.</p>';
+    $$('.pk-card').forEach(b=>b.onclick=()=>{state.entries[i]={card:byId[b.dataset.id],reversed:pickerRev,text:byId[b.dataset.id].name};renderEntries();previewSlot(i);closeDrawer();const nx=state.entries.findIndex((e,k)=>k>i&&!e.card);if(nx>=0)setTimeout(()=>openPicker(nx),350);});};
+  $('#pk-q').addEventListener('input',e=>{pickerQuery=e.target.value.trim();grid();});
+  $$('#pk-rev button').forEach(b=>b.onclick=()=>{pickerRev=b.dataset.r==='1';$$('#pk-rev button').forEach(x=>x.classList.toggle('on',x===b));grid();});
+  $$('#pk-f button').forEach(b=>b.onclick=()=>{pickerFilter=b.dataset.f;$$('#pk-f button').forEach(x=>x.classList.toggle('on',x===b));grid();});
+  grid(); setTimeout(()=>$('#pk-q').focus(),50);
+}
+async function layManual(){
+  if(state.dealing)return; ensureEntries(); readSetup(); renderSky();
+  const filled=state.entries.filter(e=>e.card);
+  if(!filled.length){toast('Enter at least one card first');const f=$('#entrylist input');if(f)f.focus();return;}
+  const ids=filled.map(e=>e.card.id); if(new Set(ids).size!==ids.length){toast('The same card appears twice');return;}
+  const bad=state.entries.find(e=>e.text&&!e.card); if(bad&&!confirm(`"${bad.text}" is not a card name and will be left empty. Lay the rest?`))return;
+  state.dealing=true; const keep=state.entries.map(e=>({...e})); clearReading(); state.entries=keep;
+  state.cards=state.entries.map(e=>e.card?{card:e.card,reversed:e.reversed,faceUp:false}:null);
+  state.dealt=true; $('#table-hint').hidden=true; layoutSpread(); renderEntries();
+  const cloth=$('#cloth').getBoundingClientRect();
+  $$('.slot:not(.empty)').forEach((el,i)=>{const r=el.getBoundingClientRect();el.style.setProperty('--dx',(cloth.left+cloth.width/2)-(r.left+r.width/2)+'px');el.style.setProperty('--dy',(cloth.top+cloth.height/2)-(r.top+r.height/2)+'px');el.style.transitionDelay=(i*90)+'ms';el.classList.add('in');});
+  void document.body.offsetHeight;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$$('.slot').forEach(el=>el.classList.remove('in'))));
+  await wait(reduced?50:filled.length*90+600); $$('.slot').forEach(el=>el.style.transitionDelay='');
+  state.dealing=false; renderList(); updateToolbar();
+  if(innerWidth<1000){$('#setup').classList.add('collapsed');$('#cloth').scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});}
+  await turnAll(); renderInterp();
+}
+function editPull(){
+  if(!state.dealt)return;
+  state.entries=state.cards.map(c=>c?{card:c.card,reversed:c.reversed,text:c.card.name}:{card:null,reversed:false,text:''});
+  const keepI=state.interp; clearReading(); state.interp=keepI; state.mode='manual'; setMode('manual'); layoutSpread(); state.entries.forEach((e,i)=>previewSlot(i)); updateToolbar(); renderInterp();
+  $('#entrylist').scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+}
+
+/* ---------- Interpretation ---------- */
+function skySummary(){
+  const d=readingDate(), m=moonPhase(d), z=zodiacFor(d), ruler=DAY_RULER[d.getDay()];
+  let s=`${d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}, ${fmtTime(d)}${state.place?', '+state.place:''}. ${m.name} (${Math.round(m.illum*100)}% lit). Sun in ${z.name}. Day of the ${ruler}. ${seasonFor(d,state.south)} in the ${state.south?'southern':'northern'} hemisphere. Card of the date: ${DECK[dayNumerology(d)].name}.`;
+  if(state.lat!==null&&state.lon!==null){const ph=planetaryHour(d,state.lat,state.lon);if(ph)s+=` Hour of ${ph.planet}.`;}
+  return s;
+}
+function readingBrief(){
+  const P=positionLabels(), sp=spread();
+  const lines=state.cards.map((c,i)=>c?`${i+1}. ${P[i].label} (${P[i].desc}): ${c.card.name}, ${c.reversed?'reversed':'upright'}. Keywords: ${(c.reversed?c.card.kwRev:c.card.kwUp).join(', ')}. Traditional meaning: ${c.reversed?c.card.rev:c.card.up}`:`${i+1}. ${P[i].label}: no card`).join('\n');
+  const pats=findings.length?findings.map(f=>`- ${f.title}: ${f.text}`).join('\n'):'None noted.';
+  return {sp,lines,pats};
+}
+function buildPrompt(){
+  const {sp,lines,pats}=readingBrief();
+  return `You are an experienced, warm and perceptive tarot reader in the Rider Waite Smith tradition. A querent has laid the cards and wants your interpretation.
+
+Question: ${state.question||'No specific question. Read for what the querent most needs to hear.'}
+Spread: ${sp.name}. ${sp.blurb}
+Cards, in the order laid, with the meaning of each position:
+${lines}
+
+When and where: ${skySummary()}
+
+Patterns already noticed between the cards:
+${pats}
+
+Write the interpretation in the second person, as one flowing reading. Weave the cards into a single story rather than listing them, relating each to its position and to the question. Name every card once together with its position. Acknowledge tension where cards pull against each other and use the patterns above where they help. Draw on the moon phase or season only if it adds something. Close with practical guidance and one question for the querent to sit with. About 450 to 600 words. Plain paragraphs only: no headings, no bullet points, no lists, and do not use dashes or hyphens as punctuation. British English.`;
+}
+function composeReading(){
+  const P=positionLabels(), sp=spread(), d=readingDate(), m=moonPhase(d), z=zodiacFor(d);
+  const paras=[];
+  paras.push(`${state.question?`You asked: ${state.question} `:''}The cards were laid as a ${sp.name} on ${d.toLocaleDateString('en-GB',{day:'numeric',month:'long'})} under a ${m.name.toLowerCase()}, with the Sun in ${z.name}. ${m.note}`);
+  state.cards.forEach((c,i)=>{if(!c)return;const kw=c.reversed?c.card.kwRev:c.card.kwUp;paras.push(`${P[i].label}. ${P[i].desc} ${c.card.name}${c.reversed?' reversed':''} falls here, speaking of ${kw[0]}, ${kw[1]} and ${kw[2]}. ${c.reversed?c.card.rev:c.card.up}`);});
+  const strong=findings.filter(f=>f.type!=='dignity'&&f.type!=='clash').slice(0,3);
+  if(strong.length)paras.push('Looking at the cards together: '+strong.map(f=>`${f.title.toLowerCase().replace(/^quintessence: /,'the quintessence is ')}. ${f.text}`).join(' '));
+  const last=[...state.cards].reverse().find(c=>c); const li=state.cards.lastIndexOf(last);
+  if(state.cards.filter(Boolean).length>1&&last)paras.push(`Taken as a whole, the reading moves toward ${last.card.name}${last.reversed?' reversed':''} in the position of ${P[li].label}. Sit with what that asks of you, and notice which card you most want to argue with; that is usually where the message is.`);
+  return paras.join('\n\n');
+}
+function renderInterp(){
+  const el=$('#interp'); const canAI=!!sampleFn; const has=state.dealt&&state.cards.some(c=>c&&c.faceUp);
+  el.hidden=!state.dealt;
+  if(!state.dealt)return;
+  const t=state.interp.text;
+  el.innerHTML=`<div class="lp-head"><h3>Interpretation</h3><p class="hint">${canAI?'Ask for a written reading of these cards, then ask follow up questions.':'A reading composed from the card meanings and the patterns between them.'}</p></div>
+   <div class="interp-actions">${canAI?`<button type="button" class="primary" id="ai-go" ${has?'':'disabled'}>${t&&state.interp.source==='ai'?'Read again':'Interpret this reading'}</button>`:''}<button type="button" class="ghost" id="compose-go" ${has?'':'disabled'}>Compose from the cards</button></div>
+   <div class="interp-out" id="interp-out" aria-live="polite">${t?t.split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join(''):''}</div>
+   ${canAI&&t&&state.interp.source==='ai'?`<form class="followup" id="followup"><input type="text" id="fu-q" placeholder="Ask a follow up, for example: what does the Tower in position 3 mean for my work?" aria-label="Follow up question"><button type="submit" class="ghost">Ask</button></form>`:''}`;
+  const go=$('#ai-go'); if(go)go.onclick=()=>askAI();
+  $('#compose-go').onclick=()=>{state.interp={text:composeReading(),source:'composed',turns:[]};renderInterp();};
+  const fu=$('#followup'); if(fu)fu.onsubmit=e=>{e.preventDefault();const q=$('#fu-q').value.trim();if(q)askAI(q);};
+}
+async function askAI(followup){
+  if(!sampleFn)return; const out=$('#interp-out'); const btn=$('#ai-go');
+  let turns;
+  if(followup&&state.interp.source==='ai'&&state.interp.turns.length){turns=[...state.interp.turns,{role:'user',content:followup+'\n\nAnswer in two or three short paragraphs, plain text, no lists, no dashes as punctuation.'}];}
+  else{turns=[{role:'user',content:buildPrompt()}];}
+  const prev=state.interp.source==='ai'&&followup?state.interp.text+'\n\n'+followup:'';
+  out.innerHTML=(prev?prev.split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join(''):'')+'<p class="thinking">Reading the cards...</p>';
+  if(btn)btn.disabled=true; const fuq=$('#fu-q'); if(fuq)fuq.disabled=true;
+  const render=text=>{out.innerHTML=(prev+(prev?'\n\n':'')+text).split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join('');};
+  try{
+    const res=await sampleFn(turns,{cache:false,onText:({text})=>render(text)});
+    const full=(prev?prev+'\n\n':'')+res.text.trim();
+    state.interp={text:full,source:'ai',turns:[...turns,{role:'assistant',content:res.text}]};
+    renderInterp(); $('#interp-out').scrollIntoView({behavior:reduced?'auto':'smooth',block:'nearest'});
+  }catch(e){
+    const msg=e&&e.code==='not_granted'?'Interpretation is not available in this view.':e&&e.code==='rate_limited'?'Too many readings in a row. Wait a moment and try again.':e&&e.code==='cancelled'?'Stopped.':'The reading could not be completed. '+(e&&e.message?e.message:'');
+    if(e&&e.text){state.interp={text:(prev?prev+'\n\n':'')+e.text,source:'ai',turns:state.interp.turns};}
+    renderInterp(); $('#interp-out').insertAdjacentHTML('beforeend',`<p class="hint">${esc(msg)}</p>`);
+    if(e&&e.code==='not_granted'){sampleFn=null;renderInterp();}
+  }
+}
+function initManual(){
+  $('#cardnames').innerHTML=DECK.map(c=>`<option value="${esc(c.name)}">`).join('');
+  $$('#mode button').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+  $('#editpull').onclick=editPull;
+  setMode('deal');
+  if(window.claude&&typeof window.claude.use==='function'){window.claude.use('sample').then(fn=>{sampleFn=fn||null;renderInterp();}).catch(()=>{});}
+}
 
 </script>
 

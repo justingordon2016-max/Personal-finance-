@@ -6,6 +6,8 @@ A single file tarot reading table. Open `index.html` in any modern browser; noth
 
 - **Nine spreads**: Single Card, Past Present Future, Situation Obstacle Advice, Mind Body Spirit, Five Card Cross, Two Paths, Relationship, Horseshoe, Celtic Cross and Year Ahead, each laid out in its true geometry with named positions.
 - **Date, time and place**: sets the sky for the reading. The strip above the table shows the moon phase and illumination (mirrored for the southern hemisphere), the sun sign and its card, the day's ruling planet and its card, the date's numerology card, the season, and when a place or coordinates are given, sunrise, sunset and the planetary hour.
+- **Pull by hand**: shuffle and pull with your own deck, then enter each card by name (with autocomplete) or by browsing the deck, marking any that fell reversed. The app lays them on the table, turns them over and interprets.
+- **Interpretation**: a written reading of the whole pull. On the published claude.ai page this asks Claude and streams the reading, with follow up questions; the offline file composes a reading from the card meanings and the patterns between them.
 - **Reversals**: none, some (about one in four) or half.
 - **Shuffle and deal**: the deck riffles, cards slide to their positions face down, then turn over one by one, or one at a time on tap.
 - **Card meanings**: tap any face up card for its art, upright and reversed keywords and meanings, what it says in that position, element, astrological correspondence and number.
