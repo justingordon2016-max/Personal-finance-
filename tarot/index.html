@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lantern Tarot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --ground:#100c1c;--cloth:#1a1230;--cloth-deep:#120b24;--surface:#1c1533;--surface-2:#241b40;
+  --line:rgba(217,182,100,.28);--line-soft:rgba(217,182,100,.14);
+  --gold:#d9b664;--gold-bright:#f1dc9c;--gold-dim:#8d7239;
+  --ivory:#efe6d2;--muted:#a99cc4;--dim:#6f6490;
+  --rose:#c96b7a;--teal:#7fb7c9;
+  --fire:#e2803f;--water:#5f9fd6;--air:#c3cfdd;--earth:#86ad6c;
+  --display:'Cinzel','Trajan Pro',Georgia,serif;--body:'Cormorant Garamond',Garamond,'Times New Roman',serif;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+html{background:var(--ground)}
+body{margin:0;background:var(--ground);color:var(--ivory);font-family:var(--body);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+#sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.7}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;letter-spacing:.04em;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+input,textarea{font:inherit;color:var(--ivory);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:.45rem .6rem;width:100%}
+textarea{resize:vertical;min-height:64px}
+input::placeholder,textarea::placeholder{color:var(--dim)}
+.eyebrow{font-family:var(--display);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.hint{color:var(--muted);font-size:.95rem;font-style:italic}
+[hidden]{display:none!important}
+
+/* masthead */
+.masthead{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.8rem}
+.brand svg{width:34px;height:34px}
+.brand h1{font-size:1.35rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase}
+.brand h1 b{font-weight:600;color:var(--gold)}
+.tabs{display:flex;gap:.25rem;border:1px solid var(--line);border-radius:999px;padding:3px}
+.tabs button{background:none;border:0;border-radius:999px;padding:.4rem 1rem;font-family:var(--display);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.tabs button.on{background:var(--gold);color:var(--ground)}
+
+main{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:1.25rem 1.5rem 4rem}
+.view{display:none}.view.on{display:block}
+#view-reading.on{display:grid;grid-template-columns:320px minmax(0,1fr);gap:1.5rem;align-items:start}
+
+/* setup rail */
+.setup{background:linear-gradient(180deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem 1.1rem 1.25rem;display:flex;flex-direction:column;gap:1rem;position:sticky;top:1rem}
+.setup-head{display:flex;justify-content:space-between;align-items:center}
+#setup-toggle{display:none;background:none;border:1px solid var(--line);border-radius:6px;padding:.2rem .6rem;font-family:var(--display);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:.35rem}
+.field>label,.field>.lbl{font-family:var(--display);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.inline{display:flex;gap:.4rem}
+.inline input{flex:1}
+.spreads{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.spread-btn{display:flex;flex-direction:column;align-items:center;gap:.25rem;background:var(--ground);border:1px solid var(--line-soft);border-radius:8px;padding:.55rem .4rem .5rem;color:var(--muted);transition:border-color .2s,color .2s}
+.spread-btn:hover{border-color:var(--line);color:var(--ivory)}
+.spread-btn.on{border-color:var(--gold);color:var(--ivory);background:var(--surface-2)}
+.spread-btn .mini{height:36px;width:100%}
+.spread-btn .mini rect{fill:none;stroke:currentColor;stroke-width:1.2}
+.spread-btn.on .mini rect{fill:rgba(217,182,100,.18);stroke:var(--gold)}
+.sp-name{font-family:var(--display);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.25}
+.sp-n{font-size:.8rem;font-style:italic;color:var(--dim)}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;background:none;border:0;padding:.4rem;font-family:var(--display);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--gold);color:var(--ground)}
+.primary{background:var(--gold);color:var(--ground);border:0;border-radius:6px;padding:.75rem 1rem;font-family:var(--display);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;transition:transform .15s,background .2s}
+.primary:hover{background:var(--gold-bright);transform:translateY(-1px)}
+.ghost{background:none;border:1px solid var(--line);border-radius:6px;padding:.5rem .9rem;font-family:var(--display);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ivory);transition:border-color .2s,background .2s}
+.ghost:hover{border-color:var(--gold);background:rgba(217,182,100,.08)}
+.ghost.on{background:var(--gold);color:var(--ground);border-color:var(--gold)}
+.ghost.small{padding:.3rem .6rem;font-size:.6rem}
+.ghost.danger:hover{border-color:var(--rose);color:var(--rose)}
+#locate{width:42px;flex:none;padding:0;font-size:1.1rem;line-height:1}
+details.coords summary{cursor:pointer;color:var(--dim);font-size:.9rem;font-style:italic}
+details.coords .row{margin-top:.4rem}
+
+/* table */
+.table-wrap{display:flex;flex-direction:column;gap:1.1rem;min-width:0}
+.sky-strip{display:flex;flex-wrap:wrap;gap:.5rem;align-items:stretch}
+.sky-lead{display:flex;flex-direction:column;justify-content:center;padding:.2rem .6rem .2rem 0;min-width:180px}
+.sky-when{font-style:italic;color:var(--muted);font-size:1rem}
+.chip{display:flex;align-items:center;gap:.6rem;background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:.45rem .75rem .45rem .55rem;text-align:left;transition:border-color .2s}
+.chip.link:hover{border-color:var(--gold)}
+.chip-icon{width:36px;height:36px;display:grid;place-items:center;flex:none}
+.chip .glyph{font-size:1.5rem;color:var(--gold);font-family:Georgia,serif;line-height:1}
+.chip .glyph.num{font-family:var(--display);font-size:1.25rem;font-weight:600}
+.chip-t{display:flex;flex-direction:column;line-height:1.15}
+.chip-t strong{font-family:var(--display);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.chip-t small{font-size:.88rem;color:var(--muted);font-style:italic}
+
+.cloth{position:relative;border-radius:14px;padding:clamp(14px,3vw,40px);background:radial-gradient(ellipse at 50% 30%,#241a44 0%,var(--cloth) 45%,var(--cloth-deep) 100%);box-shadow:inset 0 0 0 1px var(--line-soft),inset 0 0 80px rgba(0,0,0,.55),0 20px 60px rgba(0,0,0,.45);overflow:hidden}
+.cloth::before{content:"";position:absolute;inset:8px;border:1px solid var(--line-soft);border-radius:10px;pointer-events:none}
+.cloth::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px);pointer-events:none;mix-blend-mode:overlay}
+.spread-area{position:relative;width:100%;max-width:720px;margin:0 auto;z-index:1}
+.links-overlay{position:absolute;left:0;top:0;pointer-events:none;z-index:4;overflow:visible}
+.spread-area .links-overlay{left:0;top:0}
+.table-hint{position:absolute;left:0;right:0;bottom:clamp(14px,3vw,40px);text-align:center;color:var(--muted);font-style:italic;pointer-events:none;z-index:2}
+.deck-stack{position:absolute;left:50%;top:50%;width:min(22%,120px);aspect-ratio:3/5;transform:translate(-50%,-50%);z-index:5}
+.stack-card{position:absolute;inset:0;border-radius:6%;box-shadow:0 6px 18px rgba(0,0,0,.5);transform:translateY(calc(var(--k)*-2px))}
+.stack-card svg{display:block;width:100%;height:100%}
+.deck-stack.shuffling .stack-card{animation:riffle 1.4s ease-in-out both;animation-delay:calc(var(--k)*80ms)}
+@keyframes riffle{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(calc(var(--k)*22px - 44px),-30px) rotate(calc(var(--k)*8deg - 16deg))}50%{transform:translate(0,0) rotate(0)}75%{transform:translate(calc(44px - var(--k)*22px),24px) rotate(calc(16deg - var(--k)*8deg))}100%{transform:translate(0,0) rotate(0)}}
+
+.slot{position:absolute;transition:transform .7s cubic-bezier(.2,.7,.2,1),opacity .5s;transform:rotate(var(--rot))}
+.slot.in{transform:translate(var(--dx),var(--dy)) rotate(calc(var(--rot) - 14deg)) scale(.7);opacity:0}
+.slot.dim{opacity:.35}
+.slot .card{position:relative;width:100%;aspect-ratio:3/5;border-radius:6%;perspective:1200px;cursor:pointer;outline-offset:3px}
+.slot.empty .card{cursor:default;border:1px dashed var(--line);border-radius:6%}
+.slot.empty .flip{display:none}
+.flip{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.2,1)}
+.slot.faceup .flip{transform:rotateY(180deg)}
+.back,.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:6%;box-shadow:0 8px 24px rgba(0,0,0,.55)}
+.back svg,.face svg{display:block;width:100%;height:100%}
+.face{transform:rotateY(180deg)}
+.slot.reversed .face svg{transform:rotate(180deg)}
+.slot:not(.empty) .card:hover .flip{filter:brightness(1.08)}
+.slot:not(.empty) .card:hover{transform:translateY(-3px)}
+.slot .card{transition:transform .25s}
+.slot.faceup .card::after{content:"";position:absolute;inset:-2px;border-radius:7%;box-shadow:0 0 0 0 rgba(241,220,156,0);animation:reveal 1.2s ease-out .5s 1}
+@keyframes reveal{0%{box-shadow:0 0 0 0 rgba(241,220,156,.6)}100%{box-shadow:0 0 30px 14px rgba(241,220,156,0)}}
+.slot.selected .card::before{content:"";position:absolute;inset:-5px;border:2px solid var(--gold-bright);border-radius:8%;z-index:2;pointer-events:none;box-shadow:0 0 18px rgba(241,220,156,.45)}
+.cloth.linking .slot.faceup .card{cursor:crosshair}
+.pos-num{position:absolute;top:-9px;left:-9px;width:22px;height:22px;border-radius:50%;background:var(--ground);border:1px solid var(--gold);color:var(--gold);font-family:var(--display);font-size:.62rem;font-weight:600;display:grid;place-items:center;z-index:3;transform:rotate(calc(var(--rot)*-1))}
+.slot-label{margin-top:.35rem;text-align:center;font-family:var(--display);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.2;transform:rotate(calc(var(--rot)*-1))}
+.slot.crossing .slot-label{display:none}
+.cloth.has-cards .slot-label{color:var(--gold-dim)}
+.cloth.has-cards .slot.faceup .slot-label{color:var(--gold)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.toolbar .spacer{flex:1}
+
+/* reading list */
+.reading-list{display:flex;flex-direction:column;border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.reading-list:empty{display:none}
+.rrow{display:grid;grid-template-columns:2rem 1.3fr 1.4fr 5.5rem 2fr;gap:.6rem;align-items:center;padding:.55rem .8rem;background:none;border:0;border-bottom:1px solid var(--line-soft);text-align:left;color:var(--ivory)}
+.rrow:last-child{border-bottom:0}
+.rrow:hover{background:var(--surface-2)}
+.rrow.down{color:var(--dim)}
+.row-n{font-family:var(--display);color:var(--gold);font-size:.7rem;font-weight:600}
+.row-pos{font-family:var(--display);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.row-card{font-weight:600;font-size:1.05rem}
+.row-or{font-family:var(--display);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.row-or.rev{color:var(--rose)}
+.row-kw{font-style:italic;color:var(--muted);font-size:.95rem}
+
+/* links panel */
+.links-panel:empty{display:none}
+.links-panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:1rem 1.1rem}
+.lp-head{display:flex;flex-direction:column;gap:.2rem;margin-bottom:.6rem}
+.lp-head h3{font-size:.95rem}
+.findings{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.finding{display:flex;gap:.7rem;padding:.7rem .4rem;border-top:1px solid var(--line-soft);cursor:pointer;transition:background .2s}
+.finding:hover,.finding.on{background:var(--surface-2)}
+.f-dot{width:10px;height:10px;border-radius:50%;flex:none;margin-top:.45rem;box-shadow:0 0 8px currentColor}
+.finding strong{font-family:var(--display);font-size:.8rem;letter-spacing:.04em}
+.finding p{color:var(--muted)}
+.f-members{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.3rem}
+.f-members span{font-family:var(--display);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:.15rem .5rem;color:var(--ivory)}
+.finding .ghost.small{margin-top:.4rem}
+.legend{display:flex;flex-wrap:wrap;gap:.3rem 1rem;margin-top:.8rem;font-size:.85rem;color:var(--dim);font-style:italic}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:.4rem;vertical-align:middle}
+
+.notes{display:flex;flex-direction:column;gap:.35rem}
+.notes textarea{min-height:110px;background:var(--surface)}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(6,4,12,.55);opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);background:linear-gradient(180deg,var(--surface),var(--ground));border-left:1px solid var(--line);transform:translateX(102%);transition:transform .4s cubic-bezier(.2,.7,.2,1);z-index:21;display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+.drawer.open{transform:none}
+.drawer-top{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:1px solid var(--line-soft)}
+#drawer-close{background:none;border:1px solid var(--line);border-radius:50%;width:34px;height:34px;font-size:1.1rem;line-height:1;color:var(--muted)}
+#drawer-body{overflow-y:auto;padding:1.2rem 1.3rem 2rem;display:flex;flex-direction:column;gap:1rem}
+.d-art{width:min(62%,230px);margin:0 auto;border-radius:6%;box-shadow:0 14px 40px rgba(0,0,0,.6);transition:transform .6s}
+.d-art.rev{transform:rotate(180deg)}
+.d-art svg{display:block;width:100%;height:auto}
+.d-text{display:flex;flex-direction:column;gap:.7rem}
+.d-name{font-size:1.5rem;font-weight:600}
+.d-badges{display:flex;flex-wrap:wrap;gap:.35rem}
+.badge{font-family:var(--display);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.25rem .6rem;border-radius:999px;border:1px solid var(--line);color:var(--ivory)}
+.badge.up{background:rgba(127,183,201,.15);border-color:var(--teal);color:var(--teal)}
+.badge.rev{background:rgba(201,107,122,.15);border-color:var(--rose);color:var(--rose)}
+.badge.el-fire{border-color:var(--fire);color:var(--fire)}.badge.el-water{border-color:var(--water);color:var(--water)}.badge.el-air{border-color:var(--air);color:var(--air)}.badge.el-earth{border-color:var(--earth);color:var(--earth)}
+.badge.ghost{color:var(--muted)}
+.kw{display:flex;flex-wrap:wrap;gap:.3rem}
+.kw span{font-style:italic;color:var(--gold-bright);font-size:1rem}
+.kw span+span::before{content:"·";color:var(--dim);margin-right:.3rem}
+.d-pos{border-left:2px solid var(--gold);padding:.3rem .8rem;color:var(--ivory);background:rgba(217,182,100,.06)}
+.d-text h3{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:.2rem}
+.d-meaning{font-size:1.12rem;line-height:1.55}
+.d-other summary{cursor:pointer;font-family:var(--display);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.d-other[open] summary{color:var(--ivory)}
+.d-other>div,.d-other>p{margin-top:.5rem;color:var(--muted)}
+.d-corr{display:grid;grid-template-columns:auto 1fr;gap:.3rem .9rem;margin:.3rem 0 0;border-top:1px solid var(--line-soft);padding-top:.7rem}
+.d-corr dt{font-family:var(--display);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-top:.25rem}
+.d-corr dd{margin:0;font-size:1rem}
+.d-actions{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
+
+/* deck view */
+.deck-tools{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:1rem}
+.deck-tools .seg{max-width:560px;flex:1}
+.deck-tools input{max-width:260px}
+.deck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}
+.deck-card{background:none;border:0;padding:0;display:flex;flex-direction:column;gap:.35rem;text-align:center;color:var(--ivory)}
+.deck-art{border-radius:6%;box-shadow:0 8px 24px rgba(0,0,0,.5);transition:transform .25s}
+.deck-card:hover .deck-art{transform:translateY(-4px)}
+.deck-art svg{display:block;width:100%;height:auto}
+.deck-name{font-family:var(--display);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
+.deck-kw{font-style:italic;color:var(--muted);font-size:.9rem;line-height:1.2}
+.view-head{display:flex;flex-direction:column;gap:.3rem;margin-bottom:1rem}
+.view-head h2{font-size:1.2rem}
+.view-head p{color:var(--muted);font-style:italic;max-width:62ch}
+
+/* journal */
+.journal{display:flex;flex-direction:column;gap:1rem}
+.entry{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.7rem}
+.entry-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+.entry-head h3{font-family:var(--body);font-weight:600;font-size:1.15rem;letter-spacing:0;font-style:italic}
+.entry-actions{display:flex;gap:.4rem}
+.entry-cards{display:flex;flex-wrap:wrap;gap:.4rem}
+.thumb{width:54px;border-radius:5px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.thumb.rev svg{transform:rotate(180deg)}
+.thumb svg{display:block;width:100%;height:auto}
+.entry-notes{color:var(--muted);white-space:pre-wrap}
+
+.toast{position:fixed;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;left:50%;bottom:1.5rem;transform:translate(-50%,20px);background:var(--gold);color:var(--ground);font-family:var(--display);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.6rem 1.1rem;border-radius:999px;opacity:0;transition:opacity .3s,transform .3s;z-index:30;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+footer{position:relative;z-index:1;text-align:center;color:var(--dim);font-style:italic;font-size:.9rem;padding:0 1rem 2rem}
+
+@media (max-width:999px){
+  #view-reading.on{grid-template-columns:1fr}
+  .setup{position:static}
+  #setup-toggle{display:inline-block}
+  .setup.collapsed>*:not(.setup-head){display:none}
+  .rrow{grid-template-columns:2rem 1fr 1.2fr 5rem;}
+  .row-kw{display:none}
+  .spread-area{max-width:640px}
+}
+@media (max-width:600px){
+  main{padding:1rem .8rem 3rem}
+  .masthead{padding:.8rem 1rem}
+  .brand h1{font-size:1.05rem}
+  .spreads{grid-template-columns:1fr 1fr}
+  .slot-label{font-size:.48rem}
+  .rrow{grid-template-columns:1.6rem 1fr 1fr;}
+  .row-or{display:none}
+  .sky-lead{min-width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .slot,.flip,.drawer,.scrim,.slot .card,.deck-art{transition:none!important}
+  .deck-stack.shuffling .stack-card,.slot.faceup .card::after{animation:none!important}
+}
+
+input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appearance:none}
+
+</style>
+</head>
+<body>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<header class="masthead">
+  <div class="brand">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3v4M14 7h12l-2 4H16z" stroke="#d9b664" stroke-width="1.6" fill="none"/><path d="M13 11h14l3 18H10z" fill="#1c1533" stroke="#d9b664" stroke-width="1.6"/><circle cx="20" cy="21" r="8" fill="url(#lantern-glow)"/><polygon points="20,15 21.8,19 26,19 22.6,21.6 23.8,26 20,23.4 16.2,26 17.4,21.6 14,19 18.2,19" fill="#f1dc9c"/><path d="M11 29h18v3H11zM16 32v5h8v-5" stroke="#d9b664" stroke-width="1.6" fill="#1c1533"/><defs><radialGradient id="lantern-glow"><stop offset="0" stop-color="#f1dc9c" stop-opacity=".9"/><stop offset="1" stop-color="#f1dc9c" stop-opacity="0"/></radialGradient></defs></svg>
+    <h1>Lantern <b>Tarot</b></h1>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button type="button" data-view="reading" class="on" role="tab" aria-selected="true">Reading</button>
+    <button type="button" data-view="deck" role="tab" aria-selected="false">The Deck</button>
+    <button type="button" data-view="journal" role="tab" aria-selected="false">Journal</button>
+  </nav>
+</header>
+<main>
+  <section id="view-reading" class="view on">
+    <aside class="setup" id="setup" aria-label="Prepare the reading">
+      <div class="setup-head"><h2 class="eyebrow">Prepare the table</h2><button type="button" id="setup-toggle" aria-controls="setup">Show or hide</button></div>
+      <div class="field"><span class="lbl">Spread</span><div class="spreads" id="spreads" role="radiogroup" aria-label="Spread"></div><p class="hint" id="spread-blurb"></p></div>
+      <div class="field"><label for="question">Your question</label><textarea id="question" rows="2" placeholder="What do I need to understand about..."></textarea></div>
+      <div class="row">
+        <div class="field"><label for="date">Date</label><input type="date" id="date"></div>
+        <div class="field"><label for="time">Time</label><input type="time" id="time"></div>
+      </div>
+      <div class="field"><label for="place">Place</label>
+        <div class="inline"><input type="text" id="place" list="cities" placeholder="Cape Town" autocomplete="off"><button type="button" id="locate" class="ghost" title="Use my location" aria-label="Use my location">◎</button></div>
+        <datalist id="cities"></datalist>
+        <p class="hint" id="geo-hint">Type a city or use your location for sunrise, sunset and the planetary hour.</p>
+        <details class="coords"><summary>Enter coordinates by hand</summary><div class="row"><div class="field"><label for="lat">Latitude</label><input type="number" id="lat" step="0.0001" min="-90" max="90" placeholder="-33.92"></div><div class="field"><label for="lon">Longitude</label><input type="number" id="lon" step="0.0001" min="-180" max="180" placeholder="18.42"></div></div></details>
+      </div>
+      <div class="field"><span class="lbl">Reversals</span>
+        <div class="seg" id="reversals" role="radiogroup" aria-label="How often cards may fall reversed">
+          <button type="button" data-v="0" role="radio" aria-checked="false">None</button>
+          <button type="button" data-v="0.25" class="on" role="radio" aria-checked="true">Some</button>
+          <button type="button" data-v="0.5" role="radio" aria-checked="false">Half</button>
+        </div>
+        <p class="hint">Some lets about one card in four fall reversed. Half is an even chance for every card.</p>
+      </div>
+      <button type="button" id="deal" class="primary">Shuffle and deal</button>
+    </aside>
+    <section class="table-wrap" aria-label="The reading table">
+      <div class="sky-strip" id="skystrip"></div>
+      <div class="cloth" id="cloth">
+        <div class="deck-stack" id="deckstack" hidden aria-hidden="true"></div>
+        <div class="spread-area" id="spreadarea"><svg class="links-overlay" id="linksvg" aria-hidden="true"></svg></div>
+        <p class="table-hint" id="table-hint">Choose a spread, hold your question, then shuffle and deal.</p>
+      </div>
+      <div class="toolbar" id="toolbar" hidden>
+        <button type="button" id="turnall" class="ghost">Turn the cards</button>
+        <button type="button" id="linkmode" class="ghost" aria-pressed="false">Find links</button>
+        <span class="spacer"></span>
+        <button type="button" id="save" class="ghost">Save to journal</button>
+        <button type="button" id="copy" class="ghost">Copy as text</button>
+        <button type="button" id="newreading" class="ghost">New reading</button>
+      </div>
+      <div class="reading-list" id="readinglist" aria-label="Cards in this reading"></div>
+      <section class="links-panel" id="linkspanel" aria-live="polite"></section>
+      <div class="notes" id="notes-wrap" hidden><label class="eyebrow" for="notes">Your interpretation</label><textarea id="notes" placeholder="What the cards are saying to you. Saved with the reading."></textarea></div>
+    </section>
+  </section>
+  <section id="view-deck" class="view">
+    <div class="view-head"><h2>The Deck</h2><p>All seventy eight cards in the Rider Waite Smith tradition. Open any card for its upright and reversed meanings and correspondences.</p></div>
+    <div class="deck-tools">
+      <div class="seg" id="deckfilters"><button type="button" data-f="all" class="on">All</button><button type="button" data-f="major">Major</button><button type="button" data-f="wands">Wands</button><button type="button" data-f="cups">Cups</button><button type="button" data-f="swords">Swords</button><button type="button" data-f="pentacles">Pentacles</button></div>
+      <input type="search" id="decksearch" placeholder="Search a card or keyword" aria-label="Search the deck">
+    </div>
+    <div class="deck-grid" id="deckgrid"></div>
+  </section>
+  <section id="view-journal" class="view">
+    <div class="view-head"><h2>Journal</h2><p>Readings you have saved, with their cards and your notes. Open one to lay it on the table again.</p></div>
+    <div class="journal" id="journal"></div>
+  </section>
+</main>
+<footer>Card meanings follow the Rider Waite Smith tradition. Reversals, elemental dignities and pairings are one reader’s approach: trust your own.</footer>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Card meaning">
+  <div class="drawer-top"><span class="eyebrow">Card meaning</span><button type="button" id="drawer-close" aria-label="Close">×</button></div>
+  <div id="drawer-body"></div>
+</aside>
+<div class="scrim" id="scrim"></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+/* ---------- Major Arcana ---------- */
+const MAJORS = [
+[0,'The Fool','air','Uranus',
+ ['beginnings','innocence','a leap of faith','spontaneity'],
+ ['recklessness','hesitation','naivety','holding back'],
+ 'A step off the edge with nothing but a small bundle and a white rose. The Fool is the moment before the story starts: open, unguarded, trusting that the ground will be there. Something new is asking to be begun without a full plan.',
+ 'The leap is being taken carelessly, or not at all. Either fear has frozen you at the cliff, or you are ignoring an obvious warning. Ask which it is before you move.'],
+[1,'The Magician','air','Mercury',
+ ['skill','will','manifestation','resourcefulness'],
+ ['manipulation','untapped talent','trickery','scattered energy'],
+ 'All four suits lie on the table and the Magician points one hand to heaven and one to earth. You have every tool you need. This is a card of channelling intention into action with focus and craft.',
+ 'Talent is present but misused or unused. Watch for sleight of hand, your own or someone else’s, and for energy spread across too many tricks.'],
+[2,'The High Priestess','water','The Moon',
+ ['intuition','mystery','the inner voice','stillness'],
+ ['secrets withheld','ignoring intuition','surface knowledge','disconnection'],
+ 'She sits between the black and white pillars with the scroll half hidden. Not everything is meant to be known yet. Listen to what you already sense and let the answer surface in its own time.',
+ 'The inner voice is being drowned out, or something is being kept from you. Return to quiet before you decide anything.'],
+[3,'The Empress','earth','Venus',
+ ['abundance','nurture','creativity','fertility'],
+ ['creative block','smothering','dependence','neglect of self'],
+ 'Wheat, water, a crown of stars and a cushioned throne. The Empress is growth that comes from tending: projects, relationships, the body, the home. Receive and give generously.',
+ 'Care has become either too much or too little. Look at where you are over giving, or where you have stopped nourishing what you love.'],
+[4,'The Emperor','fire','Aries',
+ ['structure','authority','stability','leadership'],
+ ['rigidity','domination','loss of control','stubbornness'],
+ 'A stone throne, ram heads, a landscape of mountains. The Emperor builds order and holds the line. Discipline, boundaries and a clear plan will serve you now.',
+ 'Structure has turned into control, or authority is being challenged. Rules without warmth are failing. Soften without collapsing.'],
+[5,'The Hierophant','earth','Taurus',
+ ['tradition','teaching','institutions','shared belief'],
+ ['dogma','rebellion','questioning convention','personal path'],
+ 'Two keys crossed at the feet of the teacher. The Hierophant is wisdom handed down: mentors, ceremonies, established ways of doing things. There is value in learning the form before breaking it.',
+ 'Convention no longer fits. You may be outgrowing a teacher, a faith or an institution, and need a belief system that is genuinely yours.'],
+[6,'The Lovers','air','Gemini',
+ ['union','choice','alignment','values'],
+ ['disharmony','imbalance','misaligned values','temptation'],
+ 'Beneath the angel, two figures stand in a garden. The Lovers is partnership, but also the choice that partnership demands. What you commit to now should reflect what you truly value.',
+ 'Something is out of alignment: between two people, or between your actions and your values. A choice made for the wrong reasons is coming to light.'],
+[7,'The Chariot','water','Cancer',
+ ['determination','victory','willpower','momentum'],
+ ['lack of direction','aggression','being pulled apart','stalling'],
+ 'Two sphinxes pull in opposite directions and the charioteer holds them by will alone. Success comes through focus and controlled drive. Take the reins.',
+ 'Forces are pulling you apart and the vehicle is veering. Either the direction is unclear or you are forcing it. Re-centre before pushing on.'],
+[8,'Strength','fire','Leo',
+ ['courage','gentle power','patience','compassion'],
+ ['self doubt','raw force','weakness','inner turmoil'],
+ 'A woman closes the lion’s mouth with a soft hand, the lemniscate above her head. Real strength is quiet: patience, compassion and the taming of your own instincts.',
+ 'Confidence has slipped, or you are using force where gentleness was needed. The lion within is restless. Tend it rather than fight it.'],
+[9,'The Hermit','earth','Virgo',
+ ['solitude','searching','inner guidance','wisdom'],
+ ['isolation','loneliness','withdrawal','refusing counsel'],
+ 'On the mountain the Hermit lifts a lantern with a six pointed star inside. Step back from the noise. The answer you need comes from reflection, not from others.',
+ 'Retreat has become isolation, or you are refusing the help that is offered. Come down from the mountain, at least for a while.'],
+[10,'Wheel of Fortune','fire','Jupiter',
+ ['cycles','turning points','luck','destiny'],
+ ['bad luck','resistance to change','a cycle repeating','setbacks'],
+ 'The wheel turns and everyone on it rises and falls. A change of fortune is here, largely outside your control. Ride the turn and notice the pattern it belongs to.',
+ 'The wheel has caught: a downturn, or a cycle you keep repeating. What you resist keeps returning. Look for the lesson in the loop.'],
+[11,'Justice','air','Libra',
+ ['fairness','truth','cause and effect','accountability'],
+ ['unfairness','dishonesty','avoiding accountability','bias'],
+ 'Sword in one hand, scales in the other. Justice weighs what has been done and returns its consequence. Decisions made now should be clear eyed and honest.',
+ 'Something is unjust, or you are avoiding responsibility for your part. Truth bent for convenience will not hold.'],
+[12,'The Hanged Man','water','Neptune',
+ ['surrender','a new perspective','pause','letting go'],
+ ['stalling','resistance','needless sacrifice','indecision'],
+ 'Suspended by one foot, halo shining, face calm. The Hanged Man chooses to hang. Stop struggling, see the situation upside down, and let something go.',
+ 'The pause has become stuckness. You are sacrificing without purpose or refusing to release what has already ended.'],
+[13,'Death','water','Scorpio',
+ ['endings','transformation','transition','release'],
+ ['resisting change','stagnation','fear of endings','decay'],
+ 'The black flag carries a white rose and the sun rises between two towers. Death is rarely literal. Something is finishing so that something else can begin. Let it.',
+ 'An ending is being resisted and the delay is costing you. What is dying needs to be allowed to die.'],
+[14,'Temperance','fire','Sagittarius',
+ ['balance','moderation','patience','alchemy'],
+ ['excess','imbalance','impatience','discord'],
+ 'Water flows between two cups in a stream that should not be possible. Temperance blends opposites into something new. Move with patience and the middle path.',
+ 'Extremes are pulling the mix apart: too much, too fast, too little. Restore proportion.'],
+[15,'The Devil','earth','Capricorn',
+ ['bondage','materialism','shadow','addiction'],
+ ['release','reclaiming power','facing the shadow','breaking free'],
+ 'The chains around the two figures are loose enough to slip. The Devil shows what holds you: habits, fears, contracts, appetites. Naming it is the beginning of freedom.',
+ 'A chain is loosening. You are seeing the trap clearly and beginning to step out of it. Keep going.'],
+[16,'The Tower','fire','Mars',
+ ['sudden upheaval','revelation','collapse','awakening'],
+ ['disaster averted','fear of change','lingering crisis','slow collapse'],
+ 'Lightning strikes the crown from the tower. What was built on a false foundation comes down fast. It is frightening, and it is also a clearing.',
+ 'The collapse is either being narrowly avoided or dragged out. Something still needs to fall. Do not prop it up.'],
+[17,'The Star','air','Aquarius',
+ ['hope','renewal','inspiration','healing'],
+ ['despair','faith lost','disconnection','discouragement'],
+ 'Under a great star, a figure pours water on land and pool. After the Tower comes the Star: calm, faith, and the quiet sense that things will be well.',
+ 'Hope has dimmed and you feel cut off from what inspires you. The star is still there behind the cloud.'],
+[18,'The Moon','water','Pisces',
+ ['illusion','intuition','the unconscious','uncertainty'],
+ ['clarity returning','fear released','confusion','deception revealed'],
+ 'A path runs between two towers into the dark while a dog and a wolf howl. Nothing is quite what it seems. Trust your instincts, but do not act on every shadow.',
+ 'The fog is lifting and fears are shrinking to their true size. Confusion is giving way to understanding.'],
+[19,'The Sun','fire','The Sun',
+ ['joy','vitality','success','clarity'],
+ ['temporary gloom','over optimism','ego','delayed joy'],
+ 'A child rides bareback beneath a sun with a human face. The Sun is warmth, success and plain delight. Whatever you asked, this is the most encouraging answer in the deck.',
+ 'The sun is behind a passing cloud: joy dampened, or confidence tipping into vanity. The light returns soon.'],
+[20,'Judgement','fire','Pluto',
+ ['awakening','reckoning','a calling','renewal'],
+ ['self doubt','refusing the call','harsh judgement','stagnation'],
+ 'The trumpet sounds and the figures rise from their coffins. Judgement is a summons to a bigger life and an honest reckoning with the old one. Answer it.',
+ 'The call is being ignored, or you are judging yourself without mercy. Forgive, then rise.'],
+[21,'The World','earth','Saturn',
+ ['completion','wholeness','achievement','integration'],
+ ['incompletion','loose ends','delay','seeking closure'],
+ 'Within the wreath a dancer holds two wands, the four fixed signs at the corners. A cycle completes and everything comes together. Celebrate, then begin again.',
+ 'Something is almost finished but not quite. A loose end is preventing closure. Find it.'],
+];
+
+/* ---------- Minor Arcana ---------- */
+const SUITS = {
+  wands:     {name:'Wands',     element:'fire',  domain:'passion, will, work and creative drive', color:'#e2803f',
+              astro:['Root of Fire','Mars in Aries','Sun in Aries','Venus in Aries','Saturn in Leo','Jupiter in Leo','Mars in Leo','Mercury in Sagittarius','Moon in Sagittarius','Saturn in Sagittarius','Earth of Fire','Fire of Fire','Water of Fire','Air of Fire']},
+  cups:      {name:'Cups',      element:'water', domain:'feeling, love, intuition and relationship', color:'#5f9fd6',
+              astro:['Root of Water','Venus in Cancer','Mercury in Cancer','Moon in Cancer','Mars in Scorpio','Sun in Scorpio','Venus in Scorpio','Saturn in Pisces','Jupiter in Pisces','Mars in Pisces','Earth of Water','Fire of Water','Water of Water','Air of Water']},
+  swords:    {name:'Swords',    element:'air',   domain:'thought, truth, conflict and communication', color:'#c3cfdd',
+              astro:['Root of Air','Moon in Libra','Saturn in Libra','Jupiter in Libra','Venus in Aquarius','Mercury in Aquarius','Moon in Aquarius','Jupiter in Gemini','Mars in Gemini','Sun in Gemini','Earth of Air','Fire of Air','Water of Air','Air of Air']},
+  pentacles: {name:'Pentacles', element:'earth', domain:'money, body, home and material work', color:'#86ad6c',
+              astro:['Root of Earth','Jupiter in Capricorn','Mars in Capricorn','Sun in Capricorn','Mercury in Taurus','Moon in Taurus','Saturn in Taurus','Sun in Virgo','Venus in Virgo','Mercury in Virgo','Earth of Earth','Fire of Earth','Water of Earth','Air of Earth']},
+};
+const RANKS = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Page','Knight','Queen','King'];
+const NUMERALS = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+
+/* Each suit: 14 entries of [keywordsUpright, keywordsReversed, upright, reversed] from Ace to King. */
+const MINORS = {
+wands: [
+ [['inspiration','a spark','new venture','potential'],['false start','delay','lack of drive','creative block'],
+  'A hand emerges from a cloud gripping a living branch. The Ace of Wands is pure creative fire: an idea, an urge, a beginning that wants to be acted on immediately.',
+  'The spark is there but will not catch. Plans are delayed or the enthusiasm has drained. Check whether the idea is truly yours.'],
+ [['planning','decision','the wider world','first steps'],['fear of the unknown','poor planning','staying small','indecision'],
+  'A figure holds a globe and looks out over the sea from castle walls. The first step is done and the horizon is calling. Plan the next move boldly.',
+  'You are hesitating at the wall, holding the globe without leaving. Fear of the wider world or a lack of planning keeps you in place.'],
+ [['expansion','foresight','progress','ships coming in'],['obstacles','delays','lack of foresight','frustration'],
+  'The merchant watches ships he has sent out. What you set in motion is beginning to move. Look further ahead and prepare to expand.',
+  'The ships are late or off course. Progress is blocked by things you did not foresee. Reassess the plan and be patient.'],
+ [['celebration','home','harmony','a milestone'],['instability at home','transition','cancelled plans','lack of support'],
+  'Garlands hang between four wands and people dance before a castle. Something has been achieved and it is time to celebrate it with the people who matter.',
+  'The celebration is postponed or the foundation feels shaky. Home or community lacks its usual harmony. Tend the basics.'],
+ [['competition','conflict','creative friction','testing'],['avoiding conflict','tension released','inner conflict','agreement'],
+  'Five youths clash with staves in play or rivalry. Energy is high and unfocused. Differences are being tested, and that can sharpen everyone if it stays fair.',
+  'The scuffle is ending, or conflict is being avoided altogether. Either way the friction has moved inward. Find a constructive outlet.'],
+ [['victory','recognition','public success','confidence'],['fall from grace','ego','private success','lack of recognition'],
+  'A rider with a laurel wreath moves through a cheering crowd. Success is here and is being seen. Accept the recognition gracefully.',
+  'The wreath slips. Recognition does not come, or it comes at the cost of others. Success without humility rings hollow.'],
+ [['defence','perseverance','standing your ground','challenge'],['giving up','overwhelm','yielding','exhaustion'],
+  'One figure holds the high ground against six staves below. You are being challenged and you have the advantage. Hold your position with courage.',
+  'The ground is being lost. Too many demands, not enough strength. Decide what is actually worth defending.'],
+ [['swift movement','news','momentum','travel'],['delays','frustration','scattered energy','waiting'],
+  'Eight wands fly through clear air. Things are moving fast now: messages, travel, decisions landing. Act while the momentum is with you.',
+  'The wands are stuck in mid air. Delays, missed messages and frustration. Use the pause to aim properly.'],
+ [['resilience','last stand','boundaries','vigilance'],['paranoia','fatigue','defensiveness','giving in'],
+  'A bandaged figure guards eight wands with a ninth in hand. You are tired but nearly through. Keep your boundaries and finish what you started.',
+  'Vigilance has become paranoia and tiredness has become collapse. You may be defending against something that is no longer there.'],
+ [['burden','responsibility','overload','completion at a cost'],['release','delegation','collapse','letting go of duty'],
+  'A figure carries ten wands toward a town, bent under the weight. You have taken on too much. It can be finished, but ask what you can put down.',
+  'The burden is being set down, by choice or by collapse. Delegate, release, and stop carrying what was never yours.'],
+ [['enthusiasm','exploration','a message','free spirit'],['bad news','immaturity','lack of direction','hesitance'],
+  'The Page holds his wand and studies its budding tip. A new passion or message is arriving. Approach it with curiosity and let yourself be a beginner.',
+  'Energy without focus. A message disappoints or a plan proves half formed. Grow the idea before you announce it.'],
+ [['action','adventure','impulsiveness','passion'],['recklessness','haste','frustration','scattered action'],
+  'The Knight’s horse rears and his cloak flames behind him. Charge. This is the card of bold, passionate movement toward what you want.',
+  'The charge is reckless or badly aimed. Impulses are burning through resources. Slow the horse before you lose the way.'],
+ [['confidence','warmth','independence','charisma'],['jealousy','demanding','insecurity','burnout'],
+  'The Queen sits with a sunflower and a black cat at her feet. Be vividly yourself: warm, magnetic and self assured. Others are drawn to your light.',
+  'Confidence has curdled into jealousy or the flame has burned low. Reconnect with what makes you feel alive rather than what makes you admired.'],
+ [['vision','leadership','boldness','entrepreneurship'],['tyranny','impulsiveness','high expectations','ruthlessness'],
+  'The King leans forward on his throne, salamanders at his feet. Lead with vision and take the long view. Others will follow a clear direction.',
+  'Leadership has become domination or the vision has outrun the plan. Listen before you command.'],
+],
+cups: [
+ [['new love','compassion','emotional opening','creativity'],['emotional block','emptiness','repressed feeling','self love needed'],
+  'A hand offers a cup overflowing with five streams while a dove descends. The heart opens. New love, new feeling or a creative wellspring is being offered to you.',
+  'The cup is being held back or is running dry. Feelings are blocked or unexpressed. Begin with compassion for yourself.'],
+ [['partnership','mutual attraction','connection','balance'],['imbalance','a broken bond','miscommunication','self reliance'],
+  'Two figures exchange cups beneath the caduceus and a lion’s head. This is the card of the true pair: partners, friends, allies who meet as equals.',
+  'The exchange has become uneven. Something between two people is out of balance or unspoken. Tend the bond or accept its change.'],
+ [['friendship','celebration','community','creative joy'],['gossip','overindulgence','isolation','a third party'],
+  'Three women raise their cups in a dance. Joy shared is joy multiplied. Celebrate with your people and let community carry you.',
+  'The party has gone sour: gossip, excess, or being left out. Consider whether a third presence is crowding a relationship.'],
+ [['apathy','contemplation','missed offers','boredom'],['renewed interest','acceptance','moving on','awareness'],
+  'A figure sits beneath a tree ignoring the cup being offered from a cloud. You are so focused on what is missing that you cannot see what is being held out to you.',
+  'The eyes open. Apathy lifts and the offered cup is noticed. You are ready to re engage.'],
+ [['loss','grief','regret','disappointment'],['acceptance','moving on','forgiveness','finding what remains'],
+  'A cloaked figure mourns three spilled cups while two still stand behind. Something has been lost and the grief is real. When you are ready, turn around.',
+  'You are turning toward the two cups still standing. Grief is becoming acceptance and the way forward appears.'],
+ [['nostalgia','childhood','innocence','kindness'],['living in the past','naivety','unrealistic memory','moving forward'],
+  'A child hands another a cup filled with flowers. Sweetness from the past returns: old friends, memories, simple generosity. Receive it gladly.',
+  'Memory has become a hiding place. Either the past is idealised or it is time to leave it behind and grow.'],
+ [['choices','illusion','fantasy','wishful thinking'],['clarity','decision','disillusionment','focus'],
+  'Seven cups float in a cloud holding a castle, a wreath, jewels, a serpent, a dragon, a shrouded figure. Too many options and not all of them are real. Choose with your eyes open.',
+  'The cloud parts and one cup becomes obvious. Illusions fall away and a clear decision becomes possible.'],
+ [['walking away','seeking deeper meaning','withdrawal','transition'],['fear of change','aimless drifting','returning','avoidance'],
+  'A figure leaves eight stacked cups behind under a waning moon. What you built is fine, and it is no longer enough. It is time to go looking for more.',
+  'You keep leaving and returning, or you cannot bring yourself to leave at all. Avoidance is not the same as peace.'],
+ [['contentment','wishes granted','satisfaction','gratitude'],['smugness','dissatisfaction','greed','superficial happiness'],
+  'A satisfied host sits before nine cups on a curved shelf. This is the wish card. What you hoped for is arriving. Enjoy it and share it.',
+  'The wish came true and did not satisfy, or contentment has become complacency. Ask what you truly wanted.'],
+ [['harmony','family','emotional fulfilment','home'],['broken home','disconnection','discord','unrealistic ideals'],
+  'A rainbow of ten cups arches over a family and their home. Lasting emotional happiness, love that is settled and shared. One of the deck’s kindest cards.',
+  'The rainbow has faded. Family or home life is strained, or an ideal of happiness is being chased instead of lived.'],
+ [['a creative message','intuition','playfulness','curiosity'],['emotional immaturity','creative block','escapism','bad news'],
+  'A fish pops out of the Page’s cup and surprises him. A message from the heart, an intuitive flash or a creative invitation. Stay playful.',
+  'Feelings are being handled childishly or avoided through fantasy. A creative project stalls. Grow up the emotion gently.'],
+ [['romance','charm','an offer','following the heart'],['moodiness','unrealistic','disappointment','jealousy'],
+  'The Knight rides slowly with his cup held out like an offering. Romance, an invitation or a proposal is arriving. Let yourself be moved.',
+  'The charming offer is not what it seemed. Moodiness, fantasy or manipulation in the name of love.'],
+ [['compassion','emotional depth','intuition','nurturing'],['emotional insecurity','co dependence','martyrdom','overwhelm'],
+  'The Queen holds an ornate closed cup at the edge of the sea. Deep feeling held with wisdom. Care for others without losing yourself.',
+  'Feeling has become flood. Boundaries dissolve, care becomes need. Refill your own cup first.'],
+ [['emotional balance','diplomacy','wise counsel','generosity'],['manipulation','moodiness','coldness','emotional volatility'],
+  'The King sits calm on a throne in the sea, a fish leaping behind him. Mastery of the emotional realm: kind, balanced, wise. Lead with compassion.',
+  'The calm surface hides turbulence. Emotions are being managed for effect or are running out of control.'],
+],
+swords: [
+ [['clarity','breakthrough','truth','a new idea'],['confusion','misinformation','a clouded mind','brutal truth'],
+  'A crowned sword rises from a cloud with a wreath at its point. Mental clarity cuts through. The truth is available and a decisive idea arrives.',
+  'The blade is dull or misaimed. Confusion, half truths, or a truth delivered so harshly that it harms.'],
+ [['stalemate','difficult choice','denial','a truce'],['indecision ending','information revealed','confusion','overload'],
+  'A blindfolded figure balances two swords across her chest by the sea. A decision is being avoided. The blindfold is chosen. Remove it when you are ready.',
+  'The blindfold slips and the choice can no longer be delayed. New information arrives to break the stalemate.'],
+ [['heartbreak','grief','painful truth','separation'],['recovery','releasing pain','forgiveness','optimism'],
+  'Three swords pierce a red heart under rain. The pain is real and clean: a truth, a loss, a separation. Let it be felt.',
+  'The swords are being drawn out. Healing begins, forgiveness becomes possible, the rain is passing.'],
+ [['rest','recovery','contemplation','retreat'],['restlessness','burnout','forced rest','re entry'],
+  'A knight lies in effigy in a chapel, three swords on the wall and one beneath him. Rest is required, not optional. Withdraw and recover before the next battle.',
+  'Rest has been refused too long, or the rest is ending and it is time to rise. Either way, listen to the body.'],
+ [['conflict','hollow victory','defeat','self interest'],['reconciliation','making amends','releasing resentment','moving on'],
+  'A smirking figure collects swords while two others walk away in defeat. Someone has won at the cost of everyone else. Ask whether the win was worth it.',
+  'The fight is being laid down. Amends, reconciliation, or simply the decision to stop competing.'],
+ [['transition','moving on','a passage','calmer waters'],['stuck','baggage','resisting change','rough crossing'],
+  'A ferryman rows a woman and child across still water, six swords in the boat. You are leaving something difficult behind. The crossing is quiet and necessary.',
+  'The boat will not leave the shore, or the baggage is sinking it. Unfinished business is dragging the journey.'],
+ [['stealth','strategy','deception','getting away with it'],['confession','conscience','getting caught','coming clean'],
+  'A figure tiptoes away from a camp carrying five swords and leaving two. Something is being done quietly, strategically, or dishonestly. Check who is being outwitted.',
+  'The secret is out or the conscience will not settle. Time to come clean or to confront what has been hidden from you.'],
+ [['restriction','feeling trapped','self imposed limits','powerlessness'],['release','new perspective','freedom','self acceptance'],
+  'Bound and blindfolded, a figure stands among eight swords. The bindings are loose and the swords do not touch her. The trap is mostly in the mind.',
+  'The blindfold comes off and the way out becomes obvious. You are freeing yourself from limits you accepted.'],
+ [['anxiety','nightmares','worry','guilt'],['hope','releasing fear','recovery','facing fears'],
+  'A figure sits up in bed with her head in her hands, nine swords on the wall. Worry has taken over the night. Most of what you fear will not happen.',
+  'The night is ending. Fears are being faced and their power shrinks. Reach out to someone.'],
+ [['painful ending','rock bottom','betrayal','finality'],['recovery','survival','the worst is over','resisting the end'],
+  'Ten swords pin a figure to the ground beneath a dawning sky. The ending is total and there is nothing left to lose. Notice the dawn.',
+  'The lowest point is behind you. Recovery is beginning, though you may be resisting the ending itself.'],
+ [['curiosity','new ideas','vigilance','a message'],['gossip','hasty words','scattered thinking','defensiveness'],
+  'The Page stands on windswept ground with a sword raised, ready. New ideas, sharp questions and a restless mind. Keep watch and keep learning.',
+  'The wit turns to gossip or careless speech. Thoughts are scattered and the tongue is too quick.'],
+ [['ambition','direct action','intellect','a charge'],['recklessness','aggression','impulsive speech','burnout'],
+  'The Knight charges into the wind with his blade forward. Move fast and think clearly. Nothing will stop a mind this focused.',
+  'The charge has become an attack. Words cut carelessly and the drive is exhausting everyone. Slow down.'],
+ [['independence','clear judgement','honesty','boundaries'],['coldness','bitterness','harsh criticism','isolation'],
+  'The Queen sits upright with sword raised and one hand open. Clarity earned through experience. Speak truth with precision and keep your boundaries.',
+  'Clarity has hardened into coldness or bitterness. The truth is being used as a weapon.'],
+ [['authority','intellect','truth','ethical clarity'],['manipulation','tyranny','misuse of power','cruel logic'],
+  'The King sits stern with sword upright, butterflies on his throne. Mastery of mind and law. Decide with reason and integrity.',
+  'Intellect without conscience. Rules bent to serve power, or a cold refusal to feel.'],
+],
+pentacles: [
+ [['opportunity','prosperity','a seed','manifestation'],['missed opportunity','poor planning','scarcity','greed'],
+  'A hand offers a golden coin above a garden with a gate to the mountains. A tangible opportunity: money, work, a solid new beginning. Plant it.',
+  'The opportunity is slipping or was never sound. Check the foundations before you invest more.'],
+ [['balance','adaptability','juggling priorities','flexibility'],['overwhelm','disorganisation','imbalance','dropping the ball'],
+  'A figure juggles two coins inside a lemniscate while ships ride waves behind. Life is asking you to keep several things in the air. You can, if you keep moving.',
+  'Too many things are in the air and one is about to drop. Simplify and prioritise.'],
+ [['collaboration','craftsmanship','learning','recognition of skill'],['lack of teamwork','shoddy work','disharmony','ego'],
+  'A mason works in a cathedral while a monk and architect consult his plans. Skill meets teamwork. Your work is valued and improves through collaboration.',
+  'The team is not working together, or the craft is being rushed. Quality suffers when egos compete.'],
+ [['security','control','saving','holding on'],['generosity','letting go','financial insecurity','release'],
+  'A figure clutches a coin to his chest with one under each foot and one on his head. Security has been won and is being guarded tightly. Ask what the grip is costing.',
+  'The grip loosens, by choice or by loss. Generosity returns, or a fear of scarcity must be faced.'],
+ [['hardship','loss','exclusion','feeling forsaken'],['recovery','help arriving','renewed faith','end of hardship'],
+  'Two figures pass a lit church window in the snow. Material or emotional hardship, and the sense of being outside. The door is closer than it looks.',
+  'The worst of the hardship is passing. Help is accepted and things improve slowly but truly.'],
+ [['generosity','charity','sharing','fair exchange'],['strings attached','debt','inequality','one sided giving'],
+  'A merchant weighs coins and gives to two beggars. Resources flow where they are needed. Give or receive with grace and keep the exchange fair.',
+  'The gift has conditions. Charity is being used for control, or debts are creating an imbalance of power.'],
+ [['patience','assessment','long term view','investment'],['impatience','poor returns','lack of reward','frustration'],
+  'A farmer leans on his hoe looking at a vine heavy with coins. The work is done and the harvest is not yet ripe. Assess, wait, and let things grow.',
+  'The effort is not paying off or patience has run out. Reconsider where you are investing your energy.'],
+ [['diligence','skill building','apprenticeship','mastery in progress'],['perfectionism','tedium','cutting corners','lack of focus'],
+  'A craftsman carves pentacles one after another. Repetition is becoming mastery. Keep at the work with care and attention to detail.',
+  'The work has become drudgery or the details are obsessing you. Either recommit or step back.'],
+ [['self sufficiency','luxury','earned reward','independence'],['over reliance on others','hustle without rest','superficial success','loss'],
+  'A woman stands in a vineyard with a falcon on her wrist. Independence and abundance earned by your own hand. Enjoy what you have built.',
+  'Comfort depends on someone else, or the working has never stopped long enough to enjoy the garden.'],
+ [['legacy','family wealth','long term security','tradition'],['financial loss','family conflict','instability','fleeting success'],
+  'An elder sits with dogs beneath an archway while a family passes, ten coins arranged in the tree of life. Lasting wealth, inheritance, the long line of family and home.',
+  'The foundations are shaking: money trouble, family dispute, or a legacy that is not what it seemed.'],
+ [['study','ambition','a practical message','new skill'],['lack of progress','procrastination','unrealistic goals','distraction'],
+  'The Page gazes at the coin held up in both hands. A student’s devotion to something tangible: a course, a job, a goal you can measure. Begin.',
+  'Plans stay on paper. Procrastination or distraction is delaying the practical work.'],
+ [['reliability','routine','hard work','steady progress'],['stagnation','boredom','stubbornness','feeling stuck'],
+  'The Knight sits still on a black horse holding his coin, a ploughed field behind. Slow, careful, dependable progress. Not glamorous, always effective.',
+  'Steadiness has become stuckness. Routine has turned into rut and nothing feels like it is moving.'],
+ [['nurturing','practicality','abundance','a warm home'],['self care neglected','work life imbalance','smothering','financial dependence'],
+  'The Queen sits in a garden with a rabbit at her feet, holding her coin gently. Practical care that makes people flourish. Tend the home, the body, the budget.',
+  'The nurturer is depleted. Everyone is looked after except you, or the care has become control.'],
+ [['wealth','security','discipline','abundance'],['greed','materialism','stubbornness','poor financial judgement'],
+  'The King sits amid grapes and bulls, foot on a boar, a coin on his knee. Material mastery through discipline. Build steadily and share generously.',
+  'Wealth held too tightly or pursued at the cost of everything else. Reconsider what the money is for.'],
+],
+};
+
+/* ---------- Spreads. Positions are in card units (a card is 1 wide, 1.55 tall). ---------- */
+const CH = 1.55;
+const SPREADS = [
+ {id:'one', name:'Single Card', blurb:'One card, one clear answer.', positions:[
+   {x:0,y:0,label:'The Card',desc:'What you most need to see right now.'}]},
+ {id:'ppf', name:'Past, Present, Future', blurb:'The classic three card line.', positions:[
+   {x:0,y:0,label:'Past',desc:'What has shaped the situation and still echoes in it.'},
+   {x:1.2,y:0,label:'Present',desc:'Where things stand now and the energy at play.'},
+   {x:2.4,y:0,label:'Future',desc:'Where the current path leads if nothing changes.'}]},
+ {id:'sao', name:'Situation, Obstacle, Advice', blurb:'Three cards for a practical question.', positions:[
+   {x:0,y:0,label:'Situation',desc:'The heart of the matter as it truly is.'},
+   {x:1.2,y:0,label:'Obstacle',desc:'What stands in the way, seen or unseen.'},
+   {x:2.4,y:0,label:'Advice',desc:'The wisest response available to you.'}]},
+ {id:'mbs', name:'Mind, Body, Spirit', blurb:'A check in with yourself.', positions:[
+   {x:0,y:0,label:'Mind',desc:'Your thoughts, beliefs and mental state.'},
+   {x:1.2,y:0,label:'Body',desc:'Your physical world, health, home and resources.'},
+   {x:2.4,y:0,label:'Spirit',desc:'Your inner life, purpose and connection.'}]},
+ {id:'cross5', name:'Five Card Cross', blurb:'A fuller picture of one situation.', positions:[
+   {x:1.2,y:1.7,label:'Present',desc:'The situation as it stands at the centre.'},
+   {x:0,y:1.7,label:'Past Influence',desc:'What led here and still has a hold.'},
+   {x:2.4,y:1.7,label:'Future Influence',desc:'What is approaching.'},
+   {x:1.2,y:0,label:'Conscious',desc:'What you know, want and are aiming for.'},
+   {x:1.2,y:3.4,label:'Unconscious',desc:'What lies beneath: motives, fears and roots.'}]},
+ {id:'paths', name:'Two Paths', blurb:'Weigh a decision between two options.', positions:[
+   {x:1.5,y:2.0,label:'The Decision',desc:'The choice itself and the energy surrounding it.'},
+   {x:0,y:1.0,label:'Path A: Nature',desc:'What the first path is really like.'},
+   {x:0.5,y:0,label:'Path A: Outcome',desc:'Where the first path leads.'},
+   {x:3.0,y:1.0,label:'Path B: Nature',desc:'What the second path is really like.'},
+   {x:2.5,y:0,label:'Path B: Outcome',desc:'Where the second path leads.'}]},
+ {id:'relationship', name:'Relationship', blurb:'Two people and the space between them.', positions:[
+   {x:0,y:0.3,label:'You',desc:'How you show up in this connection.'},
+   {x:2.4,y:0.3,label:'Them',desc:'How the other person shows up.'},
+   {x:1.2,y:0,label:'The Connection',desc:'The nature of the bond itself.'},
+   {x:0,y:2.1,label:'What You Bring',desc:'Your gift, or your challenge, to the relationship.'},
+   {x:2.4,y:2.1,label:'What They Bring',desc:'Their gift, or their challenge, to the relationship.'},
+   {x:1.2,y:1.9,label:'Where It Leads',desc:'The direction the relationship is moving.'}]},
+ {id:'horseshoe', name:'Horseshoe', blurb:'Seven cards in an arch for a layered question.', positions:[
+   {x:0,y:1.7,label:'Past',desc:'Influences from the past.'},
+   {x:1.1,y:0.9,label:'Present',desc:'The present situation.'},
+   {x:2.2,y:0.3,label:'Hidden Influences',desc:'What is working beneath the surface.'},
+   {x:3.3,y:0,label:'Obstacles',desc:'The challenges to face.'},
+   {x:4.4,y:0.3,label:'Others',desc:'The attitudes and influence of other people.'},
+   {x:5.5,y:0.9,label:'Advice',desc:'What you should do.'},
+   {x:6.6,y:1.7,label:'Outcome',desc:'The likely result.'}]},
+ {id:'celtic', name:'Celtic Cross', blurb:'The ten card spread for a deep reading.', positions:[
+   {x:1.3,y:1.7,label:'The Heart',desc:'The present situation and the querent within it.'},
+   {x:1.3,y:1.95,rot:90,label:'The Crossing',desc:'What challenges or crosses the situation.'},
+   {x:1.3,y:3.4,label:'The Foundation',desc:'The root of the matter, often unconscious.'},
+   {x:0,y:1.7,label:'Recent Past',desc:'What is passing out of influence.'},
+   {x:1.3,y:0,label:'The Crown',desc:'Conscious aims, or the best that can be hoped for.'},
+   {x:2.6,y:1.7,label:'Near Future',desc:'What is coming into influence.'},
+   {x:4.2,y:5.1,label:'The Self',desc:'How you see yourself in this matter.'},
+   {x:4.2,y:3.4,label:'Environment',desc:'Home, others, and outside influences.'},
+   {x:4.2,y:1.7,label:'Hopes and Fears',desc:'What you long for and what you dread, often the same thing.'},
+   {x:4.2,y:0,label:'The Outcome',desc:'Where all of this is heading.'}]},
+ {id:'year', name:'Year Ahead', blurb:'Twelve months in a wheel around a central theme.', positions:(()=>{
+   const R=2.55, cx=R, cy=R+0.2, out=[];
+   for(let i=0;i<12;i++){const a=-Math.PI/2+i*Math.PI/6; out.push({x:+(cx+R*Math.cos(a)).toFixed(3), y:+(cy+R*Math.sin(a)*1.05).toFixed(3), label:'Month '+(i+1), desc:'The theme of this month.', month:i});}
+   out.push({x:cx,y:cy,label:'The Year',desc:'The theme that runs beneath the whole year.'});
+   return out;})()},
+];
+
+/* ---------- Pattern knowledge ---------- */
+const NUMBER_THEMES = {
+ 1:['Aces','beginnings and raw potential. Several aces together mean many doors opening at once.'],
+ 2:['Twos','choice, partnership and balance. Repeated twos point to decisions and pairings.'],
+ 3:['Threes','growth, collaboration and first results. Something is expanding.'],
+ 4:['Fours','stability, structure and pause. Things are settling, possibly too much.'],
+ 5:['Fives','conflict, loss and disruption. A period of testing.'],
+ 6:['Sixes','harmony, exchange and moving through. Relief after difficulty.'],
+ 7:['Sevens','assessment, faith and perseverance. You are being asked to hold steady and reflect.'],
+ 8:['Eights','movement, mastery and momentum. Things are shifting quickly.'],
+ 9:['Nines','near completion and its strain. The end of a cycle is in sight.'],
+ 10:['Tens','completion and fullness, sometimes to the point of overload.'],
+ 11:['Pages','messages, students and beginnings. News is coming, or a beginner’s mind is needed.'],
+ 12:['Knights','action, movement and pursuit. Things (and people) are on the move.'],
+ 13:['Queens','mature feminine energy: nurture, mastery and influence from within.'],
+ 14:['Kings','mature masculine energy: authority, leadership and control.'],
+};
+const ELEMENT_INFO = {
+ fire:{name:'Fire',suit:'Wands',theme:'drive, passion and will',missing:'energy or motivation is missing; the situation may lack drive or spark.'},
+ water:{name:'Water',suit:'Cups',theme:'feeling, love and intuition',missing:'feeling is missing; the matter is being handled without heart, or emotions are being avoided.'},
+ air:{name:'Air',suit:'Swords',theme:'thought, truth and communication',missing:'clear thinking or honest communication is missing; things are not being talked about.'},
+ earth:{name:'Earth',suit:'Pentacles',theme:'the practical, the body and money',missing:'practical grounding is missing; nothing has been made real yet.'},
+};
+const FRIENDLY = {fire:['air'],air:['fire'],water:['earth'],earth:['water']};
+const HOSTILE  = {fire:['water'],water:['fire'],air:['earth'],earth:['air']};
+
+/* Classic pairings. Ids: m0..m21 for majors, suit-rank for minors (rank 1 to 14). */
+const PAIRS = [
+ ['m0','m1','The Fool and the Magician','Pure potential meets the skill to shape it. A beginning with the tools to make it real.'],
+ ['m0','m21','The Fool and the World','The start and end of the journey in one reading. A cycle completes and another opens immediately.'],
+ ['m1','m2','The Magician and the High Priestess','Active will beside receptive knowing. Balance doing with listening.'],
+ ['m3','m4','The Empress and the Emperor','The two sovereigns together: nurture and structure, creation and order. A complete foundation.'],
+ ['m6','m15','The Lovers and the Devil','The same two figures, chained. Passion or partnership that has become bondage, or a choice made from craving rather than value.'],
+ ['m6','cups-2','The Lovers and the Two of Cups','A doubled card of union. A relationship of real mutual love and alignment.'],
+ ['m6','swords-3','The Lovers and the Three of Swords','Love and heartbreak side by side. A choice in love that wounds, or a triangle.'],
+ ['m13','m14','Death and Temperance','An ending followed by the patient blending of what remains. Transformation done gently.'],
+ ['m13','m16','Death and the Tower','Two endings, one chosen and one not. A profound clearing of the old.'],
+ ['m16','m17','The Tower and the Star','The crash and the calm after it. Whatever falls, hope follows quickly.'],
+ ['m16','m19','The Tower and the Sun','Upheaval that leads directly to joy. The collapse turns out to be liberation.'],
+ ['m17','m18','The Star and the Moon','Hope and illusion together. Keep faith, but check what is real.'],
+ ['m18','m19','The Moon and the Sun','Night and day, the unconscious and the conscious. Something hidden comes into full light.'],
+ ['m18','swords-9','The Moon and the Nine of Swords','Anxiety amplified by illusion. Most of the fear is a trick of the dark.'],
+ ['m19','swords-10','The Sun and the Ten of Swords','Dawn after the worst night. The ending is complete and the light is real.'],
+ ['m20','m21','Judgement and the World','A calling answered and a cycle fulfilled. Major completion.'],
+ ['m9','m2','The Hermit and the High Priestess','Deep inward searching. The answer is entirely within.'],
+ ['m10','pentacles-1','The Wheel and the Ace of Pentacles','A fortunate turn brings a tangible opportunity. Take it while the wheel is up.'],
+ ['m7','wands-8','The Chariot and the Eight of Wands','Speed and direction together. Rapid, decisive movement forward.'],
+ ['m12','swords-4','The Hanged Man and the Four of Swords','A double instruction to stop. Rest, surrender, and wait.'],
+ ['m11','m4','Justice and the Emperor','Law and authority. Formal matters, contracts and decisions that will hold.'],
+ ['m5','m6','The Hierophant and the Lovers','Commitment made formal. Marriage, vows, or a partnership blessed by tradition.'],
+ ['m3','cups-10','The Empress and the Ten of Cups','Abundance in the home. Family, fertility and deep contentment.'],
+ ['m8','m15','Strength and the Devil','The tamed and the untamed animal. You are stronger than the habit that binds you.'],
+ ['m0','wands-11','The Fool and the Page of Wands','Youthful fire and fearless beginning. Adventure, but pack a map.'],
+ ['cups-3','wands-4','The Three of Cups and the Four of Wands','Celebration doubled. A wedding, a party, a homecoming.'],
+ ['cups-10','wands-4','The Ten of Cups and the Four of Wands','A happy home made stable. Family celebrations and lasting belonging.'],
+ ['cups-2','cups-10','The Two of Cups and the Ten of Cups','A partnership that becomes a family. Lasting emotional fulfilment.'],
+ ['swords-3','cups-5','The Three of Swords and the Five of Cups','Heartbreak and its grief. Let the loss be mourned fully before turning around.'],
+ ['swords-8','swords-9','The Eight and Nine of Swords','The mind as prison. Anxiety is creating the very trap it fears.'],
+ ['pentacles-5','pentacles-6','The Five and Six of Pentacles','Hardship met by help. Support arrives, so accept it.'],
+ ['pentacles-4','m15','The Four of Pentacles and the Devil','Clinging that has become bondage. Money or control is the chain.'],
+ ['wands-8','swords-1','The Eight of Wands and the Ace of Swords','Fast news and a clear idea. A breakthrough arrives suddenly.'],
+ ['swords-7','m18','The Seven of Swords and the Moon','Deception in the dark. Someone is not being straight; look twice.'],
+ ['cups-7','m18','The Seven of Cups and the Moon','Fantasy layered on illusion. Nothing here should be decided until it clears.'],
+ ['wands-10','pentacles-8','The Ten of Wands and the Eight of Pentacles','Hard work to the point of overload. Diligence is admirable, but delegate.'],
+ ['cups-8','m9','The Eight of Cups and the Hermit','Walking away to seek meaning. A conscious retreat, not an escape.'],
+ ['swords-6','m13','The Six of Swords and Death','Leaving the old shore entirely. A transition that is also a transformation.'],
+ ['pentacles-10','m21','The Ten of Pentacles and the World','Material completion and legacy. What you built will last.'],
+ ['cups-1','m3','The Ace of Cups and the Empress','Emotional and creative fertility. New love, new life, new work of the heart.'],
+];
+
+/* ---------- Card art (procedural SVG) ---------- */
+const G='#d9b664', GD='#8d7239', GL='#f1dc9c', I='#efe6d2', N='#150f2a', RD='#b8413e', SKY='#7fb7c9', BK='#0b0814';
+const ELEM_TINT={fire:'#e2803f',water:'#5f9fd6',air:'#c3cfdd',earth:'#86ad6c',major:'#c9a0ff'};
+
+/* Shared defs, injected once into the document */
+function sharedDefs(){
+  const pent=(cx,cy,r)=>{let p=[];for(let i=0;i<5;i++){const a=-Math.PI/2+i*4*Math.PI/5;p.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}return p.join(' ');};
+  return `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <radialGradient id="bg-fire" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#3d1c24"/><stop offset="1" stop-color="#140a16"/></radialGradient>
+  <radialGradient id="bg-water" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#15294a"/><stop offset="1" stop-color="#0b1123"/></radialGradient>
+  <radialGradient id="bg-air" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#2b2e48"/><stop offset="1" stop-color="#101326"/></radialGradient>
+  <radialGradient id="bg-earth" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#1b3126"/><stop offset="1" stop-color="#0c1511"/></radialGradient>
+  <radialGradient id="bg-major" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#2f1c4e"/><stop offset="1" stop-color="#110a21"/></radialGradient>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${GL}" stop-opacity=".9"/><stop offset=".5" stop-color="${G}" stop-opacity=".25"/><stop offset="1" stop-color="${G}" stop-opacity="0"/></radialGradient>
+  <radialGradient id="moonglow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#dfe7f5" stop-opacity=".7"/><stop offset="1" stop-color="#dfe7f5" stop-opacity="0"/></radialGradient>
+  <linearGradient id="back-sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a1d4d"/><stop offset=".5" stop-color="#160f2c"/><stop offset="1" stop-color="#2a1d4d"/></linearGradient>
+  <pattern id="lattice" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 14h28M14 0v28" stroke="${G}" stroke-opacity=".22" stroke-width="1"/><circle cx="14" cy="14" r="1.6" fill="${G}" fill-opacity=".5"/></pattern>
+  <pattern id="veil" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="5" fill="none" stroke="${RD}" stroke-opacity=".55"/><circle cx="12" cy="12" r="1.5" fill="${RD}" fill-opacity=".6"/></pattern>
+  <symbol id="sym-wands" viewBox="0 0 40 80"><rect x="17" y="6" width="6" height="70" rx="3" fill="#b8843a" stroke="${G}" stroke-width="1"/><path d="M20 12c-9-4-11-11-9-15 6 2 10 8 9 15z" fill="#e2803f" stroke="${G}" stroke-width=".8"/><path d="M20 26c9-4 11-11 9-15-6 2-10 8-9 15z" fill="#e2803f" stroke="${G}" stroke-width=".8"/><path d="M20 42c-9-4-11-11-9-15 6 2 10 8 9 15z" fill="#e2803f" stroke="${G}" stroke-width=".8"/><path d="M20 58c9-4 11-11 9-15-6 2-10 8-9 15z" fill="#e2803f" stroke="${G}" stroke-width=".8"/></symbol>
+  <symbol id="sym-cups" viewBox="0 0 40 80"><path d="M7 18h26v8a13 13 0 0 1-26 0z" fill="#3c2a10" stroke="${G}" stroke-width="1.4"/><path d="M9 18h22v5a11 11 0 0 1-22 0z" fill="#5f9fd6"/><rect x="17.5" y="39" width="5" height="18" fill="${G}"/><path d="M7 64c6-8 20-8 26 0v4H7z" fill="#3c2a10" stroke="${G}" stroke-width="1.4"/><circle cx="20" cy="47" r="3.5" fill="none" stroke="${G}" stroke-width="1"/></symbol>
+  <symbol id="sym-swords" viewBox="0 0 40 80"><path d="M20 3l5 9v46H15V12z" fill="#d8dee8" stroke="#8c96a8" stroke-width="1"/><path d="M20 3v55" stroke="#9aa5b8" stroke-width="1"/><rect x="5" y="57" width="30" height="4.5" rx="2" fill="${G}"/><rect x="17" y="61" width="6" height="12" fill="#3c2a10" stroke="${G}" stroke-width="1"/><circle cx="20" cy="76" r="3.6" fill="${G}"/></symbol>
+  <symbol id="sym-pentacles" viewBox="0 0 40 80"><circle cx="20" cy="40" r="19" fill="#2c3d21" stroke="${G}" stroke-width="2.2"/><circle cx="20" cy="40" r="15" fill="none" stroke="${G}" stroke-width=".8"/><polygon points="${pent(20,40,14)}" fill="none" stroke="${G}" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  </defs></svg>`;
+}
+
+/* small reusable pieces */
+const star8=(cx,cy,r,fill=G)=>{let p=[];for(let i=0;i<16;i++){const rr=i%2?r*0.38:r,a=-Math.PI/2+i*Math.PI/8;p.push((cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1));}return `<polygon points="${p.join(' ')}" fill="${fill}"/>`;};
+const star5=(cx,cy,r,fill=G,rot=0)=>{let p=[];for(let i=0;i<10;i++){const rr=i%2?r*0.4:r,a=-Math.PI/2+rot+i*Math.PI/5;p.push((cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1));}return `<polygon points="${p.join(' ')}" fill="${fill}"/>`;};
+const star6=(cx,cy,r,stroke=G)=>{const t=(rot)=>{let p=[];for(let i=0;i<3;i++){const a=rot+i*2*Math.PI/3;p.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}return p.join(' ');};return `<polygon points="${t(-Math.PI/2)}" fill="none" stroke="${stroke}" stroke-width="1.5"/><polygon points="${t(Math.PI/2)}" fill="none" stroke="${stroke}" stroke-width="1.5"/>`;};
+const sun=(cx,cy,r,rays=16,face=false)=>{let s='';for(let i=0;i<rays;i++){const a=i*2*Math.PI/rays,wavy=i%2;const r1=r+4,r2=r+(wavy?14:24);s+=`<line x1="${(cx+r1*Math.cos(a)).toFixed(1)}" y1="${(cy+r1*Math.sin(a)).toFixed(1)}" x2="${(cx+r2*Math.cos(a)).toFixed(1)}" y2="${(cy+r2*Math.sin(a)).toFixed(1)}" stroke="${G}" stroke-width="${wavy?1.2:2}" stroke-linecap="round"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${r+30}" fill="url(#glow)"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="${GL}" stroke="${G}" stroke-width="2"/>`;
+  if(face)s+=`<circle cx="${cx-r*0.35}" cy="${cy-r*0.15}" r="${r*0.08}" fill="${N}"/><circle cx="${cx+r*0.35}" cy="${cy-r*0.15}" r="${r*0.08}" fill="${N}"/><path d="M${cx-r*0.4} ${cy+r*0.3}q${r*0.4} ${r*0.35} ${r*0.8} 0" fill="none" stroke="${N}" stroke-width="1.5" stroke-linecap="round"/><path d="M${cx} ${cy-r*0.05}v${r*0.3}" stroke="${N}" stroke-width="1.2"/>`;
+  return s;};
+const crescent=(cx,cy,r,fill=I)=>`<path d="M${cx} ${cy-r}a${r} ${r} 0 1 0 0 ${2*r}a${r*0.72} ${r*0.72} 0 1 1 0 ${-2*r}z" fill="${fill}"/>`;
+const figure=(x,y,s=1,opt={})=>{ /* x,y = feet centre; head at top */
+  const h=opt.h||150;const c=opt.color||I;const robe=opt.robe||'#4a3a6b';
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+   <path d="M-26 0 L-14 -${h*0.62} Q0 -${h*0.72} 14 -${h*0.62} L26 0z" fill="${robe}" stroke="${G}" stroke-width="1.2"/>
+   <circle cx="0" cy="-${h*0.85}" r="${h*0.1}" fill="${c}" stroke="${G}" stroke-width="1"/>
+   ${opt.arms||''}</g>`;};
+const pillar=(x,top,bottom,w=22,color='#2a2140',letter='')=>`<rect x="${x-w/2}" y="${top}" width="${w}" height="${bottom-top}" fill="${color}" stroke="${G}" stroke-width="1.2"/><rect x="${x-w/2-5}" y="${top-8}" width="${w+10}" height="8" fill="${color}" stroke="${G}" stroke-width="1.2"/><rect x="${x-w/2-5}" y="${bottom}" width="${w+10}" height="8" fill="${color}" stroke="${G}" stroke-width="1.2"/>${letter?`<text x="${x}" y="${top+38}" text-anchor="middle" font-family="Cinzel,serif" font-size="18" fill="${G}">${letter}</text>`:''}`;
+const towerShape=(x,base,w,h,color='#2a2140')=>{let m='';const n=4,bw=w/(2*n-1);for(let i=0;i<n;i++)m+=`<rect x="${x-w/2+i*2*bw}" y="${base-h-8}" width="${bw}" height="8" fill="${color}" stroke="${G}" stroke-width="1"/>`;return `<rect x="${x-w/2}" y="${base-h}" width="${w}" height="${h}" fill="${color}" stroke="${G}" stroke-width="1.2"/>${m}<rect x="${x-w*0.18}" y="${base-h*0.45}" width="${w*0.36}" height="${h*0.28}" rx="${w*0.18}" fill="${N}" stroke="${G}" stroke-width=".8"/>`;};
+const horse=(x,y,s=1,color='#e9e2d2')=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${color}" stroke="${G}" stroke-width="1">
+  <ellipse cx="0" cy="0" rx="46" ry="20"/><path d="M28 -8 Q44 -34 52 -56 L66 -60 Q78 -52 70 -46 L60 -44 Q56 -30 50 -20 L40 -8z"/>
+  <path d="M-38 6 l-6 34 M-24 10 l-2 34 M22 10 l4 34 M36 6 l8 34" stroke-width="5" stroke-linecap="round"/><path d="M-44 -6 q-16 6 -18 26" fill="none" stroke-width="3" stroke-linecap="round"/></g>`;
+const wings=(cx,cy,w,color=I)=>`<path d="M${cx-8} ${cy} Q${cx-w*0.5} ${cy-w*0.55} ${cx-w} ${cy-w*0.15} Q${cx-w*0.7} ${cy+w*0.05} ${cx-w*0.45} ${cy+w*0.02} Q${cx-w*0.55} ${cy+w*0.2} ${cx-w*0.3} ${cy+w*0.16} Q${cx-w*0.35} ${cy+w*0.32} ${cx-8} ${cy+w*0.25}z" fill="${color}" fill-opacity=".9" stroke="${G}" stroke-width="1"/><path d="M${cx+8} ${cy} Q${cx+w*0.5} ${cy-w*0.55} ${cx+w} ${cy-w*0.15} Q${cx+w*0.7} ${cy+w*0.05} ${cx+w*0.45} ${cy+w*0.02} Q${cx+w*0.55} ${cy+w*0.2} ${cx+w*0.3} ${cy+w*0.16} Q${cx+w*0.35} ${cy+w*0.32} ${cx+8} ${cy+w*0.25}z" fill="${color}" fill-opacity=".9" stroke="${G}" stroke-width="1"/>`;
+const crown=(cx,y,w,pts=3,h=18)=>{let p=`${cx-w/2},${y} `;for(let i=0;i<pts;i++){const x0=cx-w/2+i*w/pts,x1=x0+w/pts;p+=`${x0+w/pts/2},${y-h} ${x1},${y-h*0.35} `;}p+=`${cx+w/2},${y} ${cx+w/2},${y+8} ${cx-w/2},${y+8}`;return `<polygon points="${p}" fill="${G}" stroke="${GD}" stroke-width="1"/>`;};
+const mountains=(y,color='#221b3a')=>`<path d="M30 ${y} L70 ${y-46} L100 ${y-18} L140 ${y-62} L180 ${y-24} L215 ${y-50} L270 ${y}z" fill="${color}" stroke="${G}" stroke-opacity=".6" stroke-width="1"/>`;
+const ground=(y,color='#1c1830')=>`<rect x="18" y="${y}" width="264" height="${430-y}" fill="${color}"/><line x1="18" y1="${y}" x2="282" y2="${y}" stroke="${G}" stroke-opacity=".5"/>`;
+const water=(y,color='#1c3560')=>`<rect x="18" y="${y}" width="264" height="${430-y}" fill="${color}"/><path d="M30 ${y+14}q12-6 24 0t24 0t24 0t24 0t24 0t24 0t24 0t24 0t24 0" fill="none" stroke="${SKY}" stroke-opacity=".6" stroke-width="1.2"/><path d="M30 ${y+34}q12-6 24 0t24 0t24 0t24 0t24 0t24 0t24 0t24 0t24 0" fill="none" stroke="${SKY}" stroke-opacity=".35" stroke-width="1.2"/>`;
+const lemniscate=(cx,cy,w)=>`<path d="M${cx} ${cy} C${cx-w*0.2} ${cy-w*0.5} ${cx-w} ${cy-w*0.5} ${cx-w} ${cy} S${cx-w*0.2} ${cy+w*0.5} ${cx} ${cy} S${cx+w} ${cy+w*0.5} ${cx+w} ${cy} S${cx+w*0.2} ${cy-w*0.5} ${cx} ${cy}" fill="none" stroke="${G}" stroke-width="2.4"/>`;
+const rose=(cx,cy,r,color=I)=>{let s='';for(let i=0;i<5;i++){const a=i*2*Math.PI/5;s+=`<circle cx="${(cx+r*0.55*Math.cos(a)).toFixed(1)}" cy="${(cy+r*0.55*Math.sin(a)).toFixed(1)}" r="${r*0.55}" fill="${color}" stroke="${G}" stroke-width=".6"/>`;}return s+`<circle cx="${cx}" cy="${cy}" r="${r*0.35}" fill="${G}"/>`;};
+const key=(cx,cy,rot)=>`<g transform="translate(${cx} ${cy}) rotate(${rot})" stroke="${G}" stroke-width="3" fill="none" stroke-linecap="round"><circle cx="0" cy="-30" r="9"/><path d="M0 -21v50M0 29h10M0 20h7"/></g>`;
+const scatterStars=(seed,n=12)=>{let s='',x=seed*9301+49297;const rnd=()=>{x=(x*9301+49297)%233280;return x/233280;};for(let i=0;i<n;i++){const cx=30+rnd()*240,cy=60+rnd()*360,r=0.6+rnd()*1.4;s+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" fill="${I}" fill-opacity="${(0.25+rnd()*0.5).toFixed(2)}"/>`;}return s;};
+
+/* ---- Major arcana scenes (art region roughly x 30..270, y 70..420) ---- */
+const MAJOR_ART = [
+ /* 0 Fool */ ()=>`${sun(72,112,20,16)}${mountains(300,'#2a2148')}<path d="M18 430V330H160L192 300 282 300V430z" fill="#221a3c"/><path d="M18 330H160L192 300" fill="none" stroke="${G}" stroke-width="1.4"/>
+   ${figure(170,325,1,{robe:'#5a4a8a',arms:`<line x1="10" y1="-100" x2="52" y2="-140" stroke="${G}" stroke-width="3" stroke-linecap="round"/><circle cx="56" cy="-142" r="10" fill="#b8843a" stroke="${G}"/><line x1="-12" y1="-98" x2="-40" y2="-86" stroke="${I}" stroke-width="3" stroke-linecap="round"/>`})}
+   ${rose(128,242,9)}<circle cx="112" cy="316" r="7" fill="${I}"/><path d="M104 322l-10 10M112 323v12M120 322l8 8" stroke="${I}" stroke-width="2.5" stroke-linecap="round"/>`,
+ /* 1 Magician */ ()=>`${lemniscate(150,92,24)}${figure(150,330,1.05,{robe:'#6b2c3a',h:160,arms:`<line x1="16" y1="-105" x2="40" y2="-172" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="36" y1="-190" x2="44" y2="-160" stroke="${G}" stroke-width="3" stroke-linecap="round"/><line x1="-16" y1="-100" x2="-38" y2="-50" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}
+   <rect x="52" y="330" width="196" height="14" fill="#3b2b1a" stroke="${G}"/><rect x="60" y="344" width="10" height="60" fill="#3b2b1a" stroke="${G}"/><rect x="230" y="344" width="10" height="60" fill="#3b2b1a" stroke="${G}"/>
+   <use href="#sym-wands" x="62" y="282" width="24" height="48"/><use href="#sym-cups" x="106" y="282" width="24" height="48"/><use href="#sym-swords" x="170" y="282" width="24" height="48"/><use href="#sym-pentacles" x="214" y="282" width="24" height="48"/>
+   ${[40,80,120,160,200,240,260].map((x,i)=>rose(x,72+(i%2)*10,6,i%2?RD:I)).join('')}`,
+ /* 2 High Priestess */ ()=>`<rect x="66" y="96" width="168" height="300" fill="url(#veil)" opacity=".8"/>${pillar(64,96,400,26,'#0e0a18','B')}${pillar(236,96,400,26,'#ece4d0','J')}
+   ${figure(150,392,1,{robe:'#2f5a8f',h:170,arms:`<rect x="-16" y="-92" width="32" height="42" rx="3" fill="${I}" stroke="${G}"/><text x="0" y="-64" text-anchor="middle" font-family="Cinzel,serif" font-size="11" fill="${GD}">TORA</text>`})}
+   <path d="M150 226v-40M138 200h24" stroke="${I}" stroke-width="4" stroke-linecap="round"/>
+   <circle cx="150" cy="222" r="10" fill="${I}"/>${crescent(120,236,12)}${crescent(180,236,12)}
+   ${crescent(150,378,14)}`,
+ /* 3 Empress */ ()=>`${[...Array(12)].map((_,i)=>{const a=Math.PI+i*Math.PI/11;return star5(150+52*Math.cos(a),168+52*Math.sin(a)*0.9,5,GL);}).join('')}
+   <path d="M18 250q40-20 80 0t80 0t80 0t24 0v40q-40-20-80 0t-80 0t-80 0t-24 0z" fill="#1c3560" opacity=".9"/>
+   ${figure(150,392,1.1,{robe:'#8a3d5a',h:170,arms:`<circle cx="0" cy="-60" r="16" fill="none" stroke="${G}" stroke-width="1.2" stroke-dasharray="2 3"/>`})}
+   ${[50,72,94,206,228,250].map(x=>`<path d="M${x} 420V350" stroke="#c9a53b" stroke-width="2"/>${[0,1,2,3].map(j=>`<ellipse cx="${x+(j%2?5:-5)}" cy="${352+j*12}" rx="5" ry="7" fill="#e6c250" stroke="${GD}" stroke-width=".6"/>`).join('')}`).join('')}
+   <path d="M232 296l-20 20 20 24 20-24z" fill="${G}"/><text x="232" y="325" text-anchor="middle" font-size="22" fill="${N}" font-family="serif">♀</text>`,
+ /* 4 Emperor */ ()=>`${mountains(300,'#5b2530')}<rect x="76" y="212" width="148" height="200" fill="#3a1f24" stroke="${G}" stroke-width="1.4"/>
+   ${[[86,212],[214,212],[86,404],[214,404]].map(([x,y])=>`<path d="M${x} ${y}a12 12 0 1 1 8 -12a8 8 0 1 0 -6 8" fill="none" stroke="${G}" stroke-width="2.5"/>`).join('')}
+   ${figure(150,410,1.1,{robe:'#a03a3a',h:180,arms:`<line x1="24" y1="-110" x2="44" y2="-150" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><circle cx="46" cy="-170" r="9" fill="none" stroke="${G}" stroke-width="3"/><path d="M46 -161v40M36 -140h20" stroke="${G}" stroke-width="3"/><circle cx="-40" cy="-112" r="11" fill="${G}"/><line x1="-24" y1="-110" x2="-38" y2="-114" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}
+   ${crown(150,232,52,4,20)}`,
+ /* 5 Hierophant */ ()=>`${pillar(64,96,404,22,'#3a3050')}${pillar(236,96,404,22,'#3a3050')}
+   ${figure(150,404,1.1,{robe:'#8a2f3a',h:190,arms:`<path d="M-30 -170q0 -22 30 -22t30 22" fill="${G}" stroke="${GD}"/><path d="M-22 -180q0 -20 22 -20t22 20" fill="${GL}" stroke="${GD}"/><path d="M-12 -192q0 -14 12 -14t12 14" fill="${G}" stroke="${GD}"/><line x1="30" y1="-100" x2="52" y2="-150" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}
+   <path d="M210 390V220M196 236h28M192 254h36M198 272h24" stroke="${G}" stroke-width="3.5" stroke-linecap="round"/>
+   ${key(118,384,-30)}${key(182,384,30)}`,
+ /* 6 Lovers */ ()=>`${sun(150,96,22,24)}${wings(150,150,70,'#c9a0ff')}<circle cx="150" cy="146" r="13" fill="${I}" stroke="${G}"/><path d="M110 168l-24 44M190 168l24 44" stroke="${I}" stroke-width="4" stroke-linecap="round"/>
+   ${mountains(392,'#4a3a6a')}
+   ${figure(92,404,0.85,{robe:'#e6ddc8',arms:''})}${figure(208,404,0.85,{robe:'#a56a3a',arms:''})}
+   <path d="M46 400V300" stroke="#5a4a2a" stroke-width="5"/><circle cx="46" cy="290" r="26" fill="#3e6b3a" stroke="${G}"/>${[[32,282],[54,278],[44,300],[60,296]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="${RD}"/>`).join('')}<path d="M40 330q10 -20 0 -40q-8 20 0 40" fill="${GL}"/>
+   <path d="M254 400V310" stroke="#5a4a2a" stroke-width="5"/>${[0,1,2,3,4].map(i=>`<path d="M254 ${312-i*4}q-14 -26 ${(i-2)*8} -46q14 20 ${(2-i)*6} 46" fill="${i%2?'#e2803f':'#f1dc9c'}" stroke="${G}" stroke-width=".6"/>`).join('')}`,
+ /* 7 Chariot */ ()=>`<rect x="56" y="90" width="188" height="20" fill="#20355c" stroke="${G}"/>${[70,100,130,160,190,220].map((x,i)=>star5(x,100,5,I)).join('')}
+   ${[62,238].map(x=>`<rect x="${x-3}" y="110" width="6" height="120" fill="${G}"/>`).join('')}
+   <rect x="72" y="230" width="156" height="110" fill="#5a4a2a" stroke="${G}" stroke-width="1.4"/><rect x="82" y="240" width="136" height="90" fill="${N}" stroke="${G}" stroke-width=".8"/>
+   ${figure(150,262,0.9,{robe:'#c9a54b',h:150,arms:`<line x1="24" y1="-100" x2="46" y2="-140" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="46" y1="-150" x2="46" y2="-124" stroke="${G}" stroke-width="3"/>`})}${crown(150,140,40,3,14)}
+   ${wings(150,276,48,G)}<circle cx="150" cy="282" r="8" fill="${RD}" stroke="${G}"/>
+   <path d="M60 400a34 34 0 0 1 60 -34v28a34 34 0 0 1 -60 6z" fill="#0b0814" stroke="${G}" stroke-width="1.5"/><circle cx="80" cy="370" r="9" fill="#0b0814" stroke="${G}"/>
+   <path d="M240 400a34 34 0 0 0 -60 -34v28a34 34 0 0 0 60 6z" fill="${I}" stroke="${G}" stroke-width="1.5"/><circle cx="220" cy="370" r="9" fill="${I}" stroke="${G}"/>
+   <circle cx="100" cy="340" r="14" fill="none" stroke="${G}" stroke-width="3"/><circle cx="200" cy="340" r="14" fill="none" stroke="${G}" stroke-width="3"/>`,
+ /* 8 Strength */ ()=>`${lemniscate(120,110,22)}${mountains(410,'#2a2148')}
+   ${figure(112,380,1,{robe:'#e6ddc8',h:200,arms:`<line x1="18" y1="-120" x2="70" y2="-70" stroke="${I}" stroke-width="4" stroke-linecap="round"/>`})}
+   <g transform="translate(200 320)"><circle cx="0" cy="0" r="46" fill="#c9862b" stroke="${G}" stroke-width="1"/>${[...Array(18)].map((_,i)=>{const a=i*2*Math.PI/18;return `<path d="M${(40*Math.cos(a)).toFixed(1)} ${(40*Math.sin(a)).toFixed(1)}L${(58*Math.cos(a+0.1)).toFixed(1)} ${(58*Math.sin(a+0.1)).toFixed(1)}L${(46*Math.cos(a+0.25)).toFixed(1)} ${(46*Math.sin(a+0.25)).toFixed(1)}z" fill="#8a4f1c"/>`;}).join('')}<circle cx="0" cy="4" r="28" fill="#e2a55a"/><circle cx="-10" cy="-4" r="3.5" fill="${N}"/><circle cx="10" cy="-4" r="3.5" fill="${N}"/><path d="M-8 12q8 -6 16 0" fill="none" stroke="${N}" stroke-width="2"/><ellipse cx="0" cy="8" rx="5" ry="3.5" fill="${N}"/></g>
+   ${[[70,150],[92,140],[114,150],[80,170],[104,170]].map(([x,y],i)=>rose(x,y,5,i%2?RD:I)).join('')}`,
+ /* 9 Hermit */ ()=>`<path d="M18 430L110 240L170 330L230 220L282 430z" fill="#1a1530" stroke="${G}" stroke-opacity=".5"/>
+   ${figure(150,352,1.1,{robe:'#4a4460',h:200,arms:`<path d="M-24 -176q24 -26 48 0" fill="#4a4460" stroke="${G}" stroke-width="1.2"/><line x1="-22" y1="-120" x2="-44" y2="-160" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="26" y1="-118" x2="50" y2="-150" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="-46" y1="-190" x2="-46" y2="0" stroke="${G}" stroke-width="3"/>`})}
+   <circle cx="210" cy="180" r="60" fill="url(#glow)"/><polygon points="210,150 232,163 232,197 210,210 188,197 188,163" fill="${N}" stroke="${G}" stroke-width="2"/>${star6(210,180,16,GL)}<path d="M210 140v10M198 150h24" stroke="${G}" stroke-width="2"/>`,
+ /* 10 Wheel */ ()=>`<circle cx="150" cy="250" r="92" fill="url(#glow)"/><circle cx="150" cy="250" r="86" fill="#2a1f45" stroke="${G}" stroke-width="3"/><circle cx="150" cy="250" r="60" fill="none" stroke="${G}" stroke-width="1.5"/><circle cx="150" cy="250" r="26" fill="none" stroke="${G}" stroke-width="1.5"/>
+   ${[0,45,90,135].map(a=>`<line x1="150" y1="164" x2="150" y2="336" stroke="${G}" stroke-width="2" transform="rotate(${a} 150 250)"/>`).join('')}
+   <text font-family="Cinzel,serif" font-size="18" fill="${GL}" text-anchor="middle"><tspan x="150" y="182">T</tspan><tspan x="222" y="257">A</tspan><tspan x="150" y="330">R</tspan><tspan x="78" y="257">O</tspan></text>
+   ${figure(150,160,0.6,{robe:'#3a5a8a',arms:`<line x1="22" y1="-90" x2="22" y2="-150" stroke="${I}" stroke-width="4"/>`})}
+   <path d="M62 262q-12 30 8 44q14 -16 6 -34" fill="#7a9a4a" stroke="${G}"/><path d="M240 250q10 30 -6 50" fill="none" stroke="#a04a3a" stroke-width="6" stroke-linecap="round"/>
+   ${[[40,90],[260,90],[40,410],[260,410]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="16" fill="#3a3050" stroke="${G}"/>`).join('')}
+   ${[[40,90,'M34 87l6 6 6-6'],[260,90,'M253 90h14M260 83v14'],[40,410,'M34 412q6-12 12 0'],[260,410,'M260 404l5 6-5 6-5-6z']].map(([x,y,d])=>`<path d="${d}" fill="none" stroke="${G}" stroke-width="2"/>`).join('')}`,
+ /* 11 Justice */ ()=>`${pillar(64,96,404,22,'#3a3050')}${pillar(236,96,404,22,'#3a3050')}<rect x="75" y="96" width="150" height="300" fill="#4a2a3a" opacity=".5"/>
+   ${figure(150,404,1.1,{robe:'#a03a3a',h:190,arms:`<line x1="24" y1="-110" x2="48" y2="-150" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="-24" y1="-108" x2="-52" y2="-128" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}${crown(150,228,40,3,14)}
+   <path d="M203 250V110l-5 -10 5 -8 5 8 -5 10" fill="${I}" stroke="#8c96a8"/><rect x="190" y="250" width="26" height="6" rx="3" fill="${G}"/>
+   <path d="M92 262v-30M64 262h56" stroke="${G}" stroke-width="3" stroke-linecap="round"/><path d="M64 262v26M120 262v26" stroke="${G}" stroke-width="1.5"/><path d="M50 290q14 12 28 0z" fill="${G}"/><path d="M106 290q14 12 28 0z" fill="${G}"/>`,
+ /* 12 Hanged Man */ ()=>`<rect x="70" y="90" width="12" height="320" fill="#5a4a2a" stroke="${G}"/><rect x="218" y="90" width="12" height="320" fill="#5a4a2a" stroke="${G}"/><rect x="66" y="90" width="168" height="12" fill="#5a4a2a" stroke="${G}"/>
+   ${[80,110,140,170,200,220].map((x,i)=>`<ellipse cx="${x}" cy="${i%2?86:110}" rx="7" ry="4" fill="#7a9a4a" stroke="${G}" stroke-width=".5" transform="rotate(${i%2?-30:30} ${x} ${i%2?86:110})"/>`).join('')}
+   <circle cx="150" cy="395" r="42" fill="url(#glow)"/>
+   <g transform="translate(150 258) rotate(180)"><path d="M-22 0 L-12 -110 Q0 -120 12 -110 L22 0z" fill="#a03a3a" stroke="${G}" stroke-width="1.2"/><circle cx="0" cy="-140" r="17" fill="${I}" stroke="${G}"/><path d="M-12 -122l-14 -14M12 -122l14 -14" stroke="${I}" stroke-width="4" stroke-linecap="round"/><path d="M-10 -16l-2 -40M10 -16l22 -30" stroke="#3a5a8a" stroke-width="10" stroke-linecap="round"/></g>
+   <path d="M150 102v156" stroke="${G}" stroke-width="2"/>`,
+ /* 13 Death */ ()=>`${sun(150,392,26,20)}${towerShape(56,398,30,60,'#2a2140')}${towerShape(244,398,30,60,'#2a2140')}${water(400,'#1c3560')}
+   ${horse(130,340,0.9,'#f0ece0')}
+   <g transform="translate(118 300)"><path d="M-18 0 L-10 -70 Q0 -78 10 -70 L18 0z" fill="#0b0814" stroke="${G}"/><circle cx="0" cy="-90" r="14" fill="${I}" stroke="${G}"/><circle cx="-5" cy="-92" r="2.5" fill="${N}"/><circle cx="5" cy="-92" r="2.5" fill="${N}"/><line x1="14" y1="-60" x2="60" y2="-120" stroke="${G}" stroke-width="3"/></g>
+   <rect x="178" y="150" width="70" height="90" fill="#0b0814" stroke="${G}" stroke-width="1.2"/><path d="M178 240V150" stroke="${G}" stroke-width="3"/>${rose(213,195,16,I)}`,
+ /* 14 Temperance */ ()=>`${sun(150,90,14,12)}<circle cx="150" cy="90" r="12" fill="${GL}"/>
+   ${wings(150,190,72,'#c9d9ff')}${figure(150,400,1.1,{robe:'#e6ddc8',h:190,arms:`<line x1="-24" y1="-110" x2="-54" y2="-84" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="24" y1="-118" x2="52" y2="-130" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}
+   <rect x="138" y="252" width="24" height="24" fill="none" stroke="${G}" stroke-width="1.5"/><polygon points="150,255 161,273 139,273" fill="${RD}"/>
+   <use href="#sym-cups" x="76" y="292" width="30" height="60"/><use href="#sym-cups" x="196" y="240" width="30" height="60"/>
+   <path d="M211 262 Q160 240 96 300" fill="none" stroke="${SKY}" stroke-width="4" stroke-linecap="round"/>
+   <path d="M18 404h130v26H18z" fill="#1c3560"/><path d="M148 404h134v26H148z" fill="#2a3a20"/>
+   <path d="M60 396q30 -8 40 -40" fill="none" stroke="${G}" stroke-opacity=".4"/>`,
+ /* 15 Devil */ ()=>`${star5(150,96,22,G,Math.PI)}<circle cx="150" cy="96" r="30" fill="none" stroke="${G}" stroke-width="1"/>
+   <path d="M60 240 Q40 180 90 170 Q60 210 100 230z M240 240 Q260 180 210 170 Q240 210 200 230z" fill="#3a2a3a" stroke="${G}"/>
+   ${figure(150,320,1.1,{robe:'#2a1f2a',h:170,arms:`<path d="M-16 -158q-18 -18 -12 -44M16 -158q18 -18 12 -44" fill="none" stroke="${G}" stroke-width="4" stroke-linecap="round"/><line x1="18" y1="-110" x2="44" y2="-150" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="-18" y1="-108" x2="-44" y2="-70" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><path d="M-50 -66l6 12 6 -12" fill="#e2803f"/>`})}
+   <rect x="100" y="320" width="100" height="24" fill="#0b0814" stroke="${G}"/>
+   ${[[90,410],[210,410]].map(([x,y])=>figure(x,y,0.6,{robe:'#5a4a5a',arms:`<path d="M-16 -170q-8 -14 -2 -22M16 -170q8 -14 2 -22" fill="none" stroke="${G}" stroke-width="3"/>`})).join('')}
+   ${[...Array(9)].map((_,i)=>`<circle cx="${100+i*12.5}" cy="${344+Math.abs(i-4)*3}" r="4" fill="none" stroke="${G}" stroke-width="1.5"/>`).join('')}`,
+ /* 16 Tower */ ()=>`<path d="M18 430 L80 380 L150 400 L220 370 L282 430z" fill="#1a1530"/>${towerShape(150,400,74,210,'#3a2f4f')}
+   <g transform="translate(160 178) rotate(22)">${crown(0,0,50,4,18)}</g>
+   <path d="M270 76 L214 160 L238 166 L184 240 L206 248 L150 330" fill="none" stroke="${GL}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M270 76 L214 160 L238 166 L184 240 L206 248 L150 330" fill="none" stroke="${I}" stroke-width="2" stroke-linejoin="round"/>
+   ${[[120,190],[186,206],[140,230],[172,250]].map(([x,y])=>`<path d="M${x} ${y}q-10 -18 0 -34q10 16 0 34" fill="#e2803f" stroke="${G}" stroke-width=".6"/>`).join('')}
+   <g transform="translate(92 300) rotate(-140)">${figure(0,0,0.5,{robe:'#a03a3a'})}</g><g transform="translate(212 320) rotate(140)">${figure(0,0,0.5,{robe:'#3a5a8a'})}</g>
+   ${[...Array(14)].map((_,i)=>`<path d="M${40+(i*17)%230} ${100+(i*53)%280}q-3 -8 0 -12q3 4 0 12" fill="${GL}"/>`).join('')}`,
+ /* 17 Star */ ()=>`${star8(150,120,42,GL)}${[[60,80],[240,84],[80,170],[220,176],[110,60],[196,52],[150,204]].map(([x,y])=>star8(x,y,11,I)).join('')}
+   ${water(384,'#1c3560')}<rect x="18" y="380" width="120" height="50" fill="#2a3a20"/>
+   ${figure(150,392,1,{robe:'#e6ddc8',h:150,arms:`<line x1="-22" y1="-90" x2="-56" y2="-60" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="22" y1="-90" x2="56" y2="-56" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}
+   <path d="M86 336a10 12 0 1 0 0.1 0" fill="#b8843a" stroke="${G}"/><path d="M84 344q-14 30 -26 50" stroke="${SKY}" stroke-width="3" fill="none"/>
+   <path d="M212 336a10 12 0 1 0 0.1 0" fill="#b8843a" stroke="${G}"/><path d="M214 344q10 26 24 50" stroke="${SKY}" stroke-width="3" fill="none"/>
+   <path d="M246 384V300" stroke="#5a4a2a" stroke-width="4"/><circle cx="246" cy="290" r="18" fill="#3e6b3a" stroke="${G}"/><path d="M240 272q6 -12 14 -6l-4 6" fill="${I}"/>`,
+ /* 18 Moon */ ()=>`<circle cx="150" cy="130" r="60" fill="url(#moonglow)"/><circle cx="150" cy="130" r="34" fill="#dfe7f5" stroke="${G}" stroke-width="1.5"/><path d="M150 96a34 34 0 0 0 0 68a26 26 0 0 1 0 -68z" fill="#b9c4d9"/><circle cx="160" cy="124" r="2.5" fill="${N}"/><path d="M158 140q6 4 10 0" fill="none" stroke="${N}" stroke-width="1.5"/>
+   ${[...Array(15)].map((_,i)=>`<path d="M${50+(i*29)%210} ${186+(i*37)%70}q-3 -8 0 -12q3 4 0 12" fill="${GL}"/>`).join('')}
+   ${towerShape(46,330,30,70,'#2a2140')}${towerShape(254,330,30,70,'#2a2140')}
+   <path d="M18 330h264v100H18z" fill="#1e1a36"/><path d="M150 330 Q120 350 150 370 Q180 390 140 430" fill="none" stroke="${G}" stroke-opacity=".7" stroke-width="10" stroke-linecap="round"/>
+   <path d="M90 330l-6 -26 8 6 4 -14 6 22 12 -6 -4 20z" fill="#c9a54b" stroke="${G}" stroke-width=".8"/><path d="M210 330l6 -28 -8 8 -4 -16 -6 24 -12 -8 4 22z" fill="#5a5a6a" stroke="${G}" stroke-width=".8"/>
+   ${water(402,'#1c3560')}<path d="M150 428q-14 -18 -4 -34q8 -8 16 0q8 16 -8 34z" fill="#a04a3a" stroke="${G}" stroke-width=".8"/><path d="M142 396l-10 -10M158 396l10 -10" stroke="#a04a3a" stroke-width="3" stroke-linecap="round"/>`,
+ /* 19 Sun */ ()=>`${sun(150,150,44,24,true)}
+   <rect x="18" y="300" width="264" height="26" fill="#5a4a3a" stroke="${G}"/>
+   ${[46,100,200,254].map(x=>`<path d="M${x} 300V262" stroke="#3e6b3a" stroke-width="3"/><circle cx="${x}" cy="250" r="16" fill="#e2a52a" stroke="${GD}"/>${[...Array(8)].map((_,i)=>{const a=i*Math.PI/4;return `<ellipse cx="${(x+20*Math.cos(a)).toFixed(1)}" cy="${(250+20*Math.sin(a)).toFixed(1)}" rx="7" ry="4" fill="#f1c94a" transform="rotate(${i*45} ${(x+20*Math.cos(a)).toFixed(1)} ${(250+20*Math.sin(a)).toFixed(1)})"/>`;}).join('')}<circle cx="${x}" cy="250" r="7" fill="#7a4a1a"/>`).join('')}
+   ${horse(150,382,0.85,'#f0ece0')}
+   ${figure(150,340,0.7,{robe:'#f1dc9c',arms:`<line x1="16" y1="-110" x2="50" y2="-150" stroke="${I}" stroke-width="4" stroke-linecap="round"/>`})}
+   <path d="M186 200V300" stroke="#5a4a2a" stroke-width="3"/><path d="M188 202h56l-10 22 10 22h-56z" fill="${RD}" stroke="${G}"/>`,
+ /* 20 Judgement */ ()=>`<ellipse cx="150" cy="120" rx="90" ry="34" fill="#4a4470" opacity=".7"/>${wings(150,130,80,'#c9d9ff')}<circle cx="150" cy="118" r="16" fill="${I}" stroke="${G}"/>
+   <path d="M164 130 L230 178" stroke="${G}" stroke-width="5" stroke-linecap="round"/><path d="M226 170l16 24l-30 -6z" fill="${G}"/>
+   <rect x="196" y="186" width="34" height="34" fill="${I}" stroke="${G}"/><path d="M213 190v26M200 203h26" stroke="${RD}" stroke-width="5"/>
+   ${mountains(330,'#3a4a6a')}${water(400,'#1c3560')}
+   ${[[70,'#8a8aa0'],[150,'#8a8aa0'],[230,'#8a8aa0']].map(([x,c],i)=>`<rect x="${x-24}" y="360" width="48" height="50" fill="#2a2a3a" stroke="${G}"/>${figure(x,368,0.62,{robe:c,arms:`<line x1="-14" y1="-120" x2="-36" y2="-150" stroke="${I}" stroke-width="4" stroke-linecap="round"/><line x1="14" y1="-120" x2="36" y2="-150" stroke="${I}" stroke-width="4" stroke-linecap="round"/>`})}`).join('')}`,
+ /* 21 World */ ()=>`<ellipse cx="150" cy="250" rx="82" ry="130" fill="none" stroke="#3e6b3a" stroke-width="14"/><ellipse cx="150" cy="250" rx="82" ry="130" fill="none" stroke="${G}" stroke-width="2" stroke-dasharray="6 5"/><ellipse cx="150" cy="250" rx="70" ry="118" fill="none" stroke="${G}" stroke-width="1" stroke-dasharray="3 6"/>
+   ${[[150,120],[150,380]].map(([x,y])=>`<path d="M${x-16} ${y}q16 -10 32 0q-16 10 -32 0z" fill="${RD}" stroke="${G}"/><circle cx="${x}" cy="${y}" r="4" fill="${G}"/>`).join('')}
+   ${figure(150,352,1,{robe:'#7a5ab0',h:200,arms:`<line x1="-22" y1="-120" x2="-50" y2="-150" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="22" y1="-120" x2="50" y2="-150" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="-56" y1="-176" x2="-44" y2="-124" stroke="${G}" stroke-width="3"/><line x1="56" y1="-176" x2="44" y2="-124" stroke="${G}" stroke-width="3"/>`})}
+   ${[[44,92],[256,92],[44,408],[256,408]].map(([x,y],i)=>`<ellipse cx="${x}" cy="${y}" rx="24" ry="16" fill="#4a4470" opacity=".8"/>`+[`<circle cx="${x}" cy="${y}" r="7" fill="${I}"/>`,`<path d="M${x-10} ${y+4}q10 -14 20 0M${x} ${y-6}v10" fill="none" stroke="${I}" stroke-width="2"/>`,`<circle cx="${x}" cy="${y}" r="7" fill="#e2a55a"/><circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#8a4f1c" stroke-width="3" stroke-dasharray="2 2"/>`,`<circle cx="${x}" cy="${y+2}" r="7" fill="${I}"/><path d="M${x-8} ${y-4}q-4 -10 2 -10M${x+8} ${y-4}q4 -10 -2 -10" fill="none" stroke="${I}" stroke-width="2"/>`][i]).join('')}`,
+];
+
+/* ---- Minor arcana compositions ---- */
+const PIPS={2:[[0,0],[0,1]],3:[[0,0],[0,.5],[0,1]],4:[[-1,0],[1,0],[-1,1],[1,1]],5:[[-1,0],[1,0],[-1,1],[1,1],[0,.5]],
+ 6:[[-1,0],[1,0],[-1,.5],[1,.5],[-1,1],[1,1]],7:[[-1,0],[1,0],[-1,.5],[1,.5],[-1,1],[1,1],[0,.25]],8:[[-1,0],[1,0],[-1,.5],[1,.5],[-1,1],[1,1],[0,.25],[0,.75]],
+ 9:[[-1,0],[1,0],[-1,.333],[1,.333],[-1,.667],[1,.667],[-1,1],[1,1],[0,.5]],10:[[-1,0],[1,0],[-1,.333],[1,.333],[-1,.667],[1,.667],[-1,1],[1,1],[0,.17],[0,.83]]};
+
+function minorArt(suit,rank){
+  const sym=`#sym-${suit}`, tint=ELEM_TINT[SUITS[suit].element];
+  const use=(cx,cy,w=36)=>`<use href="${sym}" x="${(cx-w/2).toFixed(1)}" y="${(cy-w).toFixed(1)}" width="${w}" height="${w*2}"/>`;
+  if(rank===1){
+    let rays='';for(let i=0;i<24;i++){const a=i*Math.PI/12;rays+=`<line x1="${(150+70*Math.cos(a)).toFixed(1)}" y1="${(245+70*Math.sin(a)).toFixed(1)}" x2="${(150+(i%2?110:135)*Math.cos(a)).toFixed(1)}" y2="${(245+(i%2?110:135)*Math.sin(a)).toFixed(1)}" stroke="${G}" stroke-opacity=".55" stroke-width="${i%2?1:1.6}"/>`;}
+    return `<circle cx="150" cy="245" r="120" fill="url(#glow)" opacity=".7"/>${rays}<circle cx="150" cy="245" r="96" fill="none" stroke="${G}" stroke-width="1" stroke-dasharray="4 5"/>
+      <path d="M40 420q30-40 70-20t40-30q30 40 70 20t40 30v20H40z" fill="#3a3050" opacity=".8"/>${use(150,245,84)}`;
+  }
+  if(rank<=10){
+    const rows=[...new Set(PIPS[rank].map(p=>p[1]))].length;
+    return PIPS[rank].map(([c,f])=>use(150+c*52,100+f*(300-72)+36)).join('')+`<circle cx="150" cy="245" r="130" fill="${tint}" opacity=".06"/>`;
+  }
+  if(rank===11) return `${ground(390)}${figure(140,392,1.05,{robe:tint,h:190,arms:`<path d="M-16 -178q16 -10 32 0" fill="${tint}" stroke="${G}"/><path d="M14 -186q10 -30 30 -36q-6 20 -26 40z" fill="${I}" stroke="${G}" stroke-width=".8"/><line x1="24" y1="-118" x2="58" y2="-100" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}${use(206,300,44)}`;
+  if(rank===12) return `${ground(396)}${horse(150,360,1.05,suit==='pentacles'?'#2a2a2a':suit==='swords'?'#c9d3e0':suit==='cups'?'#e9e2d2':'#b06a3a')}
+     <g transform="translate(140 320)"><path d="M-18 0 L-12 -80 Q0 -90 12 -80 L18 0z" fill="${tint}" stroke="${G}"/><circle cx="0" cy="-100" r="15" fill="#8c96a8" stroke="${G}"/><path d="M-15 -100h30" stroke="${N}" stroke-width="2"/><path d="M0 -114q-10 -26 -30 -30" fill="none" stroke="${I}" stroke-width="4" stroke-linecap="round"/><line x1="16" y1="-70" x2="54" y2="-110" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/></g>${use(210,200,48)}`;
+  if(rank===13) return `<rect x="96" y="150" width="108" height="240" rx="30" fill="#2a2140" stroke="${G}" stroke-width="1.2"/><rect x="88" y="380" width="124" height="30" fill="#2a2140" stroke="${G}"/>
+     ${figure(150,402,1.15,{robe:tint,h:190,arms:`<line x1="-30" y1="-110" x2="-14" y2="-96" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="30" y1="-110" x2="14" y2="-96" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}${crown(150,168,44,3,16)}${use(150,300,50)}${crescent(64,140,10)}${crescent(236,140,10)}`;
+  return `<rect x="88" y="130" width="124" height="260" fill="#2a2140" stroke="${G}" stroke-width="1.2"/><rect x="82" y="120" width="12" height="12" fill="${G}"/><rect x="206" y="120" width="12" height="12" fill="${G}"/><rect x="80" y="380" width="140" height="30" fill="#2a2140" stroke="${G}"/>
+     ${figure(150,402,1.2,{robe:tint,h:190,arms:`<line x1="30" y1="-114" x2="52" y2="-140" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/><line x1="54" y1="-190" x2="54" y2="-130" stroke="${G}" stroke-width="3"/><circle cx="54" cy="-194" r="6" fill="${G}"/><line x1="-30" y1="-114" x2="-50" y2="-100" stroke="${I}" stroke-width="3.5" stroke-linecap="round"/>`})}${crown(150,160,54,5,22)}${use(102,290,46)}`;
+}
+
+function cardSVG(card){
+  const bg=card.arcana==='major'?'major':card.element;
+  const numeral=card.arcana==='major'?(card.number===0?'0':NUMERALS[card.number-1]):(card.rank<=10?(card.rank===1?'ACE':NUMERALS[card.rank-1]):RANKS[card.rank-1].toUpperCase());
+  const art=card.arcana==='major'?MAJOR_ART[card.number]():minorArt(card.suit,card.rank);
+  const nameSize=card.name.length>15?13:17;
+  return `<svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.name}">
+  <rect x="3" y="3" width="294" height="494" rx="16" fill="url(#bg-${bg})" stroke="${G}" stroke-width="2.5"/>
+  ${scatterStars(card.index+1,14)}
+  <rect x="13" y="13" width="274" height="474" rx="10" fill="none" stroke="${G}" stroke-width=".9" stroke-opacity=".75"/>
+  ${[[22,22],[278,22],[22,478],[278,478]].map(([x,y])=>`<path d="M${x-6} ${y}l6 -6 6 6 -6 6z" fill="${G}"/>`).join('')}
+  <text x="150" y="46" text-anchor="middle" font-family="Cinzel,serif" font-size="19" letter-spacing="2" fill="${G}">${numeral}</text>
+  <path d="M60 58h180" stroke="${G}" stroke-opacity=".5"/>
+  <g>${art}</g>
+  <path d="M40 436h100M160 436h100" stroke="${G}" stroke-opacity=".6"/><path d="M150 431l5 5-5 5-5-5z" fill="${G}"/>
+  <text x="150" y="${nameSize>15?466:464}" text-anchor="middle" font-family="Cinzel,serif" font-size="${nameSize}" letter-spacing="1.5" fill="${I}">${card.name.toUpperCase()}</text>
+  </svg>`;
+}
+
+function backSVG(){
+  return `<svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="3" y="3" width="294" height="494" rx="16" fill="url(#back-sheen)" stroke="${G}" stroke-width="2.5"/>
+  <rect x="14" y="14" width="272" height="472" rx="10" fill="url(#lattice)" stroke="${G}" stroke-width="1"/>
+  <rect x="22" y="22" width="256" height="456" rx="8" fill="none" stroke="${G}" stroke-width=".6" stroke-opacity=".6"/>
+  <circle cx="150" cy="250" r="96" fill="#160f2c" stroke="${G}" stroke-width="1.5"/><circle cx="150" cy="250" r="86" fill="none" stroke="${G}" stroke-width=".7" stroke-dasharray="2 4"/>
+  <circle cx="150" cy="250" r="74" fill="url(#glow)" opacity=".5"/>
+  ${star8(150,250,44,G)}${crescent(150,250,22,'#160f2c')}
+  ${[...Array(12)].map((_,i)=>{const a=i*Math.PI/6;return `<circle cx="${(150+108*Math.cos(a)).toFixed(1)}" cy="${(250+108*Math.sin(a)).toFixed(1)}" r="2.2" fill="${G}"/>`;}).join('')}
+  ${[[36,40],[264,40],[36,460],[264,460]].map(([x,y])=>star8(x,y,9,G)).join('')}
+  </svg>`;
+}
+
+/* ---------- Sky and calendar context ---------- */
+const PLANET_CARD={Sun:19,Moon:2,Mars:16,Mercury:1,Jupiter:10,Venus:3,Saturn:21};
+const DAY_RULER=['Sun','Moon','Mars','Mercury','Jupiter','Venus','Saturn'];
+const CHALDEAN=['Saturn','Jupiter','Mars','Sun','Venus','Mercury','Moon'];
+const PLANET_GLYPH={Sun:'☉',Moon:'☽',Mars:'♂',Mercury:'☿',Jupiter:'♃',Venus:'♀',Saturn:'♄'};
+const ZODIAC=[['Capricorn','♑',15,[12,22]],['Aquarius','♒',17,[1,20]],['Pisces','♓',18,[2,19]],['Aries','♈',4,[3,21]],['Taurus','♉',5,[4,20]],['Gemini','♊',6,[5,21]],['Cancer','♋',7,[6,21]],['Leo','♌',8,[7,23]],['Virgo','♍',9,[8,23]],['Libra','♎',11,[9,23]],['Scorpio','♏',13,[10,23]],['Sagittarius','♐',14,[11,22]]];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CITIES=[['Johannesburg',-26.2041,28.0473],['Cape Town',-33.9249,18.4241],['Durban',-29.8587,31.0218],['Pretoria',-25.7479,28.2293],['Gqeberha',-33.9608,25.6022],['Port Elizabeth',-33.9608,25.6022],['Bloemfontein',-29.0852,26.1596],['Stellenbosch',-33.9321,18.8602],['Knysna',-34.0363,23.0471],['Hermanus',-34.4187,19.2345],['Plettenberg Bay',-34.0527,23.3716],['Windhoek',-22.5609,17.0658],['Gaborone',-24.6282,25.9231],['Harare',-17.8252,31.0335],['Nairobi',-1.2921,36.8219],['Lagos',6.5244,3.3792],['Cairo',30.0444,31.2357],['Mauritius',-20.3484,57.5522],['London',51.5074,-0.1278],['Edinburgh',55.9533,-3.1883],['Dublin',53.3498,-6.2603],['Paris',48.8566,2.3522],['Amsterdam',52.3676,4.9041],['Berlin',52.52,13.405],['Lisbon',38.7223,-9.1393],['Madrid',40.4168,-3.7038],['Rome',41.9028,12.4964],['Athens',37.9838,23.7275],['Istanbul',41.0082,28.9784],['Dubai',25.2048,55.2708],['Mumbai',19.076,72.8777],['Delhi',28.6139,77.209],['Bangkok',13.7563,100.5018],['Singapore',1.3521,103.8198],['Hong Kong',22.3193,114.1694],['Tokyo',35.6762,139.6503],['Sydney',-33.8688,151.2093],['Melbourne',-37.8136,144.9631],['Perth',-31.9505,115.8605],['Brisbane',-27.4698,153.0251],['Auckland',-36.8485,174.7633],['Wellington',-41.2865,174.7762],['New York',40.7128,-74.006],['Los Angeles',34.0522,-118.2437],['Chicago',41.8781,-87.6298],['Miami',25.7617,-80.1918],['Toronto',43.6532,-79.3832],['Vancouver',49.2827,-123.1207],['Mexico City',19.4326,-99.1332],['Sao Paulo',-23.5505,-46.6333],['Buenos Aires',-34.6037,-58.3816],['Santiago',-33.4489,-70.6693],['Lima',-12.0464,-77.0428],['Reykjavik',64.1466,-21.9426],['Stockholm',59.3293,18.0686],['Oslo',59.9139,10.7522],['Zurich',47.3769,8.5417],['Vienna',48.2082,16.3738],['Prague',50.0755,14.4378],['Tel Aviv',32.0853,34.7818]];
+
+function moonPhase(d){
+  const syn=29.530588853, ref=Date.UTC(2000,0,6,18,14);
+  let ph=(((d-ref)/86400000)%syn)/syn; if(ph<0)ph+=1;
+  const illum=(1-Math.cos(2*Math.PI*ph))/2;
+  const names=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
+  const idx=Math.round(ph*8)%8;
+  const notes={'New Moon':'Seeds and intentions. A good night for questions about beginnings.','Waxing Crescent':'Momentum is building. Ask about what to nurture.','First Quarter':'Decisions and obstacles. Ask what needs action.','Waxing Gibbous':'Refinement. Ask what to adjust before the peak.','Full Moon':'Illumination and release. Readings run bright and clear tonight.','Waning Gibbous':'Gratitude and sharing. Ask what you have learned.','Last Quarter':'Letting go. Ask what to release.','Waning Crescent':'Rest and surrender. Ask gently, and rest after.'};
+  return {phase:ph, illum, age:ph*syn, name:names[idx], note:notes[names[idx]]};
+}
+function moonIcon(ph,south,size=34){
+  const r=size/2-1, c=size/2, rx=Math.abs(r*Math.cos(2*Math.PI*ph)), right=Math.cos(2*Math.PI*ph)>=0;
+  const waxing=ph<0.5; const flip=(waxing?1:-1)*(south?-1:1);
+  const lit=`M${c} ${c-r}A${r} ${r} 0 1 1 ${c} ${c+r}A${rx.toFixed(2)} ${r} 0 0 ${right?0:1} ${c} ${c-r}z`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="moon-icon"><circle cx="${c}" cy="${c}" r="${r}" fill="#2a2344" stroke="#d9b664" stroke-width=".8"/><g transform="translate(${c} ${c}) scale(${flip} 1) translate(${-c} ${-c})"><path d="${lit}" fill="#efe6d2"/></g></svg>`;
+}
+function zodiacFor(d){
+  const m=d.getMonth()+1, day=d.getDate();
+  let sign=ZODIAC[0];
+  for(const z of ZODIAC){const [zm,zd]=z[3]; if(m>zm||(m===zm&&day>=zd))sign=z;}
+  if(m===12&&day>=22)sign=ZODIAC[0]; if(m===1&&day<20)sign=ZODIAC[0];
+  return {name:sign[0],glyph:sign[1],card:sign[2]};
+}
+function dayNumerology(d){
+  const digits=(''+d.getDate()+(d.getMonth()+1)+d.getFullYear()).split('').map(Number);
+  let n=digits.reduce((a,b)=>a+b,0);
+  while(n>22)n=(''+n).split('').map(Number).reduce((a,b)=>a+b,0);
+  return n===22?0:n;
+}
+function seasonFor(d,south){
+  const start=new Date(d.getFullYear(),0,0); const doy=Math.floor((d-start)/86400000);
+  let s=doy<79?'Winter':doy<172?'Spring':doy<265?'Summer':doy<355?'Autumn':'Winter';
+  if(south)s={Winter:'Summer',Spring:'Autumn',Summer:'Winter',Autumn:'Spring'}[s];
+  return s;
+}
+function julianDay(y,m,d){return Date.UTC(y,m,d,12)/86400000+2440587.5;}
+function sunTimes(y,m,d,lat,lon){
+  const rad=Math.PI/180;
+  const n=julianDay(y,m,d)-2451545+0.0008, Js=n-lon/360;
+  const M=((357.5291+0.98560028*Js)%360+360)%360;
+  const C=1.9148*Math.sin(M*rad)+0.02*Math.sin(2*M*rad)+0.0003*Math.sin(3*M*rad);
+  const L=(M+C+180+102.9372)%360;
+  const Jt=2451545+Js+0.0053*Math.sin(M*rad)-0.0069*Math.sin(2*L*rad);
+  const dec=Math.asin(Math.sin(L*rad)*Math.sin(23.44*rad));
+  const cosw=(Math.sin(-0.833*rad)-Math.sin(lat*rad)*Math.sin(dec))/(Math.cos(lat*rad)*Math.cos(dec));
+  if(cosw>1||cosw<-1)return null;
+  const w=Math.acos(cosw)/rad;
+  const toDate=J=>new Date((J-2440587.5)*86400000);
+  return {rise:toDate(Jt-w/360),set:toDate(Jt+w/360)};
+}
+function planetaryHour(when,lat,lon){
+  const dayOf=t=>sunTimes(t.getFullYear(),t.getMonth(),t.getDate(),lat,lon);
+  let base=new Date(when); let st=dayOf(base); if(!st)return null;
+  if(when<st.rise){base=new Date(base-86400000); st=dayOf(base); if(!st)return null;}
+  const next=dayOf(new Date(base.getTime()+86400000)); if(!next)return null;
+  const ruler=DAY_RULER[base.getDay()];
+  let idx, len, isDay;
+  if(when<st.set){len=(st.set-st.rise)/12; idx=Math.floor((when-st.rise)/len); isDay=true;}
+  else{len=(next.rise-st.set)/12; idx=12+Math.floor((when-st.set)/len); isDay=false;}
+  idx=Math.max(0,Math.min(23,idx));
+  const planet=CHALDEAN[(CHALDEAN.indexOf(ruler)+idx)%7];
+  return {planet, hour:idx+1, isDay, rise:st.rise, set:st.set, dayRuler:ruler};
+}
+function fmtTime(d){return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+
+/* ---------- Deck assembly ---------- */
+const DECK=[];
+(function(){
+  let i=0;
+  for(const m of MAJORS)DECK.push({index:i++,id:'m'+m[0],arcana:'major',number:m[0],rank:m[0],name:m[1],element:m[2],astro:m[3],kwUp:m[4],kwRev:m[5],up:m[6],rev:m[7]});
+  for(const s of Object.keys(SUITS)){const S=SUITS[s];MINORS[s].forEach((e,r)=>{DECK.push({index:i++,id:s+'-'+(r+1),arcana:'minor',suit:s,rank:r+1,number:r+1,name:RANKS[r]+' of '+S.name,element:S.element,astro:S.astro[r],kwUp:e[0],kwRev:e[1],up:e[2],rev:e[3]});});}
+})();
+const byId=Object.fromEntries(DECK.map(c=>[c.id,c]));
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const svgCache={};
+const artFor=c=>svgCache[c.id]||(svgCache[c.id]=cardSVG(c));
+const BACK=backSVG();
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- State ---------- */
+const state={spreadId:'ppf',revProb:0.25,question:'',date:null,time:null,place:'',lat:null,lon:null,south:false,cards:[],dealt:false,linkMode:false,selected:new Set(),notes:'',dealing:false};
+const tz=(Intl.DateTimeFormat().resolvedOptions().timeZone||'');
+state.south=/Johannesburg|Maputo|Windhoek|Gaborone|Harare|Lusaka|Australia|Auckland|Sao_Paulo|Argentina|Santiago|Montevideo|Lima|La_Paz|Asuncion|Jakarta|Port_Moresby|Fiji|Antananarivo|Mauritius|Nairobi|Dar_es_Salaam|Luanda|Kinshasa/.test(tz);
+const spread=()=>SPREADS.find(s=>s.id===state.spreadId);
+function readingDate(){const [y,m,d]=($('#date').value||new Date().toISOString().slice(0,10)).split('-').map(Number);const [hh,mm]=($('#time').value||'12:00').split(':').map(Number);return new Date(y,m-1,d,hh,mm);}
+
+/* ---------- Spread picker ---------- */
+function miniDiagram(sp){
+  const P=sp.positions;const W=Math.max(...P.map(p=>p.x))+1,H=Math.max(...P.map(p=>p.y))+CH;
+  const sc=44/Math.max(W,H*0.7);
+  return `<svg viewBox="0 0 ${(W*sc).toFixed(1)} ${(H*sc).toFixed(1)}" class="mini"><g>${P.map(p=>`<rect x="${(p.x*sc).toFixed(1)}" y="${(p.y*sc).toFixed(1)}" width="${sc}" height="${(CH*sc).toFixed(1)}" rx="1" transform="rotate(${p.rot||0} ${((p.x+0.5)*sc).toFixed(1)} ${((p.y+CH/2)*sc).toFixed(1)})"/>`).join('')}</g></svg>`;
+}
+function renderSpreads(){
+  $('#spreads').innerHTML=SPREADS.map(s=>`<button type="button" class="spread-btn${s.id===state.spreadId?' on':''}" data-id="${s.id}" role="radio" aria-checked="${s.id===state.spreadId}">${miniDiagram(s)}<span class="sp-name">${s.name}</span><span class="sp-n">${s.positions.length} card${s.positions.length>1?'s':''}</span></button>`).join('');
+  $$('.spread-btn').forEach(b=>b.onclick=()=>{state.spreadId=b.dataset.id;renderSpreads();if(!state.dealt||confirm('Start a new reading with this spread? The current cards will be cleared.')){clearReading();layoutSpread();}else{renderSpreads();}});
+  $('#spread-blurb').textContent=spread().blurb;
+}
+
+/* ---------- Table layout ---------- */
+function positionLabels(){
+  const sp=spread(); const d=readingDate();
+  return sp.positions.map((p,i)=>{if(sp.id==='year'&&p.month!==undefined){const mi=(d.getMonth()+p.month)%12;const yr=d.getFullYear()+Math.floor((d.getMonth()+p.month)/12);return {...p,label:MONTHS[mi]+(yr!==d.getFullYear()?' '+yr:'')};}return p;});
+}
+function layoutSpread(){
+  const sp=spread(),P=positionLabels();
+  const W=Math.max(...P.map(p=>p.x+(p.rot?CH:1))) , H=Math.max(...P.map(p=>p.y+CH));
+  const area=$('#spreadarea'); area.style.setProperty('--ratio',(H/W).toFixed(4));
+  area.style.paddingTop=(H/W*100)+'%';
+  const overlay=$('#linksvg');
+  area.innerHTML=P.map((p,i)=>{
+    const drawn=state.cards[i];
+    const cls=['slot',p.rot?'crossing':'',drawn?'':'empty',drawn&&drawn.faceUp?'faceup':'',drawn&&drawn.reversed?'reversed':'',state.selected.has(i)?'selected':''].join(' ');
+    return `<div class="${cls}" data-i="${i}" style="left:${(p.x/W*100).toFixed(3)}%;top:${(p.y/H*100).toFixed(3)}%;width:${(1/W*100).toFixed(3)}%;--rot:${p.rot||0}deg;z-index:${p.rot?3:2}">
+      <div class="card" role="button" tabindex="0" aria-label="${esc(p.label)}${drawn?': '+esc(drawn.card.name)+(drawn.reversed?' reversed':''):' (empty)'}">
+        <div class="flip"><div class="back">${drawn?BACK:''}</div><div class="face">${drawn?artFor(drawn.card):''}</div></div>
+        <span class="pos-num">${i+1}</span>
+      </div>
+      <div class="slot-label">${esc(p.label)}</div></div>`;}).join('');
+  area.appendChild(overlay);
+  $$('.slot .card').forEach(el=>{el.onclick=()=>onCardTap(+el.parentElement.dataset.i);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onCardTap(+el.parentElement.dataset.i);}};});
+  $('#cloth').classList.toggle('has-cards',state.dealt);
+  $('#table-hint').hidden=state.dealt;
+  requestAnimationFrame(drawLinks);
+}
+
+/* ---------- Dealing ---------- */
+function rng(n){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n;}
+function shuffleDeck(){const d=DECK.slice();for(let i=d.length-1;i>0;i--){const j=rng(i+1);[d[i],d[j]]=[d[j],d[i]];}return d;}
+function clearReading(){state.cards=[];state.dealt=false;state.selected.clear();state.linkMode=false;$('#linkmode').classList.remove('on');$('#linkmode').setAttribute('aria-pressed','false');$('#notes').value='';state.notes='';$('#linkspanel').innerHTML='';renderList();closeDrawer();}
+async function deal(){
+  if(state.dealing)return;
+  if(state.dealt&&!confirm('Shuffle again and deal a fresh reading?'))return;
+  state.dealing=true; clearReading(); readSetup(); renderSky();
+  const sp=spread();
+  const stack=$('#deckstack'); stack.hidden=false; stack.classList.add('shuffling');
+  $('#table-hint').hidden=true;
+  await wait(reduced?50:1400);
+  const shuffled=shuffleDeck();
+  state.cards=sp.positions.map((_,i)=>({card:shuffled[i],reversed:state.revProb>0&&rng(1000)<state.revProb*1000,faceUp:false}));
+  state.dealt=true; stack.classList.remove('shuffling'); stack.hidden=true;
+  layoutSpread();
+  const cloth=$('#cloth').getBoundingClientRect();
+  $$('.slot').forEach((el,i)=>{const r=el.getBoundingClientRect();const dx=(cloth.left+cloth.width/2)-(r.left+r.width/2),dy=(cloth.top+cloth.height/2)-(r.top+r.height/2);el.style.setProperty('--dx',dx+'px');el.style.setProperty('--dy',dy+'px');el.style.transitionDelay=(i*90)+'ms';el.classList.add('in');});
+  void document.body.offsetHeight;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$$('.slot').forEach(el=>el.classList.remove('in'))));
+  await wait(reduced?50:sp.positions.length*90+700);
+  $$('.slot').forEach(el=>el.style.transitionDelay='');
+  state.dealing=false; renderList(); updateToolbar();
+  if(innerWidth<1000){$('#setup').classList.add('collapsed');}
+  if(innerWidth<1000)$('#cloth').scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function flipCard(i,open=false){
+  const c=state.cards[i]; if(!c||c.faceUp)return;
+  c.faceUp=true; const slot=$(`.slot[data-i="${i}"]`); slot.classList.add('faceup');
+  slot.querySelector('.card').setAttribute('aria-label',positionLabels()[i].label+': '+c.card.name+(c.reversed?' reversed':''));
+  renderList(); updateToolbar();
+  if(open)setTimeout(()=>openCard(i),reduced?0:700);
+}
+async function turnAll(){
+  for(let i=0;i<state.cards.length;i++){if(!state.cards[i].faceUp){flipCard(i);await wait(reduced?30:650);}}
+  analyseLinks();
+}
+function onCardTap(i){
+  const c=state.cards[i]; if(!c)return;
+  if(!c.faceUp){flipCard(i,!state.linkMode);if(state.cards.every(x=>x.faceUp))analyseLinks();return;}
+  if(state.linkMode){toggleSelect(i);return;}
+  openCard(i);
+}
+function toggleSelect(i){
+  if(state.selected.has(i))state.selected.delete(i);else state.selected.add(i);
+  $(`.slot[data-i="${i}"]`).classList.toggle('selected',state.selected.has(i));
+  analyseLinks();
+}
+function updateToolbar(){
+  const anyDown=state.cards.some(c=>!c.faceUp);
+  $('#turnall').hidden=!state.dealt||!anyDown;
+  $('#toolbar').hidden=!state.dealt;
+  $('#notes-wrap').hidden=!state.dealt;
+}
+
+/* ---------- Reading list ---------- */
+function renderList(){
+  const P=positionLabels();
+  $('#readinglist').innerHTML=state.dealt?state.cards.map((c,i)=>`<button type="button" class="rrow${c.faceUp?'':' down'}" data-i="${i}"><span class="row-n">${i+1}</span><span class="row-pos">${esc(P[i].label)}</span><span class="row-card">${c.faceUp?esc(c.card.name):'Face down'}</span><span class="row-or ${c.reversed?'rev':''}">${c.faceUp?(c.reversed?'Reversed':'Upright'):''}</span><span class="row-kw">${c.faceUp?esc((c.reversed?c.card.kwRev:c.card.kwUp).slice(0,3).join(' · ')):''}</span></button>`).join(''):'';
+  $$('#readinglist .rrow').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(!state.cards[i].faceUp)flipCard(i,true);else openCard(i);});
+}
+
+/* ---------- Drawer ---------- */
+let drawerCtx=null;
+function numberTheme(c){
+  if(c.arcana==='major'){if(c.number===0)return 'Zero: the number before counting begins. Pure potential.';let n=c.number;while(n>9)n=(''+n).split('').map(Number).reduce((x,y)=>x+y,0);const t=NUMBER_THEMES[n];return (c.number>9?`${NUMERALS[c.number-1]} reduces to ${n}: `:`${n}: `)+t[1];}
+  const t=NUMBER_THEMES[c.rank];return t?t[0]+' carry '+t[1]:'';}
+function positionSentence(c,pos,rev){
+  const kws=(rev?c.kwRev:c.kwUp);
+  return `<strong>${esc(pos.label)}</strong> asks: ${esc(pos.desc)} Here, ${esc(c.name)}${rev?' reversed':''} speaks of ${esc(kws[0])}, ${esc(kws[1])} and ${esc(kws[2])}.`;
+}
+function openCard(i){
+  const c=state.cards[i]; drawerCtx={mode:'reading',i,rev:c.reversed};
+  renderDrawer(c.card,c.reversed,positionLabels()[i],i);
+}
+function openDeckCard(card,rev=false){drawerCtx={mode:'deck',card,rev};renderDrawer(card,rev,null,null);}
+function renderDrawer(card,rev,pos,i){
+  const suitInfo=card.arcana==='major'?'Major Arcana':SUITS[card.suit].name+' · '+cap(SUITS[card.suit].domain);
+  const other=rev?'upright':'reversed';
+  $('#drawer-body').innerHTML=`
+   <div class="d-art ${rev?'rev':''}">${artFor(card)}</div>
+   <div class="d-text">
+    ${pos?`<p class="eyebrow">Position ${i+1} · ${esc(pos.label)}</p>`:`<p class="eyebrow">${card.arcana==='major'?'Major Arcana':SUITS[card.suit].name}</p>`}
+    <h2 class="d-name">${esc(card.name)}</h2>
+    <div class="d-badges"><span class="badge ${rev?'rev':'up'}">${rev?'Reversed':'Upright'}</span><span class="badge el-${card.element}">${cap(card.element)}</span><span class="badge ghost">${esc(card.astro)}</span></div>
+    <div class="kw">${(rev?card.kwRev:card.kwUp).map(k=>`<span>${esc(k)}</span>`).join('')}</div>
+    ${pos?`<p class="d-pos">${positionSentence(card,pos,rev)}</p>`:''}
+    <h3>${rev?'Reversed':'Upright'} meaning</h3>
+    <p class="d-meaning">${esc(rev?card.rev:card.up)}</p>
+    <details class="d-other"><summary>If it were ${other}</summary><div class="kw">${(rev?card.kwUp:card.kwRev).map(k=>`<span>${esc(k)}</span>`).join('')}</div><p>${esc(rev?card.up:card.rev)}</p></details>
+    <dl class="d-corr">
+      <dt>Suit</dt><dd>${esc(suitInfo)}</dd>
+      <dt>Element</dt><dd>${cap(card.element)}: ${ELEMENT_INFO[card.element].theme}</dd>
+      <dt>Astrology</dt><dd>${esc(card.astro)}</dd>
+      <dt>Number</dt><dd>${esc(numberTheme(card))}</dd>
+    </dl>
+    <div class="d-actions">
+      ${pos?`<button type="button" class="ghost" id="d-link">${state.selected.has(i)?'Remove from links':'Add to links'}</button>`:`<button type="button" class="ghost" id="d-flip">Show ${other}</button>`}
+      ${pos&&i<state.cards.length-1?`<button type="button" class="ghost" id="d-next">Next card</button>`:''}
+      ${pos&&i>0?`<button type="button" class="ghost" id="d-prev">Previous card</button>`:''}
+    </div>
+   </div>`;
+  $('#drawer').classList.add('open'); $('#scrim').classList.add('on'); $('#drawer').setAttribute('aria-hidden','false');
+  $('#drawer-body').scrollTop=0;
+  const L=$('#d-link'); if(L)L.onclick=()=>{toggleSelect(i);if(!state.linkMode)setLinkMode(true);L.textContent=state.selected.has(i)?'Remove from links':'Add to links';};
+  const F=$('#d-flip'); if(F)F.onclick=()=>openDeckCard(card,!rev);
+  const Nx=$('#d-next'); if(Nx)Nx.onclick=()=>{const j=i+1;if(!state.cards[j].faceUp)flipCard(j);openCard(j);};
+  const Pv=$('#d-prev'); if(Pv)Pv.onclick=()=>{const j=i-1;if(!state.cards[j].faceUp)flipCard(j);openCard(j);};
+  $('#drawer-close').focus();
+}
+function closeDrawer(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('on');$('#drawer').setAttribute('aria-hidden','true');}
+
+/* ---------- Links and patterns ---------- */
+const LINK_COLORS={pair:'#f1dc9c',number:'#d9b664',suit:'#c9a0ff',dignity:'#7fb7c9',clash:'#c96b7a',sequence:'#e2803f',major:'#efe6d2'};
+let findings=[];
+function setLinkMode(on){state.linkMode=on;$('#linkmode').classList.toggle('on',on);$('#linkmode').setAttribute('aria-pressed',String(on));$('#cloth').classList.toggle('linking',on);if(on)analyseLinks();else{drawLinks();}}
+function analyseLinks(){
+  if(!state.dealt){$('#linkspanel').innerHTML='';return;}
+  const P=positionLabels();
+  const useSel=state.selected.size>=2;
+  const pool=state.cards.map((c,i)=>({...c,i,pos:P[i]})).filter(c=>c.faceUp&&(!useSel||state.selected.has(c.i)));
+  findings=[];
+  if(pool.length>=2)findings=findPatterns(pool);
+  renderFindings(pool,useSel);
+  drawLinks();
+}
+function findPatterns(pool){
+  const F=[];
+  const add=(type,title,text,members,weight=1)=>F.push({type,title,text,members,weight});
+  const n=pool.length;
+  /* named pairs */
+  for(let a=0;a<n;a++)for(let b=a+1;b<n;b++){const A=pool[a].card.id,B=pool[b].card.id;const p=PAIRS.find(p=>(p[0]===A&&p[1]===B)||(p[0]===B&&p[1]===A));if(p)add('pair',p[2],p[3],[pool[a].i,pool[b].i],3);}
+  /* majors */
+  const majors=pool.filter(c=>c.card.arcana==='major');
+  if(majors.length>=2&&majors.length>=n/2)add('major',`${majors.length} of ${n} cards are Major Arcana`,'This matter is larger than day to day choices. Fate, big lessons and forces beyond the querent’s control are at work. The minor cards show how it plays out in ordinary life.',majors.map(c=>c.i),2);
+  else if(majors.length===0&&n>=3)add('major','No Major Arcana','Everything here is within reach and within your control. The situation is practical and passing, not a turning point of destiny.',pool.map(c=>c.i),1);
+  /* suits */
+  const bySuit={};pool.forEach(c=>{if(c.card.suit)(bySuit[c.card.suit]=bySuit[c.card.suit]||[]).push(c);});
+  for(const s in bySuit){const g=bySuit[s];if(g.length>=2)add('suit',`${g.length} ${SUITS[s].name}`,`${cap(SUITS[s].domain)} run through this reading. ${g.length>=n/2?'This is the dominant theme; whatever was asked, the answer lives in the realm of '+SUITS[s].name.toLowerCase()+'.':'A strong secondary current of '+SUITS[s].name.toLowerCase()+'.'}`,g.map(c=>c.i),g.length);}
+  /* courts */
+  const courts=pool.filter(c=>c.card.arcana==='minor'&&c.card.rank>=11);
+  if(courts.length>=2)add('major',`${courts.length} court cards`,'Other people are central to this question, or several roles within the querent are in conversation. Ask who each figure is: '+courts.map(c=>c.card.name).join(', ')+'.',courts.map(c=>c.i),2);
+  /* repeated numbers */
+  const byNum={};pool.forEach(c=>{const k=c.card.arcana==='major'?(c.card.number===0?null:c.card.number):c.card.rank;if(k!==null&&k<=14)(byNum[k]=byNum[k]||[]).push(c);});
+  for(const k in byNum){const g=byNum[k];if(g.length>=2&&g.some(c=>c.card.arcana==='minor')){const t=NUMBER_THEMES[k];if(t)add('number',`${g.length} ${t[0]}`,`${t[0]} carry ${t[1]}${g.some(c=>c.card.arcana==='major')?' The Major Arcana card here echoes the same number and deepens it.':''}`,g.map(c=>c.i),g.length);}}
+  /* sequences within a suit */
+  for(const s in bySuit){const ranks=[...new Set(bySuit[s].filter(c=>c.card.rank<=10).map(c=>c.card.rank))].sort((a,b)=>a-b);let run=[ranks[0]];for(let i=1;i<=ranks.length;i++){if(ranks[i]===ranks[i-1]+1)run.push(ranks[i]);else{if(run.length>=2)add('sequence',`${SUITS[s].name} in sequence: ${run.map(r=>RANKS[r-1]).join(', ')}`,'A story unfolding step by step within one area of life. Read these in order for the arc of the situation.',bySuit[s].filter(c=>run.includes(c.card.rank)).map(c=>c.i),2);run=[ranks[i]];}}}
+  /* elements */
+  const byEl={fire:[],water:[],air:[],earth:[]};pool.forEach(c=>byEl[c.card.element].push(c));
+  const missing=Object.keys(byEl).filter(e=>byEl[e].length===0);
+  if(n>=4&&missing.length&&missing.length<=2)add('major',`No ${missing.map(e=>ELEMENT_INFO[e].name).join(' or ')}`,missing.map(e=>cap(ELEMENT_INFO[e].name)+' is absent, so '+ELEMENT_INFO[e].missing).join(' '),[],1);
+  const dom=Object.keys(byEl).sort((a,b)=>byEl[b].length-byEl[a].length)[0];
+  if(byEl[dom].length>=Math.max(3,n*0.6))add('suit',`${cap(dom)} dominates`,`${byEl[dom].length} of ${n} cards are ${dom}: ${ELEMENT_INFO[dom].theme}. The reading leans heavily this way, so balance your interpretation with what is missing.`,byEl[dom].map(c=>c.i),2);
+  /* elemental dignities between neighbours (in the order laid) */
+  for(let a=0;a<n;a++)for(let b=a+1;b<n;b++){const A=pool[a],B=pool[b];const adjacent=Math.abs(A.i-B.i)===1||(useSelOnly()&&n<=3);const ea=A.card.element,eb=B.card.element;if(!adjacent&&n>3)continue;
+    if(ea===eb)add('dignity',`${A.card.name} and ${B.card.name} share ${ea}`,'Same element: the cards strengthen each other. Their message is doubled and should be taken seriously.',[A.i,B.i],1);
+    else if(FRIENDLY[ea].includes(eb))add('dignity',`${A.card.name} and ${B.card.name} are friendly`,`${cap(ea)} and ${eb} support one another. Each card helps the other’s meaning come to pass.`,[A.i,B.i],1);
+    else if(HOSTILE[ea].includes(eb))add('clash',`${A.card.name} and ${B.card.name} clash`,`${cap(ea)} and ${eb} weaken each other. There is tension here: the two energies undercut one another and the outcome is uncertain.`,[A.i,B.i],1);}
+  /* reversals */
+  const revs=pool.filter(c=>c.reversed);
+  if(revs.length>=2&&revs.length>=n/2)add('major',`${revs.length} of ${n} cards reversed`,'The energy of this reading is blocked, internal or delayed. Progress is happening beneath the surface, or resistance is high. Look at what is being held back.',revs.map(c=>c.i),2);
+  /* quintessence */
+  if(n>=3){let sum=pool.reduce((s,c)=>s+(c.card.arcana==='major'?c.card.number:Math.min(c.card.rank,10)),0);let q=sum;while(q>21){q=(''+q).split('').map(Number).reduce((a,b)=>a+b,0);}const qc=DECK[q];add('major',`Quintessence: ${qc.name}`,`Adding the cards’ numbers gives ${sum}, which reduces to ${q}. ${qc.name} is the underlying lesson beneath the whole reading: ${qc.kwUp.slice(0,3).join(', ')}.`,[],2,);F[F.length-1].quint=qc;}
+  F.sort((a,b)=>b.weight-a.weight);
+  return F;
+}
+const useSelOnly=()=>state.selected.size>=2;
+function renderFindings(pool,useSel){
+  const el=$('#linkspanel');
+  if(!state.dealt){el.innerHTML='';return;}
+  if(pool.length<2){el.innerHTML=`<div class="lp-head"><h3>Links between the cards</h3><p class="hint">${state.dealt&&state.cards.some(c=>!c.faceUp)?'Turn over at least two cards to see how they speak to each other.':'Select two or more cards to compare them.'}</p></div>`;return;}
+  el.innerHTML=`<div class="lp-head"><h3>Links between the cards</h3><p class="hint">${useSel?`Comparing the ${pool.length} cards you selected. `:`Reading all ${pool.length} face up cards. `}${state.linkMode?'Tap cards on the table to add or remove them.':'Turn on Find links to choose specific cards.'}</p></div>
+   ${findings.length?`<ul class="findings">${findings.map((f,k)=>`<li class="finding f-${f.type}" data-k="${k}" tabindex="0"><span class="f-dot" style="background:${LINK_COLORS[f.type]}"></span><div><strong>${esc(f.title)}</strong><p>${esc(f.text)}</p>${f.members.length?`<p class="f-members">${f.members.map(i=>`<span>${i+1} · ${esc(state.cards[i].card.name)}</span>`).join('')}</p>`:''}${f.quint?`<button type="button" class="ghost small" data-quint="${f.quint.id}">See ${esc(f.quint.name)}</button>`:''}</div></li>`).join('')}</ul>`:'<p class="hint">No strong patterns between these cards. Read them individually and trust the story they tell in order.</p>'}
+   <p class="legend">${Object.entries(LINK_COLORS).map(([k,v])=>`<span><i style="background:${v}"></i>${{pair:'classic pairing',number:'shared number',suit:'shared suit or element',dignity:'friendly elements',clash:'clashing elements',sequence:'sequence',major:'whole reading'}[k]}</span>`).join('')}</p>`;
+  $$('.finding').forEach(li=>{const k=+li.dataset.k;const hi=()=>highlight(findings[k]);const un=()=>highlight(null);li.onmouseenter=hi;li.onmouseleave=un;li.onfocus=hi;li.onblur=un;li.onclick=()=>{highlight(findings[k],true);};});
+  $$('[data-quint]').forEach(b=>b.onclick=()=>openDeckCard(byId[b.dataset.quint]));
+}
+let pinned=null;
+function highlight(f,pin=false){
+  if(pin){pinned=(pinned===f)?null:f;f=pinned;}
+  else if(pinned)f=pinned;
+  $$('.slot').forEach(s=>s.classList.toggle('dim',!!f&&f.members.length>0&&!f.members.includes(+s.dataset.i)));
+  $$('.finding').forEach(li=>li.classList.toggle('on',!!f&&findings[+li.dataset.k]===f));
+  drawLinks(f);
+}
+function drawLinks(focus){
+  const svg=$('#linksvg'); if(!svg)return;
+  const area=$('#spreadarea'); const r=area.getBoundingClientRect();
+  svg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`); svg.style.width=r.width+'px'; svg.style.height=r.height+'px';
+  if(!state.dealt||!findings.length){svg.innerHTML='';return;}
+  const centre=i=>{const s=$(`.slot[data-i="${i}"] .card`);if(!s)return null;const b=s.getBoundingClientRect();return [b.left-r.left+b.width/2,b.top-r.top+b.height/2];};
+  const list=focus?[focus]:findings.filter(f=>f.type!=='major'&&f.type!=='suit'||f.members.length===2);
+  let out='';
+  list.forEach(f=>{const m=f.members;if(m.length<2)return;const col=LINK_COLORS[f.type];const strong=!!focus;
+    const pairs=[];if(f.type==='pair'||f.type==='dignity'||f.type==='clash'||m.length===2)pairs.push([m[0],m[1]]);else for(let i=0;i<m.length-1;i++)pairs.push([m[i],m[i+1]]);
+    pairs.forEach(([a,b])=>{const A=centre(a),B=centre(b);if(!A||!B)return;const mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2;const dx=B[0]-A[0],dy=B[1]-A[1];const d=Math.hypot(dx,dy)||1;const nx=-dy/d*Math.min(40,d*0.15),ny=dx/d*Math.min(40,d*0.15);
+      out+=`<path d="M${A[0]} ${A[1]} Q${mx+nx} ${my+ny} ${B[0]} ${B[1]}" stroke="${col}" stroke-width="${strong?3:1.6}" stroke-opacity="${strong?.95:.55}" fill="none" stroke-dasharray="${f.type==='clash'?'6 5':''}"/><circle cx="${A[0]}" cy="${A[1]}" r="3.5" fill="${col}"/><circle cx="${B[0]}" cy="${B[1]}" r="3.5" fill="${col}"/>`;
+      if(strong){const t=f.type==='pair'?'pairing':f.type==='number'?'same number':f.type==='sequence'?'sequence':f.type==='clash'?'clash':f.type==='dignity'?'friendly':'shared';out+=`<text x="${mx+nx*0.5}" y="${my+ny*0.5-6}" text-anchor="middle" fill="${col}" font-size="11" font-family="Cinzel,serif" letter-spacing="1" paint-order="stroke" stroke="#100c1c" stroke-width="4">${t.toUpperCase()}</text>`;}});});
+  svg.innerHTML=out;
+}
+addEventListener('resize',()=>drawLinks(pinned));
+
+/* ---------- Sky strip ---------- */
+function readSetup(){
+  state.question=$('#question').value.trim();state.place=$('#place').value.trim();
+  const la=parseFloat($('#lat').value),lo=parseFloat($('#lon').value);
+  state.lat=isFinite(la)?la:null;state.lon=isFinite(lo)?lo:null;
+  if(state.lat!==null)state.south=state.lat<0;
+  state.notes=$('#notes').value;
+}
+function renderSky(){
+  readSetup();
+  const d=readingDate(), m=moonPhase(d), z=zodiacFor(d), ruler=DAY_RULER[d.getDay()], num=dayNumerology(d), season=seasonFor(d,state.south);
+  const chips=[];
+  chips.push({icon:moonIcon(m.phase,state.south),title:m.name,sub:`${Math.round(m.illum*100)}% lit · day ${m.age.toFixed(1)}`,note:m.note});
+  chips.push({icon:`<span class="glyph">${z.glyph}</span>`,title:'Sun in '+z.name,sub:DECK[z.card].name,note:'The season’s sign rules the mood of the reading.',card:z.card});
+  chips.push({icon:`<span class="glyph">${PLANET_GLYPH[ruler]}</span>`,title:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]+' · '+ruler,sub:DECK[PLANET_CARD[ruler]].name,note:'The planet that rules the day, and its card.',card:PLANET_CARD[ruler]});
+  chips.push({icon:`<span class="glyph num">${num}</span>`,title:'Card of the date',sub:DECK[num].name,note:'The digits of the date reduced to a Major Arcana.',card:num});
+  chips.push({icon:`<span class="glyph">${{Spring:'❀',Summer:'☀',Autumn:'❦',Winter:'❄'}[season]}</span>`,title:season,sub:state.south?'Southern hemisphere':'Northern hemisphere',note:'Seasonal season by hemisphere.'});
+  if(state.lat!==null&&state.lon!==null){const ph=planetaryHour(d,state.lat,state.lon);if(ph){chips.push({icon:`<span class="glyph">${PLANET_GLYPH[ph.planet]}</span>`,title:'Hour of '+ph.planet,sub:`${ph.isDay?'Day':'Night'} hour ${ph.isDay?ph.hour:ph.hour-12} · rise ${fmtTime(ph.rise)} · set ${fmtTime(ph.set)}`,note:'The planetary hour at the moment of the reading.',card:PLANET_CARD[ph.planet]});}}
+  $('#skystrip').innerHTML=`<div class="sky-lead"><span class="eyebrow">Under this sky</span><span class="sky-when">${d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · ${fmtTime(d)}${state.place?' · '+esc(state.place):''}</span></div>`+chips.map(c=>`<button type="button" class="chip${c.card!==undefined?' link':''}" ${c.card!==undefined?`data-card="${c.card}"`:''} title="${esc(c.note)}"><span class="chip-icon">${c.icon}</span><span class="chip-t"><strong>${esc(c.title)}</strong><small>${esc(c.sub)}</small></span></button>`).join('');
+  $$('.chip.link').forEach(b=>b.onclick=()=>openDeckCard(DECK[+b.dataset.card]));
+  if(state.dealt)layoutSpread();
+}
+
+/* ---------- Location ---------- */
+function setupLocation(){
+  $('#cities').innerHTML=CITIES.map(c=>`<option value="${c[0]}">`).join('');
+  $('#place').addEventListener('change',()=>{const c=CITIES.find(x=>x[0].toLowerCase()===$('#place').value.trim().toLowerCase());if(c){$('#lat').value=c[1];$('#lon').value=c[2];$('#geo-hint').textContent=`Using ${c[0]} for sunrise, sunset and the planetary hour.`;}renderSky();});
+  $('#locate').onclick=()=>{if(!navigator.geolocation){$('#geo-hint').textContent='Location is not available in this browser. Type a city instead.';return;}
+    $('#geo-hint').textContent='Finding you...';
+    navigator.geolocation.getCurrentPosition(p=>{$('#lat').value=p.coords.latitude.toFixed(4);$('#lon').value=p.coords.longitude.toFixed(4);$('#geo-hint').textContent=`Using your position (${p.coords.latitude.toFixed(2)}, ${p.coords.longitude.toFixed(2)}).`;if(!$('#place').value)$('#place').value='Here';renderSky();},
+      ()=>{$('#geo-hint').textContent='Could not read your location. Type a city or enter coordinates below.';},{timeout:8000});};
+  $('#lat').addEventListener('change',renderSky);$('#lon').addEventListener('change',renderSky);
+}
+
+/* ---------- Deck browser ---------- */
+let deckFilter='all',deckQuery='';
+function renderDeck(){
+  const q=deckQuery.toLowerCase();
+  const list=DECK.filter(c=>(deckFilter==='all'||(deckFilter==='major'?c.arcana==='major':c.suit===deckFilter))&&(!q||c.name.toLowerCase().includes(q)||c.kwUp.join(' ').includes(q)||c.kwRev.join(' ').includes(q)));
+  $('#deckgrid').innerHTML=list.map(c=>`<button type="button" class="deck-card" data-id="${c.id}"><div class="deck-art">${artFor(c)}</div><span class="deck-name">${esc(c.name)}</span><span class="deck-kw">${esc(c.kwUp.slice(0,3).join(' · '))}</span></button>`).join('')||'<p class="hint">No cards match.</p>';
+  $$('.deck-card').forEach(b=>b.onclick=()=>openDeckCard(byId[b.dataset.id]));
+}
+
+/* ---------- Journal ---------- */
+const JKEY='lantern.readings';
+function loadJournal(){try{return JSON.parse(localStorage.getItem(JKEY)||'[]');}catch(e){return [];}}
+function saveJournal(list){try{localStorage.setItem(JKEY,JSON.stringify(list));return true;}catch(e){return false;}}
+function saveReading(){
+  if(!state.dealt)return; readSetup();
+  const d=readingDate();
+  const entry={id:Date.now(),savedAt:new Date().toISOString(),when:d.toISOString(),place:state.place,lat:state.lat,lon:state.lon,question:state.question,spreadId:state.spreadId,revProb:state.revProb,cards:state.cards.map(c=>({id:c.card.id,r:c.reversed})),notes:$('#notes').value};
+  const list=loadJournal(); const existing=list.findIndex(e=>e.id===state.journalId);
+  if(existing>=0){entry.id=state.journalId;list[existing]=entry;}else{list.unshift(entry);state.journalId=entry.id;}
+  if(saveJournal(list)){toast(existing>=0?'Reading updated in your journal':'Reading saved to your journal');renderJournal();}else toast('Could not save. Your browser is blocking storage.');
+}
+function renderJournal(){
+  const list=loadJournal();
+  $('#journal').innerHTML=list.length?list.map(e=>{const sp=SPREADS.find(s=>s.id===e.spreadId);const d=new Date(e.when);return `<article class="entry"><div class="entry-head"><div><p class="eyebrow">${sp?esc(sp.name):''} · ${d.toLocaleDateString([],{day:'numeric',month:'long',year:'numeric'})}${e.place?' · '+esc(e.place):''}</p><h3>${e.question?esc(e.question):'No question written'}</h3></div><div class="entry-actions"><button type="button" class="ghost small" data-open="${e.id}">Open</button><button type="button" class="ghost small danger" data-del="${e.id}">Delete</button></div></div>
+    <div class="entry-cards">${e.cards.map((c,i)=>{const card=byId[c.id];return `<div class="thumb ${c.r?'rev':''}" title="${esc(card.name)}${c.r?' reversed':''}">${artFor(card)}</div>`;}).join('')}</div>
+    ${e.notes?`<p class="entry-notes">${esc(e.notes)}</p>`:''}</article>`;}).join(''):'<p class="hint">Nothing saved yet. Lay a reading and press Save to journal, and it will appear here. Readings stay in this browser only.</p>';
+  $$('[data-open]').forEach(b=>b.onclick=()=>openEntry(+b.dataset.open));
+  $$('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Delete this reading from the journal?')){saveJournal(loadJournal().filter(e=>e.id!==+b.dataset.del));renderJournal();}});
+}
+function openEntry(id){
+  const e=loadJournal().find(x=>x.id===id); if(!e)return;
+  clearReading();
+  state.spreadId=e.spreadId; state.revProb=e.revProb??0.25; state.journalId=e.id;
+  const d=new Date(e.when); $('#date').value=d.toISOString().slice(0,10); $('#time').value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  $('#place').value=e.place||''; $('#lat').value=e.lat??''; $('#lon').value=e.lon??''; $('#question').value=e.question||''; $('#notes').value=e.notes||'';
+  $$('#reversals button').forEach(b=>b.classList.toggle('on',+b.dataset.v===state.revProb));
+  state.cards=e.cards.map(c=>({card:byId[c.id],reversed:c.r,faceUp:true})); state.dealt=true;
+  renderSpreads(); renderSky(); layoutSpread(); renderList(); updateToolbar(); analyseLinks(); showView('reading');
+  $('#cloth').scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+}
+function copyReading(){
+  if(!state.dealt)return; readSetup(); const d=readingDate(),P=positionLabels(),sp=spread();
+  const lines=[`${sp.name} · ${d.toLocaleDateString([],{day:'numeric',month:'long',year:'numeric'})} ${fmtTime(d)}${state.place?' · '+state.place:''}`,state.question?`Question: ${state.question}`:'',''];
+  state.cards.forEach((c,i)=>{lines.push(`${i+1}. ${P[i].label}: ${c.faceUp?c.card.name+(c.reversed?' (reversed)':''):'face down'}`);if(c.faceUp)lines.push('   '+(c.reversed?c.card.kwRev:c.card.kwUp).join(', '));});
+  if(findings.length){lines.push('','Links:');findings.forEach(f=>lines.push(`- ${f.title}: ${f.text}`));}
+  if($('#notes').value.trim()){lines.push('','Notes:',$('#notes').value.trim());}
+  navigator.clipboard?.writeText(lines.filter(l=>l!==undefined).join('\n')).then(()=>toast('Reading copied as text'),()=>toast('Could not copy'));
+}
+let toastT;function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
+
+/* ---------- Views ---------- */
+function showView(v){$$('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));$$('.tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.view===v);b.setAttribute('aria-selected',String(b.dataset.view===v));});if(v==='deck'&&!$('#deckgrid').children.length)renderDeck();if(v==='journal')renderJournal();if(v==='reading')requestAnimationFrame(()=>drawLinks(pinned));}
+
+/* ---------- Starfield ---------- */
+function starfield(){
+  const cv=$('#sky'),ctx=cv.getContext('2d');let stars=[],w,h;
+  function size(){w=cv.width=innerWidth*devicePixelRatio;h=cv.height=innerHeight*devicePixelRatio;stars=[...Array(Math.round(innerWidth*innerHeight/9000))].map(()=>({x:Math.random()*w,y:Math.random()*h,r:(Math.random()*1.2+0.3)*devicePixelRatio,p:Math.random()*Math.PI*2,s:0.4+Math.random()*0.8}));}
+  size();addEventListener('resize',size);
+  function draw(t){ctx.clearRect(0,0,w,h);for(const s of stars){const a=reduced?0.5:0.35+0.4*Math.sin(t/1000*s+s.p);ctx.globalAlpha=a;ctx.fillStyle='#efe6d2';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();}if(!reduced)requestAnimationFrame(draw);}
+  requestAnimationFrame(draw);
+}
+
+/* ---------- Init ---------- */
+function init(){
+  document.body.insertAdjacentHTML('afterbegin',sharedDefs());
+  const now=new Date();
+  $('#date').value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  $('#time').value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  $('#deckstack').innerHTML=[0,1,2,3,4].map(i=>`<div class="stack-card" style="--k:${i}">${BACK}</div>`).join('');
+  renderSpreads(); setupLocation(); renderSky(); layoutSpread(); updateToolbar();
+  $('#deal').onclick=deal;
+  $('#turnall').onclick=turnAll;
+  $('#linkmode').onclick=()=>setLinkMode(!state.linkMode);
+  $('#save').onclick=saveReading;
+  $('#copy').onclick=copyReading;
+  $('#newreading').onclick=()=>{if(!state.dealt||confirm('Clear the table for a new reading?')){clearReading();state.journalId=null;layoutSpread();updateToolbar();}};
+  $$('#reversals button').forEach(b=>b.onclick=()=>{state.revProb=+b.dataset.v;$$('#reversals button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',String(x===b));});});
+  ['#date','#time'].forEach(s=>$(s).addEventListener('change',()=>{renderSky();if(!state.dealt)layoutSpread();}));
+  $('#question').addEventListener('input',()=>state.question=$('#question').value);
+  $$('.tabs button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+  $('#drawer-close').onclick=closeDrawer;$('#scrim').onclick=closeDrawer;
+  addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+  $$('#deckfilters button').forEach(b=>b.onclick=()=>{deckFilter=b.dataset.f;$$('#deckfilters button').forEach(x=>x.classList.toggle('on',x===b));renderDeck();});
+  $('#decksearch').addEventListener('input',e=>{deckQuery=e.target.value.trim();renderDeck();});
+  $('#setup-toggle').onclick=()=>$('#setup').classList.toggle('collapsed');
+  starfield();
+}
+document.addEventListener('DOMContentLoaded',init);
+
+</script>
+
+</body>
+</html>
