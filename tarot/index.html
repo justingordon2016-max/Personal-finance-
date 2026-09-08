@@ -341,7 +341,7 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
 .cloth.entering .slot.current.empty .card::after{color:var(--gold-bright)}
 .cloth.entering .slot.current .slot-label{color:var(--gold-bright)}
 @keyframes beckon{0%,100%{box-shadow:0 0 0 4px rgba(241,220,156,.12),0 0 18px rgba(241,220,156,.25)}50%{box-shadow:0 0 0 6px rgba(241,220,156,.22),0 0 30px rgba(241,220,156,.5)}}
-.slot.placed .card{animation:drop .6s cubic-bezier(.2,.8,.2,1)}
+.slot.just-placed .card{animation:drop .6s cubic-bezier(.2,.8,.2,1)}
 @keyframes drop{0%{transform:translateY(-14px) scale(1.06);opacity:.4}100%{transform:none;opacity:1}}
 .slot-rev{position:absolute;right:-8px;top:-8px;width:24px;height:24px;border-radius:50%;background:var(--ground);border:1px solid var(--line);color:var(--muted);font-size:.9rem;line-height:1;display:grid;place-items:center;z-index:4;padding:0;transform:rotate(calc(var(--rot)*-1))}
 .slot-rev.on{background:var(--rose);border-color:var(--rose);color:var(--ground)}
@@ -428,6 +428,24 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
 }
 
 .cloth.entering .flip{transition:none}
+
+.style-row{display:flex;flex-direction:column;gap:.5rem;padding-top:.6rem;border-top:1px solid var(--line-soft)}
+.style-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem}
+.act-row{display:flex;flex-wrap:wrap;gap:.5rem}
+.clarify-form{display:flex;flex-direction:column;gap:.5rem;padding:.8rem;border:1px solid var(--line-soft);border-radius:8px;background:var(--ground)}
+.clar-row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:stretch}
+.clar-row select{font:inherit;color:var(--ivory);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:.45rem .6rem;max-width:100%}
+.clar-row input{flex:1;min-width:180px}
+.clar{display:flex;gap:.7rem;align-items:center;margin-top:.6rem}
+.clar-img{width:44px;flex:none;border-radius:4px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+.clar-img img{display:block;width:100%;height:auto}
+.clar-img.rev img{transform:rotate(180deg)}
+.clar .fu-q{margin-top:0}
+.rs.sky .sky-strip.small{margin-bottom:.6rem}
+.sky-strip.small .chip{padding:.3rem .55rem .3rem .4rem}
+.sky-strip.small .chip-icon{width:28px;height:28px}
+.sky-strip.small .chip .glyph{font-size:1.2rem}
+.sky-strip.small .chip-t strong{font-size:.6rem}.sky-strip.small .chip-t small{font-size:.8rem}
 
 </style>
 </head>
@@ -521,6 +539,16 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
         <div class="seg pk-filters" id="pk-f"><button type="button" data-f="all" class="on">All</button><button type="button" data-f="major">Major</button><button type="button" data-f="wands">Wands</button><button type="button" data-f="cups">Cups</button><button type="button" data-f="swords">Swords</button><button type="button" data-f="pentacles">Pentacles</button></div>
         <div class="pk-grid" id="pk-grid"></div>
         <div class="placed-wrap"><p class="eyebrow">Placed so far</p><ol class="placed-list" id="placed"></ol></div>
+        <div class="style-row" id="style">
+          <p class="eyebrow">How to read it</p>
+          <div class="style-grid">
+            <div class="field"><span class="lbl">Length</span><div class="seg" role="radiogroup" aria-label="Length"><button type="button" data-k="length" data-v="short" role="radio">Short</button><button type="button" data-k="length" data-v="full" role="radio">Full write up</button></div></div>
+            <div class="field"><span class="lbl">Tone</span><div class="seg" role="radiogroup" aria-label="Tone"><button type="button" data-k="tone" data-v="gentle" role="radio">Gentle</button><button type="button" data-k="tone" data-v="direct" role="radio">Straight talking</button></div></div>
+            <div class="field"><span class="lbl">The sky</span><div class="seg" role="radiogroup" aria-label="How much the moon, sign and hour shape the reading"><button type="button" data-k="sky" data-v="none" role="radio">Leave out</button><button type="button" data-k="sky" data-v="touch" role="radio">A touch</button><button type="button" data-k="sky" data-v="full" role="radio">Weave it in</button></div></div>
+          </div>
+          <p class="hint">Short gives a few lines per card and a one paragraph answer. Weave it in adds an “Under this sky” section reading the moon, sun sign, planetary day and hour against the cards.</p>
+        </div>
+        <datalist id="cardnames"></datalist>
         <div class="step-actions lay">
           <button type="button" class="primary big" id="lay" disabled>Lay the reading</button>
           <p class="hint" id="lay-hint"></p>
@@ -1321,12 +1349,15 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 
 /* ---------- State ---------- */
-const state={step:1,spreadId:null,question:'',place:'',lat:null,lon:null,south:false,entries:[],cards:[],dealt:false,linkMode:false,selected:new Set(),reading:{text:'',source:null,turns:[],status:'idle'},journalId:null,busy:false,current:0,revNext:false};
+const state={style:{length:'full',tone:'gentle',sky:'touch'},spreadId:null,question:'',place:'',lat:null,lon:null,south:false,entries:[],cards:[],dealt:false,linkMode:false,selected:new Set(),reading:{text:'',source:null,turns:[],status:'idle'},journalId:null,busy:false,current:0,revNext:false};
 const tz=(Intl.DateTimeFormat().resolvedOptions().timeZone||'');
 state.south=/Johannesburg|Maputo|Windhoek|Gaborone|Harare|Lusaka|Australia|Auckland|Sao_Paulo|Argentina|Santiago|Montevideo|Lima|La_Paz|Asuncion|Jakarta|Port_Moresby|Fiji|Antananarivo|Mauritius|Nairobi|Dar_es_Salaam|Luanda|Kinshasa/.test(tz);
 const spread=()=>SPREADS.find(s=>s.id===state.spreadId);
 function readingDate(){const [y,m,d]=($('#date').value||new Date().toISOString().slice(0,10)).split('-').map(Number);const [hh,mm]=($('#time').value||'12:00').split(':').map(Number);return new Date(y,m-1,d,hh,mm);}
 let sampleFn=null;
+try{Object.assign(state.style,JSON.parse(localStorage.getItem('lantern.style')||'{}'));}catch(e){}
+function setStyle(k,v){state.style[k]=v;try{localStorage.setItem('lantern.style',JSON.stringify(state.style));}catch(e){}renderStyle();}
+function renderStyle(){$$('#style [data-k]').forEach(b=>{const on=state.style[b.dataset.k]===b.dataset.v;b.classList.toggle('on',on);b.setAttribute('aria-checked',String(on));});}
 
 /* ---------- Steps ---------- */
 function goStep(n){
@@ -1444,7 +1475,7 @@ function placeCard(card,pos){
   state.revNext=false; pkQuery=''; const q=$('#pk-q'); if(q){q.value='';}
   const nx=nextEmpty(i+1); state.current=nx>=0?nx:i;
   renderTable(); renderPicker();
-  const slot=$(`.slot[data-i="${i}"]`); if(slot){slot.classList.add('placed');setTimeout(()=>slot.classList.remove('placed'),700);}
+  const slot=$(`.slot[data-i="${i}"]`); if(slot){slot.classList.add('just-placed');setTimeout(()=>slot.classList.remove('just-placed'),700);}
   if(q&&innerWidth>=900)q.focus();
   if(nx<0){$('#lay').focus();}
 }
@@ -1470,7 +1501,7 @@ async function layReading(fromAuto){
   state.busy=true; readSetup(); state.journalId=null;
   state.cards=state.entries.map(e=>e.card?{card:e.card,reversed:e.reversed,faceUp:false}:null);
   state.dealt=true; state.selected.clear(); state.linkMode=false; findings=[]; pinned=null;
-  state.reading={text:'',source:null,turns:[],status:'idle'};
+  state.reading={text:'',source:null,turns:[],status:'idle'}; if(speaking)toggleSpeak();
   goStep(4); renderTable(); renderReading(); updateToolbar();
   const stack=$('#deckstack'); if(fromAuto){stack.hidden=false;stack.classList.add('shuffling');await wait(reduced?50:1300);stack.classList.remove('shuffling');stack.hidden=true;}
   const cloth=$('#cloth').getBoundingClientRect();
@@ -1514,25 +1545,30 @@ function cardLines(){
   return state.cards.map((c,i)=>c?`${i+1}. ${P[i].label} (${P[i].desc}): ${c.card.name}, ${c.reversed?'reversed':'upright'}. Keywords: ${(c.reversed?c.card.kwRev:c.card.kwUp).join(', ')}. Traditional meaning: ${c.reversed?c.card.rev:c.card.up}`:`${i+1}. ${P[i].label}: no card placed (skip this position)`).join('\n');
 }
 function buildPrompt(){
-  const sp=spread();
+  const sp=spread(); const S=state.style;
   const pats=findings.length?findings.map(f=>`- ${f.title}: ${f.text}`).join('\n'):'None noted.';
   const q=state.question||'';
-  return `You are an experienced, warm and perceptive tarot reader in the Rider Waite Smith tradition. A querent has shuffled and pulled the cards with their own deck and laid them in a ${sp.name} spread. Give them a full reading.
+  const d=readingDate();
+  const when=S.sky==='none'?`${d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}.`:skySummary();
+  const tone=S.tone==='direct'?'Speak plainly and directly. Do not soften hard cards or hedge; say what you see and what it means, kindly but without cushioning.':'Be warm, encouraging and honest. Hard cards are named clearly, but always with the way through.';
+  const skyRule=S.sky==='none'?'Do not mention the date, moon, season or planets.':S.sky==='full'?'The querent wants the sky woven in: refer to the moon phase, the sun sign, the planetary day and hour, and the card of the date where they colour a card or the answer.':'Draw on the moon phase, sign or season only where it adds something real; otherwise leave it out.';
+  const short=S.length==='short';
+  const structure=short?`# Opening
+Two or three sentences that acknowledge the question and name the feeling of the spread.
 
-The question: ${q||'The querent asked no specific question. Read for what they most need to hear right now.'}
-Spread: ${sp.name}. ${sp.blurb}
+## 1. <position label>: <card name>, <upright or reversed>
+Two or three sentences on this card in this position and what it says about the question. One "##" section for every card in order, numbered to match. Skip positions with no card.
+${S.sky==='full'?`
+# Under this sky
+Two or three sentences on how the moon, sign, day and hour colour this reading.
+`:''}
+# Your answer
+One paragraph that answers the question directly, says what tips the balance, and ends with one concrete thing to do this week.
 
-The cards, in the order laid, with what each position means:
-${cardLines()}
+# To sit with
+One question for the querent to reflect on.
 
-When and where: ${skySummary()}
-
-Patterns between the cards (use where helpful):
-${pats}
-
-Write in the second person, warmly and plainly, in British English. Use exactly this structure, with each heading on its own line and nothing else on that line:
-
-# Opening
+Keep the whole reading under 300 words.`:`# Opening
 One short paragraph that acknowledges the question and names the overall feeling of the spread at first glance.
 
 ## 1. <position label>: <card name>, <upright or reversed>
@@ -1540,21 +1576,42 @@ One or two paragraphs reading this card in this position, and what it says about
 
 # Weaving the cards together
 One or two paragraphs on how the cards speak to each other: the story from first to last, the tensions, the repeated suits or numbers, what is missing.
-
+${S.sky==='full'?`
+# Under this sky
+One paragraph reading the moon phase, the sun sign, the planetary day and hour, and the card of the date against this spread: what the timing of the pull adds to its meaning.
+`:''}
 # Your answer
 Two paragraphs that answer the question directly and honestly, drawing on the cards above. If the cards are mixed, say so and say what tips the balance. End with concrete guidance the querent can act on this week.
 
 # To sit with
 One question for the querent to reflect on.
 
+About ${S.sky==='full'?'550 to 700':'450 to 600'} words.`;
+  return `You are an experienced and perceptive tarot reader in the Rider Waite Smith tradition. A querent has shuffled and pulled the cards with their own deck and laid them in a ${sp.name} spread. Give them a ${short?'concise':'full'} reading.
+
+The question: ${q||'The querent asked no specific question. Read for what they most need to hear right now.'}
+Spread: ${sp.name}. ${sp.blurb}
+
+The cards, in the order laid, with what each position means:
+${cardLines()}
+
+When and where: ${when}
+
+Patterns between the cards (use where helpful):
+${pats}
+
+${tone} ${skyRule} Write in the second person, in British English. Use exactly this structure, with each heading on its own line and nothing else on that line:
+
+${structure}
+
 Rules: plain paragraphs under each heading, no bullet points, no lists, no bold, no headings other than the ones above, and do not use dashes or hyphens as punctuation.`;
 }
 function parseReading(text){
-  const out={opening:'',cards:[],weave:'',answer:'',sit:''}; let cur=null; let curCard=null;
+  const out={opening:'',cards:[],weave:'',sky:'',answer:'',sit:''}; let cur=null; let curCard=null;
   const push=(k,line)=>{if(k==='card'){curCard.text+=(curCard.text?'\n':'')+line;}else out[k]+=(out[k]?'\n':'')+line;};
   for(const raw of text.split('\n')){const line=raw.trimEnd();
     let m=line.match(/^##\s*(\d+)[.):]?\s*(.*)$/); if(m){curCard={n:+m[1],title:m[2].trim(),text:''};out.cards.push(curCard);cur='card';continue;}
-    m=line.match(/^#\s*(.+)$/); if(m){const h=m[1].toLowerCase();cur=h.startsWith('open')?'opening':h.startsWith('weav')?'weave':h.startsWith('your')||h.includes('answer')?'answer':h.startsWith('to sit')||h.includes('sit')?'sit':'opening';continue;}
+    m=line.match(/^#\s*(.+)$/); if(m){const h=m[1].toLowerCase();cur=h.startsWith('open')?'opening':h.startsWith('weav')?'weave':(h.startsWith('under')||h.includes('sky'))?'sky':h.startsWith('your')||h.includes('answer')?'answer':h.startsWith('to sit')||h.includes('sit')?'sit':'opening';continue;}
     if(!line.trim())continue;
     if(cur===null){cur='opening';} push(cur,line);}
   return out;
@@ -1571,27 +1628,52 @@ function renderReading(){
   if(p.opening)html+=`<section class="rs"><h3 class="rs-h">Opening</h3>${paras(p.opening)}</section>`;
   p.cards.forEach(cs=>{const i=cs.n-1;const c=state.cards[i];if(!c)return;html+=`<article class="rc"><button type="button" class="rc-img${c.reversed?' rev':''}" data-i="${i}" aria-label="Open ${esc(c.card.name)}">${imgFor(c.card)}</button><div class="rc-t"><p class="eyebrow">Position ${cs.n} · ${esc(P[i]?P[i].label:'')}</p><h3>${esc(c.card.name)} <span class="badge ${c.reversed?'rev':'up'}">${c.reversed?'Reversed':'Upright'}</span></h3>${paras(cs.text)}</div></article>`;});
   if(p.weave)html+=`<section class="rs"><h3 class="rs-h">Weaving the cards together</h3>${paras(p.weave)}</section>`;
+  if(p.sky)html+=`<section class="rs sky"><h3 class="rs-h">Under this sky</h3><div class="sky-strip small">${$('#skystrip').innerHTML}</div>${paras(p.sky)}</section>`;
   if(p.answer)html+=`<section class="rs answer"><h3 class="rs-h">Your answer</h3>${paras(p.answer)}</section>`;
   if(p.sit)html+=`<section class="rs sit"><h3 class="rs-h">To sit with</h3>${paras(p.sit)}</section>`;
   if(live)html+=`<p class="waiting cursor">Reading…</p>`;
-  if(R.followups&&R.followups.length)html+=`<section class="rs fu"><h3 class="rs-h">Follow up</h3>${R.followups.map(f=>`<p class="fu-q">${esc(f.q)}</p>${paras(f.a)}`).join('')}</section>`;
+  if(R.followups&&R.followups.length)html+=`<section class="rs fu"><h3 class="rs-h">Follow up</h3>${R.followups.map(f=>`${f.card?`<div class="clar"><span class="clar-img${f.rev?' rev':''}">${imgFor(byId[f.card])}</span><p class="fu-q">${esc(f.q)}</p></div>`:`<p class="fu-q">${esc(f.q)}</p>`}${paras(f.a)}`).join('')}</section>`;
   out.innerHTML=html;
   $$('.rc-img').forEach(b=>b.onclick=()=>openCard(+b.dataset.i));
   const acts=$('#reading-actions');
   if(R.status==='done'||R.status==='error'){
-    acts.innerHTML=`${R.source==='composed'&&sampleFn?`<button type="button" class="primary" id="ask-ai">Ask for a fuller reading</button>`:''}${R.source==='ai'?`<form class="followup" id="followup"><input type="text" id="fu-q" placeholder="Ask a follow up, for example: what does the Tower in position 2 mean for my work?" aria-label="Follow up question"><button type="submit" class="primary">Ask</button></form>`:''}${R.status==='error'?`<p class="hint err">${esc(R.error||'')}</p><button type="button" class="ghost" id="retry">Try again</button>`:''}`;
+    const canSpeak='speechSynthesis' in window;
+    acts.innerHTML=`${R.source==='ai'?`<form class="followup" id="followup"><input type="text" id="fu-q" placeholder="Ask a follow up, for example: what does the Tower in position 2 mean for my work?" aria-label="Follow up question"><button type="submit" class="primary">Ask</button></form>`:''}
+      <div class="act-row">
+        ${R.source==='composed'&&sampleFn?`<button type="button" class="primary" id="ask-ai">Ask Claude for the reading</button>`:''}
+        ${sampleFn?`<button type="button" class="ghost" id="relen">${state.style.length==='short'?'Read again in full':'Read again, shorter'}</button>`:''}
+        <button type="button" class="ghost" id="clarify">Add a clarifier card</button>
+        ${canSpeak?`<button type="button" class="ghost" id="speak">${speaking?'Stop reading aloud':'Read it aloud'}</button>`:''}
+      </div>
+      <div class="clarify-form" id="clarify-form" hidden>
+        <p class="hint">Pull one more card from your deck to clarify a position, or the whole reading, and tell me what it was.</p>
+        <div class="clar-row">
+          <select id="cl-pos" aria-label="What the clarifier is for"><option value="-1">The whole reading</option>${state.cards.map((c,i)=>c?`<option value="${i}">${i+1} · ${esc(positionLabels()[i].label)} (${esc(c.card.name)})</option>`:'').join('')}</select>
+          <input type="text" id="cl-q" list="cardnames" placeholder="Which card? e.g. six of swords" aria-label="Clarifier card" autocomplete="off">
+          <button type="button" id="cl-rev" class="revsw" aria-pressed="false"><span class="sw"></span>Reversed</button>
+          <button type="button" id="cl-add" class="primary">Add</button>
+        </div>
+      </div>
+      ${R.status==='error'?`<p class="hint err">${esc(R.error||'')}</p><button type="button" class="ghost" id="retry">Try again</button>`:''}`;
     const a=$('#ask-ai'); if(a)a.onclick=()=>runReading(true);
     const r=$('#retry'); if(r)r.onclick=()=>runReading(true);
+    const rl=$('#relen'); if(rl)rl.onclick=()=>{setStyle('length',state.style.length==='short'?'full':'short');runReading(true);};
     const fu=$('#followup'); if(fu)fu.onsubmit=e=>{e.preventDefault();const q=$('#fu-q').value.trim();if(q)askFollowup(q);};
+    const sp=$('#speak'); if(sp)sp.onclick=toggleSpeak;
+    $('#clarify').onclick=()=>{const f=$('#clarify-form');f.hidden=!f.hidden;if(!f.hidden)$('#cl-q').focus();};
+    let clRev=false; $('#cl-rev').onclick=()=>{clRev=!clRev;$('#cl-rev').classList.toggle('on',clRev);$('#cl-rev').setAttribute('aria-pressed',String(clRev));};
+    const addCl=()=>{const card=rankMatches(DECK,$('#cl-q').value.trim().toLowerCase())[0];if(!$('#cl-q').value.trim()||!card){toast('Type the card you pulled');return;}addClarifier(card,clRev,+$('#cl-pos').value);};
+    $('#cl-add').onclick=addCl; $('#cl-q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addCl();}});
   } else acts.innerHTML='';
 }
 function composeReading(){
   const P=positionLabels(), sp=spread(), d=readingDate(), m=moonPhase(d), z=zodiacFor(d);
   const L=[]; const q=state.question;
   L.push('# Opening',`${q?`You asked: ${q} `:''}The cards were laid as a ${sp.name} under a ${m.name.toLowerCase()} with the Sun in ${z.name}. ${m.note} Read them in order first, then let them speak together.`);
-  state.cards.forEach((c,i)=>{if(!c)return;const kw=c.reversed?c.card.kwRev:c.card.kwUp;L.push(`## ${i+1}. ${P[i].label}: ${c.card.name}, ${c.reversed?'reversed':'upright'}`,`${P[i].desc} ${c.card.name}${c.reversed?' reversed':''} speaks of ${kw[0]}, ${kw[1]} and ${kw[2]}. ${c.reversed?c.card.rev:c.card.up}${q?` Held against your question, ask where ${kw[0]} is already present in the situation.`:''}`);});
+  state.cards.forEach((c,i)=>{if(!c)return;const kw=c.reversed?c.card.kwRev:c.card.kwUp;const full=state.style.length!=='short';L.push(`## ${i+1}. ${P[i].label}: ${c.card.name}, ${c.reversed?'reversed':'upright'}`,full?`${P[i].desc} ${c.card.name}${c.reversed?' reversed':''} speaks of ${kw[0]}, ${kw[1]} and ${kw[2]}. ${c.reversed?c.card.rev:c.card.up}${q?` Held against your question, ask where ${kw[0]} is already present in the situation.`:''}`:`${c.card.name}${c.reversed?' reversed':''}: ${kw[0]}, ${kw[1]}, ${kw[2]}. ${(c.reversed?c.card.rev:c.card.up).split('. ').slice(-1)[0]}`);});
   const strong=findings.filter(f=>f.type!=='dignity'&&f.type!=='clash').slice(0,3);
-  L.push('# Weaving the cards together',strong.length?strong.map(f=>`${f.title.replace(/^Quintessence: /,'The quintessence is ')}. ${f.text}`).join(' '):'No strong patterns run between these cards, so read them as a sequence: each answers the one before it.');
+  if(state.style.length!=='short')L.push('# Weaving the cards together',strong.length?strong.map(f=>`${f.title.replace(/^Quintessence: /,'The quintessence is ')}. ${f.text}`).join(' '):'No strong patterns run between these cards, so read them as a sequence: each answers the one before it.');
+  if(state.style.sky==='full'){const ruler=DAY_RULER[d.getDay()];L.push('# Under this sky',`${m.name}, ${Math.round(m.illum*100)}% lit. ${m.note} The Sun is in ${z.name}, which belongs to ${DECK[z.card].name}, and the day is ruled by the ${ruler}, whose card is ${DECK[PLANET_CARD[ruler]].name}. The date itself reduces to ${DECK[dayNumerology(d)].name}. Read these as the weather the cards were pulled in: they colour the answer without changing it.`);}
   const last=[...state.cards].reverse().find(Boolean); const li=state.cards.lastIndexOf(last);
   L.push('# Your answer',`${q?`On the question of ${q.replace(/\?$/,'').replace(/^(should|will|is|do|does|can|what|how|why|where|when)\s+/i,m=>m.toLowerCase())}, the`:'The'} reading settles on ${last.card.name}${last.reversed?' reversed':''} in the position of ${P[li].label}: ${(last.reversed?last.card.kwRev:last.card.kwUp).slice(0,2).join(' and ')}. Take the first card as where you stand and the last as where this is heading, and notice which card you most want to argue with; that is usually where the message is.`,`This week, act on the card that felt most practical, and hold the others as weather rather than instruction.`);
   L.push('# To sit with',`Which of these ${state.cards.filter(Boolean).length} cards did you already know was coming, and what does that tell you?`);
@@ -1622,6 +1704,36 @@ async function askFollowup(q){
   try{const res=await sampleFn(turns,{cache:false});R.followups=[...(R.followups||[]),{q,a:res.text.trim()}];R.turns=[...turns,{role:'assistant',content:res.text}];renderReading();$('#reading-out .fu:last-child')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'end'});}
   catch(e){toast(e&&e.code==='rate_limited'?'Too many questions in a row. Wait a moment.':'Could not answer just now.');if(inp){inp.disabled=false;inp.value=q;}}
 }
+
+async function addClarifier(card,rev,pos){
+  const R=state.reading; const P=positionLabels();
+  const target=pos>=0&&state.cards[pos]?`position ${pos+1}, ${P[pos].label} (${state.cards[pos].card.name}${state.cards[pos].reversed?' reversed':''})`:'the whole reading';
+  const q=`Clarifier for ${target}: ${card.name}${rev?', reversed':''}.`;
+  const meaning=`${card.name}${rev?' reversed':''}: ${(rev?card.kwRev:card.kwUp).join(', ')}. ${rev?card.rev:card.up}`;
+  if(R.source==='ai'&&sampleFn){
+    const turns=[...R.turns,{role:'user',content:`The querent pulled one more card as a clarifier for ${target}. It is ${card.name}, ${rev?'reversed':'upright'}. Its traditional meaning: ${meaning}\n\nIn two or three short paragraphs of plain text, say what this clarifier adds, changes or confirms, and how it bears on the question. No headings, no lists, no dashes as punctuation.`}];
+    R.followups=[...(R.followups||[]),{q,a:'Reading the clarifier…',card:card.id,rev}]; renderReading();
+    try{const res=await sampleFn(turns,{cache:false});R.followups[R.followups.length-1].a=res.text.trim();R.turns=[...turns,{role:'assistant',content:res.text}];}
+    catch(e){R.followups[R.followups.length-1].a='Could not read the clarifier just now. '+meaning;}
+    renderReading();
+  } else {
+    R.followups=[...(R.followups||[]),{q,a:`${meaning} Read it as a footnote to ${target}: where the card agrees, the message is confirmed; where it argues, it is showing the part of the situation the first card left out.`,card:card.id,rev}]; renderReading();
+  }
+  $('#reading-out .fu')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'end'});
+}
+let speaking=false;
+function readingPlainText(){const p=parseReading(state.reading.text);const P=positionLabels();const parts=[];if(state.question)parts.push('You asked: '+state.question);if(p.opening)parts.push(p.opening);p.cards.forEach(c=>{const i=c.n-1;const k=state.cards[i];if(k)parts.push(`${P[i]?P[i].label:''}. ${k.card.name}${k.reversed?', reversed':''}. ${c.text}`);});if(p.weave)parts.push('Weaving the cards together. '+p.weave);if(p.sky)parts.push('Under this sky. '+p.sky);if(p.answer)parts.push('Your answer. '+p.answer);if(p.sit)parts.push('To sit with. '+p.sit);(state.reading.followups||[]).forEach(f=>parts.push(f.q+' '+f.a));return parts.join('\n\n');}
+function toggleSpeak(){
+  if(!('speechSynthesis' in window))return;
+  if(speaking){speechSynthesis.cancel();speaking=false;renderReading();return;}
+  const text=readingPlainText(); if(!text)return;
+  speechSynthesis.cancel();
+  const voices=speechSynthesis.getVoices(); const pick=voices.find(v=>/en[-_]GB/i.test(v.lang)&&/female|serena|kate|stephanie|libby|sonia/i.test(v.name))||voices.find(v=>/en[-_]GB/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang));
+  const chunks=text.split(/\n\n+/);
+  chunks.forEach((ch,k)=>{const u=new SpeechSynthesisUtterance(ch);if(pick)u.voice=pick;u.rate=0.92;u.pitch=1;if(k===chunks.length-1)u.onend=()=>{speaking=false;renderReading();};speechSynthesis.speak(u);});
+  speaking=true; renderReading();
+}
+addEventListener('beforeunload',()=>{if('speechSynthesis' in window)speechSynthesis.cancel();});
 
 /* ---------- Card drawer ---------- */
 function numberTheme(c){
@@ -1774,7 +1886,7 @@ function loadJournal(){try{return JSON.parse(localStorage.getItem(JKEY)||'[]');}
 function saveJournal(list){try{localStorage.setItem(JKEY,JSON.stringify(list));return true;}catch(e){return false;}}
 function saveReading(){
   if(!state.dealt)return; readSetup(); const d=readingDate();
-  const entry={id:state.journalId||Date.now(),savedAt:new Date().toISOString(),when:d.toISOString(),place:state.place,lat:state.lat,lon:state.lon,question:state.question,spreadId:state.spreadId,cards:state.cards.map(c=>c?{id:c.card.id,r:c.reversed}:null),notes:$('#notes').value,reading:state.reading.text?{text:state.reading.text,source:state.reading.source,followups:state.reading.followups||[]}:null};
+  const entry={id:state.journalId||Date.now(),savedAt:new Date().toISOString(),when:d.toISOString(),place:state.place,lat:state.lat,lon:state.lon,question:state.question,spreadId:state.spreadId,cards:state.cards.map(c=>c?{id:c.card.id,r:c.reversed}:null),notes:$('#notes').value,reading:state.reading.text?{text:state.reading.text,source:state.reading.source,followups:state.reading.followups||[]}:null,style:{...state.style}};
   const list=loadJournal(); const k=list.findIndex(e=>e.id===entry.id);
   if(k>=0)list[k]=entry;else list.unshift(entry); state.journalId=entry.id;
   if(saveJournal(list)){toast(k>=0?'Reading updated in your journal':'Saved to your journal');}else toast('Could not save. Your browser is blocking storage.');
@@ -1795,6 +1907,7 @@ function openEntry(id){
   state.spreadId=e.spreadId; state.journalId=e.id; readSetup();
   state.entries=e.cards.map(c=>c?{card:byId[c.id],reversed:c.r}:{card:null,reversed:false});
   state.cards=e.cards.map(c=>c?{card:byId[c.id],reversed:c.r,faceUp:true}:null); state.dealt=true; state.selected.clear(); state.linkMode=false;
+  if(e.style)Object.assign(state.style,e.style);renderStyle();
   state.reading=e.reading?{text:e.reading.text,source:e.reading.source,turns:[],status:'done',followups:e.reading.followups||[]}:{text:'',source:null,turns:[],status:'idle'};
   if(state.reading.source==='ai'&&state.reading.text)state.reading.turns=[{role:'user',content:'(A previous reading of these cards follows.)'},{role:'assistant',content:state.reading.text}];
   showView('reading'); renderSky(); goStep(4); renderTable(); updateToolbar(); analyseLinks(); renderReading();
@@ -1811,6 +1924,7 @@ function copyReading(){
 }
 let toastT;function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
 function newReading(){
+  if(speaking)toggleSpeak();
   if(state.dealt&&!confirm('Start a new reading? The table will be cleared. Save to journal first if you want to keep this one.'))return;
   state.cards=[];state.dealt=false;state.entries=[];state.spreadId=null;state.selected.clear();state.linkMode=false;state.reading={text:'',source:null,turns:[],status:'idle'};state.journalId=null;state.current=0;findings=[];pinned=null;
   $('#notes').value='';$('#question').value='';$('#linkspanel').hidden=true;$('#linkmode').classList.remove('on');updateToolbar();goStep(1);
@@ -1847,6 +1961,8 @@ function init(){
   q.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const top=$('.pk-card.top:not(.used)')||$('.pk-card:not(.used)');if(top&&pkQuery)placeCard(byId[top.dataset.id]);}if(e.key==='Escape'){q.value='';pkQuery='';renderPickerGrid();}});
   $('#pk-rev').onclick=()=>{state.revNext=!state.revNext;$('#pk-rev').classList.toggle('on',state.revNext);$('#pk-rev').setAttribute('aria-pressed',String(state.revNext));renderPickerGrid();};
   $$('#pk-f button').forEach(b=>b.onclick=()=>{pkFilter=b.dataset.f;$$('#pk-f button').forEach(x=>x.classList.toggle('on',x===b));renderPickerGrid();});
+  $('#cardnames').innerHTML=DECK.map(c=>`<option value="${esc(c.name)}">`).join('');
+  $$('#style [data-k]').forEach(b=>b.onclick=()=>setStyle(b.dataset.k,b.dataset.v)); renderStyle();
   $('#lay').onclick=()=>layReading(false);
   $('#autodraw').onclick=autoDraw;
   $('#turnall').onclick=turnAll;
