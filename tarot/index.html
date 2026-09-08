@@ -1371,7 +1371,7 @@ function renderTable(){
   const sp=spread(); if(!sp)return; const P=positionLabels();
   const W=Math.max(...P.map(p=>p.x+(p.rot?CH:1))),H=Math.max(...P.map(p=>p.y+CH));
   const area=$('#spreadarea'); const overlay=$('#linksvg');
-  area.style.paddingTop=(H/W*100)+'%';
+  area.style.aspectRatio=`${W} / ${H}`;
   area.innerHTML=P.map((p,i)=>{
     const drawn=state.dealt?state.cards[i]:(state.entries[i]&&state.entries[i].card?{card:state.entries[i].card,reversed:state.entries[i].reversed,faceUp:true}:null);
     const cls=['slot',p.rot?'crossing':'',drawn?'':'empty',drawn&&drawn.faceUp?'faceup':'',drawn&&drawn.reversed?'reversed':'',state.selected.has(i)?'selected':'',!state.dealt&&i===state.current?'current':''].join(' ');
@@ -1479,8 +1479,12 @@ async function layReading(fromAuto){
   requestAnimationFrame(()=>requestAnimationFrame(()=>$$('.slot').forEach(el=>el.classList.remove('in'))));
   await wait(reduced?50:filled.length*90+600); $$('.slot').forEach(el=>el.style.transitionDelay='');
   state.busy=false;
+  const P=positionLabels();
+  findings=findPatterns(state.cards.map((c,i)=>c?{...c,i,pos:P[i]}:null).filter(Boolean));
+  const pending=runReading();
   await turnAll();
-  runReading();
+  renderReading();
+  await pending;
 }
 function flipCard(i){
   const c=state.cards[i]; if(!c||c.faceUp)return; c.faceUp=true;
@@ -1558,9 +1562,10 @@ function parseReading(text){
 const paras=t=>t.split(/\n+/).filter(Boolean).map(p=>`<p>${esc(p.replace(/\*\*/g,''))}</p>`).join('');
 function renderReading(){
   const R=state.reading, P=positionLabels(), d=readingDate(), m=moonPhase(d);
-  $('#reading-hero').innerHTML=`<p class="eyebrow">Your reading</p>${state.question?`<blockquote class="q">“${esc(state.question)}”</blockquote>`:'<p class="q open">An open reading</p>'}<p class="hint">${esc(spread()?spread().name:'')} · ${d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})} · ${m.name}${state.place?' · '+esc(state.place):''}</p>`;
+  $('#reading-hero').innerHTML=`<p class="eyebrow">${state.question?'You asked':'The question'}</p>${state.question?`<blockquote class="q">“${esc(state.question)}”</blockquote>`:'<p class="q open">An open reading</p>'}<p class="hint">${esc(spread()?spread().name:'')} · ${d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})} · ${m.name}${state.place?' · '+esc(state.place):''}</p>`;
   const out=$('#reading-out');
-  if(R.status==='idle'&&!R.text){out.innerHTML=`<p class="waiting">${state.cards.some(c=>c&&!c.faceUp)?'Turning the cards…':'Preparing your reading…'}</p>`;$('#reading-actions').innerHTML='';return;}
+  const turning=state.cards.some(c=>c&&!c.faceUp);
+  if(turning||(R.status==='idle'&&!R.text)){out.innerHTML=`<p class="waiting">${state.cards.some(c=>c&&!c.faceUp)?'Turning the cards…':'Preparing your reading…'}</p>`;$('#reading-actions').innerHTML='';return;}
   const p=parseReading(R.text); const live=R.status==='streaming';
   let html='';
   if(p.opening)html+=`<section class="rs"><h3 class="rs-h">Opening</h3>${paras(p.opening)}</section>`;
