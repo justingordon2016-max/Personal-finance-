@@ -461,6 +461,12 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
   .rc-img{min-width:72px}
 }
 
+.link-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.4rem}
+.link-chip{display:inline-flex;align-items:center;gap:.45rem;background:var(--ground);border:1px solid var(--line-soft);border-radius:999px;padding:.35rem .8rem .35rem .55rem;color:var(--ivory);font-family:var(--display);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;transition:border-color .2s,background .2s}
+.link-chip i{width:9px;height:9px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.link-chip:hover{border-color:var(--gold)}
+.link-chip.on{border-color:var(--gold);background:var(--surface-2)}
+
 </style>
 </head>
 <body>
@@ -1642,6 +1648,8 @@ function renderReading(){
   if(p.opening)html+=`<section class="rs"><h3 class="rs-h">Opening</h3>${paras(p.opening)}</section>`;
   p.cards.forEach(cs=>{const i=cs.n-1;const c=state.cards[i];if(!c)return;html+=`<article class="rc"><button type="button" class="rc-img${c.reversed?' rev':''}" data-i="${i}" aria-label="Open ${esc(c.card.name)}">${imgFor(c.card)}</button><div class="rc-t"><p class="eyebrow">Position ${cs.n} · ${esc(P[i]?P[i].label:'')}</p><h3>${esc(c.card.name)} <span class="badge ${c.reversed?'rev':'up'}">${c.reversed?'Reversed':'Upright'}</span></h3>${paras(cs.text)}</div></article>`;});
   if(p.weave)html+=`<section class="rs"><h3 class="rs-h">Weaving the cards together</h3>${paras(p.weave)}</section>`;
+  const allDone=!turning&&state.cards.filter(Boolean).length>=2;
+  if(allDone){const RF=readingFindings();const linked=RF.filter(f=>f.members.length>=2);if(linked.length)html+=`<section class="rs links"><h3 class="rs-h">See the links on the table</h3><div class="link-chips">${linked.map((f,k)=>`<button type="button" class="link-chip" data-rf="${RF.indexOf(f)}"><i style="background:${LINK_COLORS[f.type]}"></i>${esc(f.title)}</button>`).join('')}</div><p class="hint">Tap one to draw it between the cards above.</p></section>`;}
   if(p.sky)html+=`<section class="rs sky"><h3 class="rs-h">Under this sky</h3><div class="sky-strip small">${$('#skystrip').innerHTML}</div>${paras(p.sky)}</section>`;
   if(p.answer)html+=`<section class="rs answer"><h3 class="rs-h">Your answer</h3>${paras(p.answer)}</section>`;
   if(p.sit)html+=`<section class="rs sit"><h3 class="rs-h">To sit with</h3>${paras(p.sit)}</section>`;
@@ -1649,6 +1657,7 @@ function renderReading(){
   if(R.followups&&R.followups.length)html+=`<section class="rs fu"><h3 class="rs-h">Follow up</h3>${R.followups.map(f=>`${f.card?`<div class="clar"><span class="clar-img${f.rev?' rev':''}">${imgFor(byId[f.card])}</span><p class="fu-q">${esc(f.q)}</p></div>`:`<p class="fu-q">${esc(f.q)}</p>`}${paras(f.a)}`).join('')}</section>`;
   out.innerHTML=html;
   $$('.rc-img').forEach(b=>b.onclick=()=>openCard(+b.dataset.i));
+  $$('.link-chip').forEach(b=>b.onclick=()=>showLinkOnTable(+b.dataset.rf,b));
   const acts=$('#reading-actions');
   if(R.status==='done'||R.status==='error'){
     const canSpeak='speechSynthesis' in window;
@@ -1785,6 +1794,17 @@ function renderDrawer(card,rev,pos,i){
 function closeDrawer(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('on');$('#drawer').setAttribute('aria-hidden','true');}
 
 /* ---------- Links and patterns ---------- */
+let rfCache=null,rfKey='';
+function readingFindings(){const key=state.cards.map(c=>c?c.card.id+(c.reversed?'r':''):'-').join(',');if(rfKey!==key||!rfCache){const P=positionLabels();rfCache=findPatterns(state.cards.map((c,i)=>c?{...c,i,pos:P[i]}:null).filter(Boolean));rfKey=key;}return rfCache;}
+function showLinkOnTable(k,btn){
+  const RF=readingFindings(); const f=RF[k]; if(!f)return;
+  state.selected.clear(); $$('.slot').forEach(s=>s.classList.remove('selected'));
+  if(!state.linkMode)setLinkMode(true); else analyseLinks();
+  const match=findings.find(x=>x.title===f.title)||f;
+  pinned=null; highlight(match,true);
+  $$('.link-chip').forEach(c=>c.classList.toggle('on',c===btn&&pinned===match));
+  $('#cloth').scrollIntoView({behavior:reduced?'auto':'smooth',block:innerWidth<900?'start':'center'});
+}
 const LINK_COLORS={pair:'#f1dc9c',number:'#d9b664',suit:'#c9a0ff',dignity:'#7fb7c9',clash:'#c96b7a',sequence:'#e2803f',major:'#efe6d2'};
 let findings=[],pinned=null;
 function setLinkMode(on){state.linkMode=on;$('#linkmode').classList.toggle('on',on);$('#linkmode').setAttribute('aria-pressed',String(on));$('#cloth').classList.toggle('linking',on);$('#linkspanel').hidden=!on;if(on){analyseLinks();$('#linkspanel').scrollIntoView({behavior:reduced?'auto':'smooth',block:'nearest'});}else{state.selected.clear();$$('.slot').forEach(s=>s.classList.remove('selected','dim'));pinned=null;drawLinks();}}
@@ -1837,6 +1857,7 @@ function highlight(f,pin=false){
   if(pin){pinned=(pinned===f)?null:f;f=pinned;}else if(pinned)f=pinned;
   $$('.slot').forEach(s=>s.classList.toggle('dim',!!f&&f.members.length>0&&!f.members.includes(+s.dataset.i)));
   $$('.finding').forEach(li=>li.classList.toggle('on',!!f&&findings[+li.dataset.k]===f));
+  if(pin&&pinned&&innerWidth<900)$('#cloth').scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
   drawLinks(f);
 }
 function drawLinks(focus){
