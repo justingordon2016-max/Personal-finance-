@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#100c1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lantern Tarot">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Lantern Tarot</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
@@ -447,6 +452,15 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
 .sky-strip.small .chip .glyph{font-size:1.2rem}
 .sky-strip.small .chip-t strong{font-size:.6rem}.sky-strip.small .chip-t small{font-size:.8rem}
 
+@media (pointer:coarse){
+  .slot-rev{width:32px;height:32px;right:-10px;top:-10px;font-size:1.1rem}
+  .placed .x{width:32px;height:32px}
+  .placed .revtog{padding:.45rem .7rem}
+  .pk-card{padding:.3rem}
+  .ghost,.tabs button{padding-top:.6rem;padding-bottom:.6rem}
+  .rc-img{min-width:72px}
+}
+
 </style>
 </head>
 <body>
@@ -533,7 +547,7 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
           <div class="pk-progress-wrap"><span id="pk-count" class="pk-count"></span><div class="pk-bar"><div class="pk-fill" id="pk-progress"></div></div></div>
         </div>
         <div class="pk-tools">
-          <input type="search" id="pk-q" placeholder="Type the card, for example: ten of cups, tower, knight wands" aria-label="Search for the card" autocomplete="off">
+          <input type="search" id="pk-q" placeholder="Type a card: ten of cups, tower, knight wands" aria-label="Search for the card" autocomplete="off">
           <button type="button" id="pk-rev" class="revsw" aria-pressed="false"><span class="sw"></span>Fell reversed</button>
         </div>
         <div class="seg pk-filters" id="pk-f"><button type="button" data-f="all" class="on">All</button><button type="button" data-f="major">Major</button><button type="button" data-f="wands">Wands</button><button type="button" data-f="cups">Cups</button><button type="button" data-f="swords">Swords</button><button type="button" data-f="pentacles">Pentacles</button></div>
