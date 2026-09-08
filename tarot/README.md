@@ -1,18 +1,12 @@
 # Lantern Tarot
 
-A single file tarot reading table. Open `index.html` in any modern browser; nothing to install and no internet needed apart from the two Google fonts, which fall back gracefully.
+A single file tarot reading table. Open `index.html` in any modern browser; nothing to install. The 78 card images of the Rider Waite Smith deck (Pamela Colman Smith, 1909, public domain) are embedded in the file, so it works offline.
 
-## What it does
+## How a reading works
 
-- **Nine spreads**: Single Card, Past Present Future, Situation Obstacle Advice, Mind Body Spirit, Five Card Cross, Two Paths, Relationship, Horseshoe, Celtic Cross and Year Ahead, each laid out in its true geometry with named positions.
-- **Date, time and place**: sets the sky for the reading. The strip above the table shows the moon phase and illumination (mirrored for the southern hemisphere), the sun sign and its card, the day's ruling planet and its card, the date's numerology card, the season, and when a place or coordinates are given, sunrise, sunset and the planetary hour.
-- **Pull by hand**: shuffle and pull with your own deck, then enter each card by name (with autocomplete) or by browsing the deck, marking any that fell reversed. The app lays them on the table, turns them over and interprets.
-- **Interpretation**: a written reading of the whole pull. On the published claude.ai page this asks Claude and streams the reading, with follow up questions; the offline file composes a reading from the card meanings and the patterns between them.
-- **Reversals**: none, some (about one in four) or half.
-- **Shuffle and deal**: the deck riffles, cards slide to their positions face down, then turn over one by one, or one at a time on tap.
-- **Card meanings**: tap any face up card for its art, upright and reversed keywords and meanings, what it says in that position, element, astrological correspondence and number.
-- **Find links**: select two or more cards (or read the whole spread) to see classic pairings, shared suits and numbers, sequences, elemental dignities and clashes, Major Arcana weight, court card presence, reversal ratio and the quintessence card. Links are drawn on the table.
-- **Journal**: save readings with your notes to the browser, reopen them on the table, or copy a reading as text.
-- **The Deck**: browse and search all 78 cards.
+1. **Question.** Write the question in your own words, or pick one of the suggestions. Optionally set the date, time and place: the strip beneath shows the moon phase, the sun sign, the day's ruling planet, the date's numerology card, the season and, with a place, sunrise, sunset and the planetary hour.
+2. **Spread.** Ten spreads, from a single card to the Celtic Cross and a Year Ahead wheel, each with named positions.
+3. **Your cards.** Shuffle and pull with your own deck. Type each card as you pull it ("ten of cups", "tower", "knight wands", "8 pent") and press Enter, or tap it in the deck grid. Tap "Fell reversed" before placing a card, or toggle it afterwards. Cards appear on the table as you go; tap any position to fill it out of order. "Let the app shuffle and draw for me" is there if she wants a random pull.
+4. **Reading.** The cards are laid face down, turn over one by one, and the reading follows automatically: an opening, a section for every card in its position, how the cards weave together, a direct answer to the question, and one thing to sit with. On the published claude.ai page the reading is written by Claude and streams in, with follow up questions; the offline file composes a reading from the card meanings and patterns instead.
 
-All 78 cards are drawn as procedural SVG in the Rider Waite Smith tradition, so the app has no image dependencies.
+Afterwards: tap any card for its full meaning and correspondences, turn on Find links to see pairings, shared suits and numbers, sequences and elemental dignities drawn on the table, save the reading with notes to the journal, or copy it as text.
