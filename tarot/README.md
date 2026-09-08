@@ -13,4 +13,6 @@ Before laying, "How to read it" sets the style, remembered between readings: **L
 
 After the reading: ask follow up questions, switch between the short and full versions, add a **clarifier card** pulled from the deck for one position or the whole reading, or have the reading **read aloud** by the browser.
 
+**Daily.** A card of the day: pull one from the deck each morning (or let the app draw), add an intention, and get a short note for the day written against the moon and the day's planet. Recent cards collect in a strip and the app shows which cards keep returning. A bar at the top of the Reading tab shows today's card or invites you to pull it.
+
 Afterwards: tap any card for its full meaning and correspondences, turn on Find links to see pairings, shared suits and numbers, sequences and elemental dignities drawn on the table, save the reading with notes to the journal, or copy it as text.

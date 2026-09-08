@@ -467,6 +467,38 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
 .link-chip:hover{border-color:var(--gold)}
 .link-chip.on{border-color:var(--gold);background:var(--surface-2)}
 
+/* daily */
+.daily-bar{display:flex;align-items:center;gap:.8rem;background:var(--surface);border:1px solid var(--line-soft);border-radius:999px;padding:.4rem 1rem .4rem .5rem;text-align:left;color:var(--ivory);width:fit-content;max-width:100%;transition:border-color .2s}
+.daily-bar:hover{border-color:var(--gold)}
+.daily-bar>span:nth-child(2){display:flex;flex-direction:column;line-height:1.15}
+.daily-bar strong{font-family:var(--body);font-weight:600;font-size:1.05rem}
+.db-thumb{width:28px;border-radius:3px;overflow:hidden;flex:none}.db-thumb img{display:block;width:100%;height:auto}.db-thumb.rev img{transform:rotate(180deg)}
+.db-icon{width:28px;height:28px;display:grid;place-items:center;color:var(--gold);font-size:1.3rem}
+.db-go{margin-left:.4rem;font-family:var(--display);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.daily{display:flex;flex-direction:column;gap:1.2rem;max-width:900px}
+.daily-head{display:flex;flex-direction:column;gap:.5rem}
+.daily-entry{display:flex;flex-direction:column;gap:.8rem;background:linear-gradient(180deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem 1.2rem}
+.daily-grid{max-height:300px}
+.daily-card{display:grid;grid-template-columns:minmax(160px,220px) 1fr;gap:1.4rem;align-items:start;background:linear-gradient(180deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem}
+.daily-art{background:none;border:0;padding:0;border-radius:6%;box-shadow:0 16px 40px rgba(0,0,0,.6);overflow:hidden;cursor:pointer}
+.daily-art img{display:block;width:100%;height:auto}
+.daily-art.rev img{transform:rotate(180deg)}
+.daily-text{display:flex;flex-direction:column;gap:.7rem}
+.daily-text h3{font-size:1.5rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.daily-int{color:var(--muted)}
+.daily-note{font-size:1.15rem;line-height:1.6;max-width:60ch;display:flex;flex-direction:column;gap:.6rem}
+.daily-history{display:flex;flex-direction:column;gap:.5rem}
+.daily-strip{display:flex;gap:.5rem;overflow-x:auto;padding:.3rem .1rem .6rem}
+.daily-thumb{background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:.25rem;color:var(--muted);flex:none;width:56px}
+.dt-img{width:56px;border-radius:4px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.5);transition:transform .2s}
+.dt-img img{display:block;width:100%;height:auto}
+.daily-thumb.rev .dt-img img{transform:rotate(180deg)}
+.daily-thumb:hover .dt-img{transform:translateY(-3px)}
+.dt-date{font-family:var(--display);font-size:.52rem;letter-spacing:.06em;text-transform:uppercase}
+.recurring{display:flex;flex-wrap:wrap;gap:.4rem}
+.d-daily{border-left:2px solid var(--gold);padding:.3rem .8rem;background:rgba(217,182,100,.06);display:flex;flex-direction:column;gap:.4rem}
+@media (max-width:600px){.daily-card{grid-template-columns:1fr}.daily-art{width:min(60%,200px);margin:0 auto}}
+
 </style>
 </head>
 <body>
@@ -479,12 +511,14 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
   </div>
   <nav class="tabs" role="tablist" aria-label="Sections">
     <button type="button" data-view="reading" class="on" role="tab" aria-selected="true">Reading</button>
+    <button type="button" data-view="daily" role="tab" aria-selected="false">Daily</button>
     <button type="button" data-view="deck" role="tab" aria-selected="false">The Deck</button>
     <button type="button" data-view="journal" role="tab" aria-selected="false">Journal</button>
   </nav>
 </header>
 <main>
   <section id="view-reading" class="view on">
+    <button type="button" class="daily-bar" id="daily-bar"></button>
     <ol class="stepper" aria-label="Progress">
       <li data-step="1" class="on"><span class="st-n">1</span><span class="st-t">Question</span></li>
       <li data-step="2"><span class="st-n">2</span><span class="st-t">Spread</span></li>
@@ -588,6 +622,10 @@ input[type="date"],input[type="time"]{min-width:0;-webkit-appearance:none;appear
     </section>
   </section>
 
+  <section id="view-daily" class="view">
+    <div class="view-head"><h2>Card of the day</h2><p>One card each morning. Pull it from your deck, tell me what it was, and carry its note through the day. Over time you will see which cards keep finding you.</p></div>
+    <div class="daily" id="daily"></div>
+  </section>
   <section id="view-deck" class="view">
     <div class="view-head"><h2>The Deck</h2><p>All seventy eight cards of the Rider Waite Smith deck, drawn by Pamela Colman Smith in 1909. Open any card for its upright and reversed meanings and correspondences.</p></div>
     <div class="deck-tools">
@@ -1966,7 +2004,7 @@ function newReading(){
 }
 
 /* ---------- Views ---------- */
-function showView(v){$$('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));$$('.tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.view===v);b.setAttribute('aria-selected',String(b.dataset.view===v));});if(v==='deck'&&!$('#deckgrid').children.length)renderDeck();if(v==='journal')renderJournal();if(v==='reading')requestAnimationFrame(()=>drawLinks(pinned));}
+function showView(v){$$('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));$$('.tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.view===v);b.setAttribute('aria-selected',String(b.dataset.view===v));});if(v==='deck'&&!$('#deckgrid').children.length)renderDeck();if(v==='journal')renderJournal();if(v==='daily')renderDaily();if(v==='reading')requestAnimationFrame(()=>drawLinks(pinned));}
 
 /* ---------- Starfield ---------- */
 function starfield(){
@@ -2008,10 +2046,104 @@ function init(){
   addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
   $$('#deckfilters button').forEach(b=>b.onclick=()=>{deckFilter=b.dataset.f;$$('#deckfilters button').forEach(x=>x.classList.toggle('on',x===b));renderDeck();});
   $('#decksearch').addEventListener('input',e=>{deckQuery=e.target.value.trim();renderDeck();});
-  goStep(1); updateToolbar(); starfield();
-  if(window.claude&&typeof window.claude.use==='function'){window.claude.use('sample').then(fn=>{sampleFn=fn||null;if(state.dealt&&state.reading.status==='done')renderReading();}).catch(()=>{});}
+  goStep(1); updateToolbar(); starfield(); renderDailyBar();
+  if(window.claude&&typeof window.claude.use==='function'){window.claude.use('sample').then(fn=>{sampleFn=fn||null;if(state.dealt&&state.reading.status==='done')renderReading();if($('#view-daily').classList.contains('on'))renderDaily();}).catch(()=>{});}
 }
 document.addEventListener('DOMContentLoaded',init);
+
+/* ---------- Card of the day ---------- */
+const DKEY='lantern.daily';
+const todayKey=()=>{const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;};
+function loadDaily(){try{return JSON.parse(localStorage.getItem(DKEY)||'[]');}catch(e){return [];}}
+function saveDaily(list){try{localStorage.setItem(DKEY,JSON.stringify(list));return true;}catch(e){return false;}}
+function todaysCard(){return loadDaily().find(e=>e.date===todayKey())||null;}
+let dailyRev=false, dailyBusy=false;
+function fmtDayKey(k){const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'});}
+function dailySky(d){const m=moonPhase(d),ruler=DAY_RULER[d.getDay()],z=zodiacFor(d);return {m,ruler,z,text:`${m.name} (${Math.round(m.illum*100)}% lit). Sun in ${z.name}. Day of the ${ruler}.`};}
+function renderDaily(){
+  const wrap=$('#daily'); const t=todaysCard(); const d=new Date(); const sky=dailySky(d);
+  const chips=`<div class="sky-strip small"><button type="button" class="chip" title="${esc(sky.m.note)}"><span class="chip-icon">${moonIcon(sky.m.phase,state.south)}</span><span class="chip-t"><strong>${esc(sky.m.name)}</strong><small>${Math.round(sky.m.illum*100)}% lit</small></span></button><button type="button" class="chip link" data-card="${PLANET_CARD[sky.ruler]}"><span class="chip-icon"><span class="glyph">${PLANET_GLYPH[sky.ruler]}</span></span><span class="chip-t"><strong>${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]} · ${sky.ruler}</strong><small>${esc(DECK[PLANET_CARD[sky.ruler]].name)}</small></span></button><button type="button" class="chip link" data-card="${sky.z.card}"><span class="chip-icon"><span class="glyph">${sky.z.glyph}</span></span><span class="chip-t"><strong>Sun in ${sky.z.name}</strong><small>${esc(DECK[sky.z.card].name)}</small></span></button></div>`;
+  let main;
+  if(!t){
+    main=`<div class="daily-entry">
+      <p class="hint">Shuffle, pull one card, and tell me what it was. Or let the app draw one for you.</p>
+      <div class="pk-tools"><input type="search" id="dl-q" placeholder="Type the card: nine of pentacles, sun, page swords" aria-label="Today’s card" autocomplete="off"><button type="button" id="dl-rev" class="revsw${dailyRev?' on':''}" aria-pressed="${dailyRev}"><span class="sw"></span>Fell reversed</button></div>
+      <div class="pk-grid daily-grid" id="dl-grid"></div>
+      <div class="act-row"><button type="button" class="primary" id="dl-set" disabled>This is my card</button><button type="button" class="ghost" id="dl-draw">Let the app draw</button></div>
+      <div class="field"><label for="dl-int">An intention for the day <span class="muted">(optional)</span></label><input type="text" id="dl-int" placeholder="For example: stay patient in the meeting"></div>
+    </div>`;
+  } else {
+    const c=byId[t.id]; const kws=t.r?c.kwRev:c.kwUp;
+    main=`<div class="daily-card">
+      <button type="button" class="daily-art${t.r?' rev':''}" id="dl-open" aria-label="Open ${esc(c.name)}">${imgFor(c)}</button>
+      <div class="daily-text">
+        <p class="eyebrow">Today’s card</p>
+        <h3>${esc(c.name)} <span class="badge ${t.r?'rev':'up'}">${t.r?'Reversed':'Upright'}</span></h3>
+        <div class="kw">${kws.map(k=>`<span>${esc(k)}</span>`).join('')}</div>
+        ${t.intention?`<p class="daily-int">Your intention: <em>${esc(t.intention)}</em></p>`:''}
+        <div class="daily-note" id="dl-note">${t.note?paras(t.note):`<p class="waiting">Writing your note for the day…</p>`}</div>
+        <div class="act-row">
+          ${sampleFn&&t.source!=='ai'&&t.note?`<button type="button" class="primary" id="dl-ai">Ask Claude for the note</button>`:''}
+          <button type="button" class="ghost" id="dl-more">Full meaning</button>
+          <button type="button" class="ghost" id="dl-change">Change today’s card</button>
+        </div>
+      </div></div>`;
+  }
+  const hist=loadDaily().filter(e=>e.date!==todayKey()).slice(0,30);
+  const counts={}; loadDaily().forEach(e=>{counts[e.id]=(counts[e.id]||0)+1;});
+  const recurring=Object.entries(counts).filter(([,n])=>n>=2).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const history=`<div class="daily-history"><p class="eyebrow">Your recent cards</p>${hist.length?`<div class="daily-strip">${hist.map(e=>`<button type="button" class="daily-thumb${e.r?' rev':''}" data-date="${e.date}" title="${esc(byId[e.id].name)}${e.r?' reversed':''} · ${fmtDayKey(e.date)}"><span class="dt-img">${imgFor(byId[e.id])}</span><span class="dt-date">${fmtDayKey(e.date).split(' ').slice(1).join(' ')}</span></button>`).join('')}</div>`:'<p class="hint">Your daily cards will collect here. Pull one each morning and patterns start to show within a couple of weeks.</p>'}
+    ${recurring.length?`<p class="eyebrow" style="margin-top:.8rem">Cards that keep returning</p><div class="recurring">${recurring.map(([id,n])=>`<button type="button" class="link-chip" data-rc="${id}"><i style="background:${LINK_COLORS.pair}"></i>${esc(byId[id].name)} · ${n} times</button>`).join('')}</div>`:''}</div>`;
+  wrap.innerHTML=`<div class="daily-head"><p class="eyebrow">${d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}</p>${chips}</div>${main}${history}`;
+  $$('#daily .chip.link').forEach(b=>b.onclick=()=>openDeckCard(DECK[+b.dataset.card]));
+  $$('.daily-thumb').forEach(b=>b.onclick=()=>openDailyEntry(b.dataset.date));
+  $$('[data-rc]').forEach(b=>b.onclick=()=>openDeckCard(byId[b.dataset.rc]));
+  if(!t){
+    let pick=null,q='';
+    const grid=()=>{const list=q?rankMatches(DECK,q):DECK;$('#dl-grid').innerHTML=list.map((c,k)=>`<button type="button" class="pk-card${pick===c?' top':''}" data-id="${c.id}"><div class="pk-img${dailyRev?' rev':''}">${imgFor(c)}</div><span>${esc(c.name)}</span></button>`).join('');$$('#dl-grid .pk-card').forEach(b=>b.onclick=()=>{pick=byId[b.dataset.id];$('#dl-q').value=pick.name;$('#dl-set').disabled=false;grid();});};
+    $('#dl-q').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();pick=q?rankMatches(DECK,q)[0]||null:null;$('#dl-set').disabled=!pick;grid();});
+    $('#dl-q').addEventListener('keydown',e=>{if(e.key==='Enter'&&pick){e.preventDefault();setDaily(pick,dailyRev,$('#dl-int').value.trim());}});
+    $('#dl-rev').onclick=()=>{dailyRev=!dailyRev;$('#dl-rev').classList.toggle('on',dailyRev);$('#dl-rev').setAttribute('aria-pressed',String(dailyRev));grid();};
+    $('#dl-set').onclick=()=>{if(pick)setDaily(pick,dailyRev,$('#dl-int').value.trim());};
+    $('#dl-draw').onclick=()=>{const a=new Uint32Array(2);crypto.getRandomValues(a);setDaily(DECK[a[0]%78],a[1]%4===0,$('#dl-int').value.trim());};
+    grid();
+  } else {
+    $('#dl-open').onclick=()=>openDeckCard(byId[t.id],t.r); $('#dl-more').onclick=()=>openDeckCard(byId[t.id],t.r);
+    $('#dl-change').onclick=()=>{if(confirm('Replace today’s card?')){saveDaily(loadDaily().filter(e=>e.date!==todayKey()));renderDaily();renderDailyBar();}};
+    const ai=$('#dl-ai'); if(ai)ai.onclick=()=>writeDailyNote(t,true);
+    if(!t.note&&!dailyBusy)writeDailyNote(t,false);
+  }
+  renderDailyBar();
+}
+function setDaily(card,rev,intention){
+  const list=loadDaily().filter(e=>e.date!==todayKey());
+  list.unshift({date:todayKey(),id:card.id,r:rev,intention,note:'',source:null});
+  if(!saveDaily(list))toast('Could not save. Your browser is blocking storage.');
+  dailyRev=false; renderDaily();
+}
+async function writeDailyNote(t,force){
+  const c=byId[t.id]; const d=new Date(); const sky=dailySky(d);
+  const compose=()=>`${c.name}${t.r?' reversed':''} invites ${(t.r?c.kwRev:c.kwUp).slice(0,2).join(' and ')} today. ${(t.r?c.rev:c.up).split('. ').slice(0,2).join('. ').replace(/\.$/,'')}.\n\n${sky.m.note} It is the day of ${/^(Sun|Moon)$/.test(sky.ruler)?'the ':''}${sky.ruler}${t.intention?`, and your intention is to ${t.intention.replace(/^to\s+/i,'')}`:''}. Carry one line from this card into the day and notice where it turns up.`;
+  const save=(note,source)=>{const list=loadDaily();const e=list.find(x=>x.date===t.date);if(e){e.note=note;e.source=source;saveDaily(list);}};
+  if(!sampleFn||(!force&&t.source==='composed')){save(compose(),'composed');renderDaily();return;}
+  dailyBusy=true;
+  try{
+    const prompt=`Card of the day for ${d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}: ${c.name}, ${t.r?'reversed':'upright'}. Keywords: ${(t.r?c.kwRev:c.kwUp).join(', ')}. Traditional meaning: ${t.r?c.rev:c.up}\nSky: ${sky.text.replace('Day of the ',/^(Sun|Moon)$/.test(sky.ruler)?'Day of the ':'Day of ')}${t.intention?`\nThe querent's intention for today: ${t.intention}`:''}\n\nWrite a note for the day in the second person, warm and specific, in three short paragraphs of one or two sentences each: what this card invites today, one thing to watch for, and one small practice or question to carry through the day. Refer to the intention if given, and to the moon or the day's planet only if it adds something. Plain text, no headings, no lists, no dashes as punctuation. Under 110 words.`;
+    const res=await sampleFn(prompt,{cache:!force});
+    save(res.text.trim(),'ai');
+  }catch(e){if(e&&e.code==='not_granted')sampleFn=null;save(compose(),'composed');if(e&&e.code==='rate_limited')toast('Too many requests in a row. A composed note is shown instead.');}
+  dailyBusy=false; renderDaily();
+}
+function openDailyEntry(date){
+  const e=loadDaily().find(x=>x.date===date); if(!e)return; const c=byId[e.id];
+  renderDrawer(c,e.r,null,null);
+  $('#drawer-body .d-text').insertAdjacentHTML('afterbegin',`<div class="d-daily"><p class="eyebrow">Card of the day · ${esc(fmtDayKey(date))}</p>${e.intention?`<p class="daily-int">Intention: <em>${esc(e.intention)}</em></p>`:''}${e.note?paras(e.note):''}</div>`);
+}
+function renderDailyBar(){
+  const bar=$('#daily-bar'); if(!bar)return; const t=todaysCard();
+  bar.innerHTML=t?`<span class="db-thumb${t.r?' rev':''}">${imgFor(byId[t.id])}</span><span><span class="eyebrow">Today’s card</span><strong>${esc(byId[t.id].name)}${t.r?' reversed':''}</strong></span><span class="db-go">Open</span>`:`<span class="db-icon">☉</span><span><span class="eyebrow">Card of the day</span><strong>Not pulled yet today</strong></span><span class="db-go">Pull it</span>`;
+  bar.onclick=()=>showView('daily');
+}
 
 </script>
 
