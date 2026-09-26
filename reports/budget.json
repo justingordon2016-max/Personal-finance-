@@ -1,0 +1,389 @@
+{
+  "salary": 70000.0,
+  "totals": {
+    "fixed": 58542.21,
+    "variable": 16861.18,
+    "savings": 14506.22
+  },
+  "leftAfterFixed": 11457.79,
+  "leftAfterVariable": -5403.39,
+  "gap": -19909.61,
+  "unidentified": 8600.0,
+  "oneOff": {
+    "name": "Medical, out of pocket (June)",
+    "amount": 26060.66
+  },
+  "groups": {
+    "fixed": {
+      "Debt": [
+        {
+          "item": "FNB Structured Loan",
+          "amount": 22202.79,
+          "frequency": "Monthly",
+          "day": "31st",
+          "account": "Cheque",
+          "basis": "Standing instruction at the September rate",
+          "status": "rising"
+        },
+        {
+          "item": "WesBank vehicle finance",
+          "amount": 5749.6,
+          "frequency": "Monthly",
+          "day": "31st",
+          "account": "Cheque",
+          "basis": "Standing instruction at the September rate",
+          "status": ""
+        },
+        {
+          "item": "iStore budget facility instalment",
+          "amount": 773.47,
+          "frequency": "Monthly",
+          "day": "Statement",
+          "account": "Card 4002",
+          "basis": "11.50% p.a. - R9868.11 still outstanding",
+          "status": ""
+        },
+        {
+          "item": "FNB Home admin fee",
+          "amount": 69.0,
+          "frequency": "Monthly",
+          "day": "31st",
+          "account": "Cheque",
+          "basis": "Standing instruction",
+          "status": ""
+        }
+      ],
+      "Insurance & cover": [
+        {
+          "item": "Discovery premium",
+          "amount": 7578.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "Medical aid - claims refunded in May and June",
+          "status": ""
+        },
+        {
+          "item": "FNB Life (Fl105Gz98)",
+          "amount": 4106.61,
+          "frequency": "Monthly",
+          "day": "25th",
+          "account": "Cheque",
+          "basis": "Life and risk cover",
+          "status": ""
+        },
+        {
+          "item": "JAC insurance",
+          "amount": 3836.27,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "Life and risk cover - confirmed by you",
+          "status": ""
+        },
+        {
+          "item": "Netstar vehicle tracking",
+          "amount": 231.38,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "Usually an insurer requirement",
+          "status": ""
+        },
+        {
+          "item": "FNB Life (Fl68Zw53)",
+          "amount": 33.58,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "Second small policy",
+          "status": ""
+        }
+      ],
+      "Subscriptions": [
+        {
+          "item": "Happy Hound",
+          "amount": 6143.54,
+          "frequency": "Weekly",
+          "day": "Every week",
+          "account": "Card 4002",
+          "basis": "R1417.74 per week x 52/12 - on a dedicated card",
+          "status": ""
+        }
+      ],
+      "Connectivity": [
+        {
+          "item": "RSAWEB fibre line 2",
+          "amount": 1728.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "Second fibre line",
+          "status": "duplicate?"
+        },
+        {
+          "item": "RSAWEB fibre line 1",
+          "amount": 1299.01,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "First fibre line",
+          "status": "duplicate?"
+        },
+        {
+          "item": "FNB Connect 8858332324",
+          "amount": 749.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        },
+        {
+          "item": "FNB Connect 8872638615",
+          "amount": 579.0,
+          "frequency": "Monthly",
+          "day": "25th",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        },
+        {
+          "item": "FNB Connect 8858332521",
+          "amount": 499.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        },
+        {
+          "item": "Hybrid Connect top-up",
+          "amount": 415.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        },
+        {
+          "item": "Stratum",
+          "amount": 390.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        },
+        {
+          "item": "Hybrid Connect top-up",
+          "amount": 145.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        }
+      ],
+      "Unidentified": [
+        {
+          "item": "Ril Res001",
+          "amount": 850.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "First appeared 1 September - assumed recurring",
+          "status": "unidentified"
+        }
+      ],
+      "Bank charges": [
+        {
+          "item": "Monthly account service fee",
+          "amount": 661.46,
+          "frequency": "Monthly",
+          "day": "18th",
+          "account": "Cheque",
+          "basis": "Rose from 625.00 in July",
+          "status": "rising"
+        },
+        {
+          "item": "Linked account service charges",
+          "amount": 103.5,
+          "frequency": "Monthly",
+          "day": "31st",
+          "account": "Cheque",
+          "basis": "From account 62724872339",
+          "status": ""
+        }
+      ],
+      "Home": [
+        {
+          "item": "Edgekloof levy",
+          "amount": 399.0,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        }
+      ]
+    },
+    "variable": {
+      "Connectivity": [
+        {
+          "item": "Airtime top-ups",
+          "amount": 188.25,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Cheque",
+          "basis": "4-cycle average",
+          "status": ""
+        }
+      ],
+      "Bank charges": [
+        {
+          "item": "Overdraft and card interest",
+          "amount": 119.85,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Both",
+          "basis": "4-cycle average",
+          "status": ""
+        }
+      ],
+      "Home": [
+        {
+          "item": "Prepaid electricity",
+          "amount": 625.0,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Cheque",
+          "basis": "4-cycle average - you choose when and how much",
+          "status": ""
+        }
+      ],
+      "Second credit account": [
+        {
+          "item": "Payments to a second credit account",
+          "amount": 7750.0,
+          "frequency": "Irregular",
+          "day": "Varies",
+          "account": "Unknown",
+          "basis": "4-cycle average of 5 payments - accelerating",
+          "status": "unidentified"
+        }
+      ],
+      "Food": [
+        {
+          "item": "Groceries and eating out",
+          "amount": 3196.98,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Both",
+          "basis": "4-cycle average across both accounts",
+          "status": ""
+        }
+      ],
+      "Family": [
+        {
+          "item": "Family support",
+          "amount": 2662.65,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Cheque",
+          "basis": "4-cycle average - PayShap and app transfers",
+          "status": ""
+        }
+      ],
+      "Shopping": [
+        {
+          "item": "Shopping and other retail",
+          "amount": 1196.61,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Both",
+          "basis": "4-cycle average - Takealot Yuppiechef pets",
+          "status": ""
+        }
+      ],
+      "Travel": [
+        {
+          "item": "Travel and leisure",
+          "amount": 777.7,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Both",
+          "basis": "4-cycle average - one weekend away",
+          "status": ""
+        }
+      ],
+      "Transport": [
+        {
+          "item": "Transport and fuel",
+          "amount": 344.14,
+          "frequency": "Irregular",
+          "day": "-",
+          "account": "Cheque",
+          "basis": "4-cycle average - one fuel purchase in four months",
+          "status": ""
+        }
+      ]
+    },
+    "savings": {
+      "Savings": [
+        {
+          "item": "Scheduled transfer to savings",
+          "amount": 9000.0,
+          "frequency": "Monthly",
+          "day": "27th",
+          "account": "Cheque",
+          "basis": "The flexible one - clears before month-end",
+          "status": ""
+        },
+        {
+          "item": "EasyEquities TFSA",
+          "amount": 3006.22,
+          "frequency": "Monthly",
+          "day": "1st",
+          "account": "Cheque",
+          "basis": "R74.64/yr over the R36000 annual limit",
+          "status": "check"
+        },
+        {
+          "item": "FNB Invest",
+          "amount": 2500.0,
+          "frequency": "Monthly",
+          "day": "17th",
+          "account": "Cheque",
+          "basis": "",
+          "status": ""
+        }
+      ]
+    }
+  },
+  "subtotals": {
+    "fixed": {
+      "Debt": 28794.86,
+      "Insurance & cover": 15785.84,
+      "Subscriptions": 6143.54,
+      "Connectivity": 5804.01,
+      "Unidentified": 850.0,
+      "Bank charges": 764.96,
+      "Home": 399.0
+    },
+    "variable": {
+      "Connectivity": 188.25,
+      "Bank charges": 119.85,
+      "Home": 625.0,
+      "Second credit account": 7750.0,
+      "Food": 3196.98,
+      "Family": 2662.65,
+      "Shopping": 1196.61,
+      "Travel": 777.7,
+      "Transport": 344.14
+    },
+    "savings": {
+      "Savings": 14506.22
+    }
+  }
+}

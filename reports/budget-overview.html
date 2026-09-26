@@ -174,7 +174,6 @@ tr.total td{border-top:2px solid var(--rule-2);border-bottom:none;
 tr.total td.l{font-family:"Archivo",sans-serif;font-size:14px;font-weight:600}
 .grp{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;
   text-transform:uppercase;color:var(--muted)}
-.grp.day{text-transform:none;font-size:11.5px;color:var(--ink-2)}
 .tag{display:inline-block;font-size:10px;letter-spacing:.07em;text-transform:uppercase;
   padding:2px 6px;border-radius:2px;background:var(--warning-wash);color:var(--warning);
   font-weight:500;margin-left:8px;vertical-align:1px}
@@ -231,6 +230,13 @@ footer p{max-width:78ch;color:var(--faint);font-family:inherit;font-size:inherit
 .cliff{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--muted)}
 .bar .fill.var{background:var(--accent);opacity:.55}
 .verdict .fig{font-size:clamp(40px,5vw,58px)}
+.grp.day{text-transform:none;font-size:11.5px;color:var(--ink-2)}
+tr.grouphead td{background:var(--surface-2);border-top:1px solid var(--rule-2);
+  font-family:"Archivo",sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink);padding-top:12px;padding-bottom:12px}
+tr.grouphead td.avg{font-family:"IBM Plex Mono",monospace;letter-spacing:0;font-size:13px}
+tr.grouphead + tr td{border-top:none}
+.tag.crit{background:var(--critical-wash);color:var(--critical)}
 </style>
 <div class="wrap">
 
@@ -238,626 +244,440 @@ footer p{max-width:78ch;color:var(--faint);font-family:inherit;font-size:inherit
   <div>
     <div class="eyebrow">FNB Private Wealth &middot; cheque &hellip;8756 &middot; card &hellip;4002</div>
     <h1>Where the R70,000 Goes</h1>
-    <p class="sub">What is fixed, what is yours to decide, and what is actually left once
-      the debit orders clear. Built from six statements across two accounts, 16 May to
-      17 September 2026 &mdash; 236 transactions, reconciled to the printed balances.</p>
+    <p class="sub">The budget at September 2026 rates: every fixed commitment, every
+      variable cost, and what each one leaves behind. Built from seven statements
+      across two accounts, 16 May to 17 September, all reconciled to the printed
+      balances.</p>
   </div>
   <div class="stampcol">
-    <div class="stamp">Cheque <b>135 &ndash; 138</b></div>
-    <div class="stamp">Card <b>130 &middot; 131 &middot; 132</b></div>
-    <div class="stamp">Fixed costs <b>R58,542 / month</b></div>
-    <div class="stamp">Left after them <b>R11,458</b></div>
+    <div class="stamp">Fixed <b>R58,542 / month</b></div>
+    <div class="stamp">Variable <b>R16,861 / month</b></div>
+    <div class="stamp">Savings <b>R14,506 / month</b></div>
+    <div class="stamp">Salary <b>R70,000 / month</b></div>
   </div>
 </header>
 
 <div class="verdict">
   <div>
     <div class="fig">R11,458</div>
-    <div class="figlabel">is what is left once<br>the fixed costs clear</div>
+    <div class="figlabel">left after the fixed<br>expenses clear</div>
   </div>
   <div>
-    <p>Your salary lands on the 25th. By the 18th of the next month,
-      <strong>R58,542</strong> of it has gone on things you cannot change this month.
-      That leaves <strong>R11,458</strong> &mdash; and September's statement shows
-      R16,861 a month of variable spending against it.</p>
-    <p>The September statement also settles the R5,000 that would not reconcile:
-      there is a <strong>second credit account</strong>. Every "Transfer To Credit"
-      lands on card &hellip;4002; every "<strong>Payment</strong> To Credit" goes
-      somewhere else &mdash; R31,000 of it since July, and accelerating.</p>
+    <p>Your salary is R70,000. <strong>R58,542</strong> of it goes on things you cannot
+      change this month &mdash; 22 standing instructions across two accounts. That
+      leaves <strong>R11,458</strong> for everything else.</p>
+    <p>Everything else costs <strong>R16,861</strong>. Savings instructions take another
+      <strong>R14,506</strong> on top. The full arithmetic is below, and so is every
+      line behind these three numbers.</p>
   </div>
 </div>
 
-<section id="september">
+<section id="summary">
   <div class="shead">
-    <h2>What September changed</h2>
-    <div class="eyebrow">Statement 138 &middot; 17 Aug &ndash; 17 Sep 2026</div>
+    <h2>The budget</h2>
+    <div class="eyebrow">Per month, at current rates</div>
   </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th class="l">&nbsp;</th><th>Amount</th><th>% of salary</th><th>Running</th></tr></thead>
+      <tbody id="summarybody"></tbody>
+    </table>
+  </div>
+  <p class="caption">Savings are listed separately from fixed expenses throughout this
+    page. They are standing instructions like the rest, but they are money you keep
+    rather than money you spend &mdash; so they belong in a different column when you
+    are deciding what to change.</p>
+</section>
 
-  <div class="actions" style="margin-bottom:26px">
+<section id="fixed">
+  <div class="shead">
+    <h2>Fixed expenses</h2>
+    <div class="eyebrow">22 standing instructions &middot; R58,542 / month</div>
+  </div>
+  <p>A standing instruction at a rate you cannot change this month. Each one is listed
+    at what it actually costs now, with the day it clears and the account it hits.</p>
+  <div class="bars" id="fixedbars"></div>
+  <div class="tablewrap" style="margin-top:26px">
+    <table>
+      <thead><tr><th class="l">Item</th><th class="l">Clears</th><th class="l">Account</th>
+                 <th>Per month</th><th>Per year</th></tr></thead>
+      <tbody id="fixedledger"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="variable">
+  <div class="shead">
+    <h2>Variable expenses</h2>
+    <div class="eyebrow">Four-cycle averages &middot; R16,861 / month</div>
+  </div>
+  <p>Bought when needed, in amounts that change month to month. These are averages over
+    four statement cycles, not commitments &mdash; they are the part of the budget you
+    can actually move.</p>
+  <div class="bars" id="varbars"></div>
+  <div class="tablewrap" style="margin-top:26px">
+    <table>
+      <thead><tr><th class="l">Item</th><th class="l">Account</th><th class="l">Basis</th>
+                 <th>Per month</th><th>Per year</th></tr></thead>
+      <tbody id="varledger"></tbody>
+    </table>
+  </div>
+  <p class="caption">One row dominates and it is the one we cannot see: R7,750 a month
+    of payments to a second credit account. Strip it out and variable spending is
+    <strong>R9,111</strong>, of which genuine discretionary &mdash; food, shopping,
+    travel, fuel &mdash; is R5,515. June's R26,061 of dentist and doctor was a one-off
+    event and is excluded from every figure on this page.</p>
+</section>
+
+<section id="savings">
+  <div class="shead">
+    <h2>Savings</h2>
+    <div class="eyebrow">Three standing instructions &middot; R14,506 / month</div>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th class="l">Item</th><th class="l">Clears</th><th class="l">Note</th>
+                 <th>Per month</th><th>Per year</th></tr></thead>
+      <tbody id="savledger"></tbody>
+    </table>
+  </div>
+  <p class="caption">20.7% of net salary, which is a strong rate. The problem is not the
+    amount but that salary cannot currently fund it: after fixed and variable expenses
+    there is R5,403 <em>less</em> than nothing to save from, so these three instructions
+    come out of the buffer, out of the overdraft, or out of money transferred in from
+    elsewhere.</p>
+</section>
+
+<section id="cycle">
+  <div class="shead">
+    <h2>When it all clears</h2>
+    <div class="eyebrow">Payday to payday</div>
+  </div>
+  <div class="chartcard">
+    <div class="chartwrap">
+      <svg class="chart" id="stepchart" viewBox="0 0 900 340" role="img"
+           aria-label="Money remaining through the salary cycle: R70,000 on the 25th, falling to R28,190 after the structured loan and WesBank clear on the 31st, R10,036 after the 1st and 3rd runs, and below zero once the card commitments are counted."></svg>
+      <div class="tip" id="tip2"></div>
+    </div>
+    <div class="barlegend" style="margin-top:16px">
+      <span><i class="swatch" style="background:var(--accent)"></i> Fixed expense</span>
+      <span><i class="swatch" style="background:var(--rule-2)"></i> Savings instruction</span>
+      <span><i class="swatch" style="background:var(--critical-dot);opacity:.55"></i> Below zero</span>
+    </div>
+    <p class="caption">Two days carry almost all of it. The <strong>31st</strong> takes
+      R28,125 in four debits, R22,203 of it the structured loan; the <strong>1st</strong>
+      takes R17,754 across twelve. R49,284 has to be in the account by the 30th to carry
+      the 31st, the 1st and the 3rd &mdash; 18 debit orders inside four days. Hover any
+      step to see the item and what is left after it.</p>
+  </div>
+  <div class="tiles" style="margin-top:26px">
+    <div class="tile">
+      <div class="k">Debit orders, 25th to 18th</div>
+      <div class="v">R66,131</div>
+      <div class="d">Cheque account only.<br>94% of salary</div>
+    </div>
+    <div class="tile">
+      <div class="k">Clears on salary with</div>
+      <div class="v pos">R3,869</div>
+      <div class="d">To spare. Was R5,037<br>before September's increases</div>
+    </div>
+    <div class="tile">
+      <div class="k">Needed by the 30th</div>
+      <div class="v acc">R49,284</div>
+      <div class="d">The month-end run,<br>31st through 3rd</div>
+    </div>
+    <div class="tile">
+      <div class="k">Settled on the card</div>
+      <div class="v">R8,750</div>
+      <div class="d">R6,917 fixed +<br>R1,833 variable</div>
+    </div>
+    <div class="tile">
+      <div class="k">Full cycle needs</div>
+      <div class="v neg">R19,909</div>
+      <div class="d">On top of salary, to end<br>the cycle at zero</div>
+    </div>
+  </div>
+</section>
+
+<section id="open">
+  <div class="shead">
+    <h2>What would change these numbers</h2>
+    <div class="eyebrow">Open items, largest first</div>
+  </div>
+  <div class="actions">
 
     <div class="action">
-      <div class="amt">R31,000<br><span style="color:var(--muted);font-weight:400">since July</span></div>
+      <div class="amt">R7,750<br><span style="color:var(--muted);font-weight:400">/month</span></div>
       <div>
-        <h3>There is a second credit account
-          <span class="pill crit"><i class="swatch"></i> Confirmed</span></h3>
-        <p>The R5,000 that would not reconcile last time is now explained, and it is
-          bigger than R5,000. The wording splits the payments perfectly: every
-          <strong>"FNB App Transfer To Credit"</strong> appears on card &hellip;4002,
-          and every <strong>"FNB App Payment To Credit"</strong> does not.</p>
-        <div class="tablewrap" style="margin-top:14px">
-          <table>
-            <thead><tr><th class="l">Out of the cheque account</th><th>Amount</th><th class="l">Lands where</th></tr></thead>
-            <tbody>
-              <tr><td class="l">"Transfer To Credit" &times; 4, plus the Fnbcc debit order</td>
-                  <td>55,490.47</td><td class="l">Card &hellip;4002 &mdash; matches to the cent</td></tr>
-              <tr class="total"><td class="l">"Payment To Credit" &times; 5</td>
-                  <td>31,000.00</td><td class="l">Unknown account</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="margin-top:14px">R3,000 on 16 July, R1,000 on the 20th, R1,000 on the
-          21st, R10,000 on 7 August, <strong>R16,000 on 20 August</strong>. Nothing in
-          four months of statements shows what that account is, what it owes or what it
-          costs. It is now the largest single hole in this picture &mdash; and the
-          payments are growing fast. Send me a statement for it.</p>
+        <h3>The second credit account
+          <span class="pill crit"><i class="swatch"></i> Unidentified</span></h3>
+        <p>Every "FNB App <strong>Transfer</strong> To Credit" plus the Fnbcc debit order
+          totals R55,490.47 &mdash; exactly what card &hellip;4002 recorded receiving.
+          Every "FNB App <strong>Payment</strong> To Credit" totals
+          <strong>R31,000.00</strong> and appears on no statement: R3,000 on 16 July,
+          R1,000 on the 20th, R1,000 on the 21st, R10,000 on 7 August, R16,000 on
+          20 August. The figure in the variable table is a four-cycle average of an
+          accelerating series, which makes it the least reliable line in this budget.
+          One statement replaces a guess with a number.</p>
       </div>
     </div>
 
     <div class="action">
-      <div class="amt">R200,000<br><span style="color:var(--muted);font-weight:400">9 Sept</span></div>
+      <div class="amt">R2,000<br><span style="color:var(--muted);font-weight:400">to R6,500</span></div>
       <div>
-        <h3>A R200,000 capital repayment
-          <span class="pill good"><i class="swatch"></i> Biggest event yet</span></h3>
-        <p>R200,000 arrived from "Fif Payment" and went straight out again the same day
-          as a capital repayment. If that went against the structured loan, the
-          <strong>30 September debit is the one to watch</strong> &mdash; at 10.5%, with
-          the term held constant, R200,000 off the principal is worth roughly:</p>
-        <div class="tablewrap" style="margin-top:14px">
-          <table>
-            <thead><tr><th class="l">Remaining term</th><th>Instalment falls by about</th><th>New instalment</th></tr></thead>
-            <tbody>
-              <tr><td class="l">3 years</td><td>6,500</td><td class="avg">15,703</td></tr>
-              <tr><td class="l">5 years</td><td>4,299</td><td class="avg">17,904</td></tr>
-              <tr><td class="l">10 years</td><td>2,699</td><td class="avg">19,504</td></tr>
-              <tr><td class="l">20 years</td><td>1,997</td><td class="avg">20,206</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="margin-top:14px">Or the bank may have held the instalment and shortened
-          the term instead, in which case nothing changes month to month. Either way this
-          is the single biggest thing that has happened in four months of statements, and
-          the next statement will tell us which. If it is the first, a large part of the
-          monthly gap closes by itself.</p>
+        <h3>The 30 September structured-loan debit
+          <span class="pill good"><i class="swatch"></i> Could close the gap</span></h3>
+        <p>R200,000 went out as a capital repayment on 9 September, funded by a transfer
+          in. If it came off the structured loan and the term was held, the instalment
+          should fall by roughly R6,500 a month with three years remaining, R4,299 with
+          five, R2,699 with ten. If the 30 September debit is still R22,202.79 the bank
+          shortened the term instead and the monthly picture is unchanged. This single
+          line is worth more than everything below it.</p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R7,976<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>Life and risk cover across two providers</h3>
+        <p>FNB Life at R4,140.19 and JAC at R3,836.27, R95,718 a year between them, on
+          top of a R90,936-a-year Discovery premium that looks like medical aid. Dread
+          disease, disability and income protection commonly appear on both schedules.
+          Ask each provider for a schedule of benefits and compare them line by line
+          &mdash; it is the largest reviewable fixed line that is not a loan.</p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R5,804<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>Eight connectivity debits, including two fibre lines</h3>
+        <p>RSAWEB at R1,728.00 and R1,299.01, three FNB Connect debit orders, two Connect
+          top-ups and Stratum. R69,648 a year for one household. Two fibre lines is the
+          obvious place to look for something being paid for twice.</p>
+      </div>
+    </div>
+
+    <div class="action">
+      <div class="amt">R6,144<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div>
+        <h3>Happy Hound, billed weekly</h3>
+        <p>R1,417.74 every week on a card used for nothing else, up from R1,317.44 on
+          20 July. R73,722 a year, and the only item in this budget that is charged
+          weekly &mdash; which is why it stayed invisible until the card statements
+          arrived.</p>
       </div>
     </div>
 
     <div class="action">
       <div class="amt">R850<br><span style="color:var(--muted);font-weight:400">/month</span></div>
       <div>
-        <h3>A new debit order appeared on 1 September
-          <span class="pill warn"><i class="swatch"></i> Unidentified</span></h3>
-        <p>"Magtape Debit Ril Res001 282060", R850.00, first occurrence. It has the shape
-          of a standing instruction rather than a once-off &mdash; same Netcash route as
-          Stratum, Edgekloof and the others &mdash; so it is in the fixed schedule until
-          you tell me otherwise. R10,200 a year if it recurs.</p>
+        <h3>Ril Res001
+          <span class="pill warn"><i class="swatch"></i> New in September</span></h3>
+        <p>First appeared on 1 September through the same Netcash route as Stratum and
+          Edgekloof, which is the shape of a standing instruction rather than a one-off.
+          It is in the fixed table on that assumption. R10,200 a year if it recurs
+          &mdash; tell me what it is and I will file it properly.</p>
       </div>
     </div>
 
     <div class="action">
-      <div class="amt">R22,203<br><span style="color:var(--muted);font-weight:400">/month</span></div>
+      <div class="amt">R74.64<br><span style="color:var(--muted);font-weight:400">/year over</span></div>
       <div>
-        <h3>The structured loan has risen three times</h3>
-        <p>R21,828.65 in June and July, R21,891.23 in August, <strong>R22,202.79</strong>
-          on 31 August &mdash; up R374.14 since June, and the jump is getting bigger each
-          time. Prime has not moved since 29 May, so something else is driving it. This
-          is 32% of your salary and it is drifting upward; it is worth knowing why.</p>
-      </div>
-    </div>
-
-    <div class="action">
-      <div class="amt">R30,000<br><span style="color:var(--muted);font-weight:400">20 Aug</span></div>
-      <div>
-        <h3>External money is now carrying the cycle
-          <span class="pill warn"><i class="swatch"></i> Not salary</span></h3>
-        <p>R30,000 came in from "Pool And Tickets" on 20 August and R26,000 went out to
-          the two credit accounts the same day. That transfer is the only reason the
-          cycle closed up &mdash; R4,677 to R8,937. On salary alone it would have closed
-          about <strong>R25,740 down</strong>. Two large external transfers in one month
-          means the numbers below no longer describe how the account is actually being
-          funded, and I cannot model money I cannot see the source of.</p>
+        <h3>The TFSA contribution is fractionally over the limit
+          <span class="pill warn"><i class="swatch"></i> Easy fix</span></h3>
+        <p>R3,006.22 &times; 12 = R36,074.64 against a R36,000 annual limit, with excess
+          contributions taxed at 40%. An even <strong>R3,000.00</strong> lands exactly on
+          it. Worth confirming with EasyEquities whether the R6.22 is part of the
+          contribution or a platform fee, and confirming the current limit.</p>
       </div>
     </div>
 
   </div>
 </section>
 
-
-<section id="cycle">
+<section id="history">
   <div class="shead">
-    <h2>The month, step by step</h2>
-    <div class="eyebrow">From payday to payday, at current rates</div>
-  </div>
-  <div class="chartcard">
-    <div class="chartwrap">
-      <svg class="chart" id="stepchart" viewBox="0 0 900 340" role="img"
-           aria-label="Money remaining through the salary cycle: R70,000 on the 25th, falling to R28,501 after the structured loan and WesBank clear on the 31st, R11,598 after the 1st-of-month insurance and connectivity run, and below zero once savings and the card commitments are counted."></svg>
-      <div class="tip" id="tip2"></div>
-    </div>
-    <div class="barlegend" style="margin-top:16px">
-      <span><i class="swatch" style="background:var(--accent)"></i> Fixed cost &mdash; money gone</span>
-      <span><i class="swatch" style="background:var(--rule-2)"></i> Savings debit order &mdash; money you keep</span>
-      <span><i class="swatch" style="background:var(--critical-dot);opacity:.55"></i> Below zero</span>
-    </div>
-    <p class="caption">Two days do almost all the damage. The 31st takes R28,125 in four
-      debits, R22,203 of it the structured loan. The 1st takes another R17,754, mostly
-      insurance and fibre. By the 3rd you are down to R10,036, and every rand of food,
-      fuel and family support for the rest of the month comes out of that. The R9,000
-      savings transfer on the 27th and the R661 account fee on the 18th are on the line
-      too &mdash; hover any step to see it. The last two steps are the card commitments,
-      which you settle rather than have debited.</p>
-  </div>
-</section>
-
-<section id="buffer">
-  <div class="shead">
-    <h2>What you need in the account, and when</h2>
-    <div class="eyebrow">The debit-order run &middot; 25th to the 18th &middot; September rates</div>
-  </div>
-
-  <div class="tiles" style="margin-bottom:26px">
-    <div class="tile">
-      <div class="k">Biggest single day &mdash; the 31st</div>
-      <div class="v acc">R28,125</div>
-      <div class="d">Four debits. R22,203<br>of it the structured loan</div>
-    </div>
-    <div class="tile">
-      <div class="k">31st + 1st, back to back</div>
-      <div class="v acc">R45,879</div>
-      <div class="d">16 debits in two days,<br>66% of your salary</div>
-    </div>
-    <div class="tile">
-      <div class="k">There by the 30th</div>
-      <div class="v">R49,284</div>
-      <div class="d">Covers the 31st, 1st and 3rd<br>&mdash; the whole month-end run</div>
-    </div>
-    <div class="tile">
-      <div class="k">Whole run, 25th to 18th</div>
-      <div class="v">R66,131</div>
-      <div class="d">94% of salary. Clears with<br>R3,869 to spare</div>
-    </div>
-    <div class="tile">
-      <div class="k">Opening balance needed</div>
-      <div class="v neg">R19,909</div>
-      <div class="d">For the full cycle, once both<br>credit accounts and living land</div>
-    </div>
-  </div>
-
-  <div class="callout" style="border-left-color:var(--good-dot)">
-    <h3>For the debit orders alone, you still need nothing extra</h3>
-    <p>The run is <strong>R66,131.42</strong> and your salary is R70,000. As long as the
-      account is at zero or better when salary lands, and nothing goes out ahead of the
-      run, every debit order clears and you finish the 18th with
-      <strong>R3,868.58</strong>. Nothing bounces.</p>
-    <p style="margin-top:.8em">That margin has narrowed, though. It was R5,036.60 last
-      month; the structured loan increase, the new R850 debit order and the higher
-      account fee have taken R1,168 off it. Another R3,900 of increases and the salary
-      stops covering the debit orders on its own.</p>
-  </div>
-
-  <div class="tablewrap" style="margin:26px 0">
-    <table>
-      <thead><tr><th class="l">Clears</th><th class="l">What</th><th>Amount</th>
-                 <th>Needs to be there</th><th class="l">Running</th></tr></thead>
-      <tbody>
-        <tr><td class="l grp day">25th</td><td class="l">FNB Connect, FNB Life</td>
-            <td>4,685.61</td><td class="avg">4,686</td><td class="l grp">2 debits</td></tr>
-        <tr><td class="l grp day">27th</td><td class="l">Savings transfer</td>
-            <td>9,000.00</td><td class="avg">9,000</td><td class="l grp">1 debit</td></tr>
-        <tr><td class="l grp day">31st</td><td class="l">Structured loan, WesBank, home fee, charges</td>
-            <td>28,124.89</td><td class="avg">28,125</td><td class="l grp">4 debits &mdash; the cliff</td></tr>
-        <tr><td class="l grp day">1st</td><td class="l">Discovery, JAC, RSAWEB &times;2, FNB Connect &times;2, top-ups, Stratum, Netstar, FNB Life, Ril Res001</td>
-            <td>17,754.24</td><td class="avg">17,755</td><td class="l grp">12 debits</td></tr>
-        <tr><td class="l grp day">3rd</td><td class="l">Edgekloof levy, EasyEquities TFSA</td>
-            <td>3,405.22</td><td class="avg">3,406</td><td class="l grp">2 debits</td></tr>
-        <tr><td class="l grp day">17th</td><td class="l">FNB Invest</td>
-            <td>2,500.00</td><td class="avg">2,500</td><td class="l grp">1 debit</td></tr>
-        <tr><td class="l grp day">18th</td><td class="l">Account service fee</td>
-            <td>661.46</td><td class="avg">661</td><td class="l grp">1 debit</td></tr>
-        <tr class="total"><td class="l">Total</td><td class="l">23 debit orders</td>
-            <td>66,131.42</td><td>&mdash;</td><td class="l">94% of salary</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="caption">The one date to watch is the <strong>30th</strong>. R49,284 has to be
-    sitting there to carry the 31st, the 1st and the 3rd without a bounce &mdash; 18 debit
-    orders inside four days. Everything before and after it is comfortable by comparison.</p>
-
-  <div class="callout">
-    <h3>For the whole cycle you need R19,909 on top of salary</h3>
-    <p>Over a full cycle <strong>R89,909</strong> now goes out: R66,131 of debit orders,
-      R8,750 settling card &hellip;4002, R7,278 of living off the cheque account, and
-      <strong>R7,750 a month to the second credit account</strong>. Against R70,000 of
-      salary that needs an opening balance of R19,909 to end the cycle at zero.</p>
-    <p style="margin-top:.8em">That last line is an average of five irregular payments
-      that are climbing steeply &mdash; nothing, then R3,000, then R12,000, then R16,000.
-      Strip it out and the requirement falls to about <strong>R12,159</strong>, close to
-      last month's figure. Which of those two numbers is real depends entirely on what
-      that account is, so it is the first thing to find out.</p>
-  </div>
-
-  <div class="callout" style="border-left-color:var(--warning-dot)">
-    <h3>Savings can no longer come out of salary at all</h3>
-    <p>Last month there was R2,293 of room. At September rates, with the second credit
-      account counted, R11,458 is left after fixed costs against R16,861 of variable
-      spending &mdash; <strong>R5,403 short before a cent of saving</strong>. Stopping all
-      three savings instructions frees R14,506 and still leaves R5,403 short, so the
-      savings transfers are no longer the whole answer.</p>
-    <p style="margin-top:.8em">Two things could change that quickly. If the R200,000
-      capital repayment cuts the structured loan instalment, that is worth R2,000&ndash;R6,500
-      a month on its own. And if the second credit account turns out to be a balance you
-      are clearing rather than a recurring cost, R7,750 of that R16,861 disappears. Both
-      are answerable &mdash; the 30 September debit and one statement.</p>
-  </div>
-</section>
-
-<section>
-  <div class="shead">
-    <h2>Fixed &mdash; R58,542 a month</h2>
-    <div class="eyebrow">84% of salary &middot; committed before you decide anything</div>
-  </div>
-  <div class="bars" id="fixedbars"></div>
-  <p class="caption">Every one of these is a standing instruction at its current rate. The
-    two card rows are not debit orders off the cheque account &mdash; they land on the
-    credit card and you settle them when you pay it &mdash; but they are just as fixed.</p>
-  <div class="tablewrap" style="margin-top:26px">
-    <table>
-      <thead><tr><th class="l">Clears</th><th class="l">Commitment</th>
-                 <th class="l">Category</th><th class="l">Account</th><th>Amount</th></tr></thead>
-      <tbody id="fixedbody"></tbody>
-    </table>
-  </div>
-</section>
-
-<section>
-  <div class="shead">
-    <h2>Variable &mdash; R16,861 a month</h2>
-    <div class="eyebrow">4-cycle average &middot; the part you control</div>
-  </div>
-  <p>This is everything that is not a standing instruction: bought when needed, in amounts
-    that change month to month. It is the only part of the page you can move quickly.</p>
-  <div class="bars" id="varbars"></div>
-  <p class="caption">Against the R11,458 left after fixed costs, this leaves
-    <strong style="color:var(--critical)">&minus;R5,403 a month</strong>. But the top row
-    carries it: payments to the second credit account average R7,750 and are climbing.
-    Everything below that row comes to R9,111, and genuine discretionary spending &mdash;
-    food, shopping, travel and fuel &mdash; is R5,515 of it. You are still not living
-    extravagantly. June's R26,061 of dentist and doctor was a one-off event and is
-    excluded here.</p>
-</section>
-
-<section>
-  <div class="shead">
-    <h2>So where does it actually go wrong</h2>
-    <div class="eyebrow">The arithmetic, in four lines</div>
-  </div>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th class="l">On salary alone</th><th>Per month</th><th>Running</th></tr></thead>
-      <tbody>
-        <tr><td class="l">Salary</td><td>70,000.00</td><td class="avg">70,000.00</td></tr>
-        <tr><td class="l">Less fixed costs</td><td>&minus;58,542.21</td><td class="avg">11,457.79</td></tr>
-        <tr><td class="l">Less variable spending</td><td>&minus;16,861.18</td><td class="avg" style="color:var(--critical)">&minus;5,403.39</td></tr>
-        <tr><td class="l">Less savings debit orders</td><td>&minus;14,506.22</td><td class="avg" style="color:var(--critical)">&minus;19,909.61</td></tr>
-        <tr class="total"><td class="l">Monthly gap</td><td></td><td>&minus;R19,909.61</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="callout">
-    <h3>The gap is now R19,910 a month, and only part of it is the savings plan</h3>
-    <p>Last month this line read R12,214 and the whole of it was savings. It no longer
-      is. R7,750 a month of payments to the second credit account, R1,168 of increases to
-      the fixed schedule, and the fact that variable spending is measured over four
-      cycles rather than three have moved it. Stopping all three savings instructions
-      frees R14,506 and still leaves R5,403 short.</p>
-    <p style="margin-top:.8em">What has also changed is how the shortfall is being
-      funded. In September it was not the buffer &mdash; it was R30,000 from outside,
-      and separately R200,000 that went straight to a capital repayment. The account
-      closed up, at R8,937. On salary alone it would have closed about R25,740 down.</p>
-  </div>
-  <div class="callout" style="border-left-color:var(--warning-dot)">
-    <h3>What to do, in order</h3>
-    <p><b>1. Get a statement for the second credit account.</b> R31,000 has gone to it
-      since July, the payments are accelerating, and nothing tells us what it owes or
-      what it costs. Everything else on this page is measured; that is the one number
-      that is guessed.</p>
-    <p style="margin-top:.8em"><b>2. Check the 30 September structured-loan debit.</b>
-      If the R200,000 capital repayment cut the instalment, it is worth
-      R2,000&ndash;R6,500 a month and a large part of the gap closes by itself. If the
-      debit is still R22,203, the bank shortened the term instead and nothing changes
-      month to month.</p>
-    <p style="margin-top:.8em"><b>3. Identify Ril Res001</b> &mdash; R850 a month,
-      new on 1 September, R10,200 a year if it recurs.</p>
-    <p style="margin-top:.8em"><b>4. Then right-size the savings.</b> Pause the R9,000
-      transfer and the R2,500 FNB Invest and keep only the R3,006.22 TFSA. That is worth
-      R11,500 a month. Whether it is enough depends entirely on points 1 and 2.</p>
-    <p style="margin-top:.8em"><b>5. And move the savings date.</b> The R9,000 still
-      leaves on the 27th, three days before R49,284 has to be there. Moving it to the
-      4th costs nothing and removes the risk.</p>
-  </div>
-</section>
-
-<section>
-  <div class="shead">
-    <h2>What actually happened</h2>
-    <div class="eyebrow">Cheque account balance &middot; 16 May – 17 Sep 2026</div>
+    <h2>What the account actually did</h2>
+    <div class="eyebrow">Cheque balance &middot; 16 May – 17 Sep 2026</div>
   </div>
   <div class="chartcard">
     <div class="chartwrap">
       <svg class="chart" id="balchart" viewBox="0 0 900 300" role="img"
-           aria-label="Running account balance from 16 May to 17 August 2026, showing three salary spikes that each drain within days, a dip below zero in late July, and a closing balance of R4,677."></svg>
+           aria-label="Running cheque account balance from 16 May to 17 September 2026: four salary spikes that each drain within days, a dip below zero in late July, and a closing balance of R8,937."></svg>
       <div class="tip" id="tip"></div>
     </div>
-    <p class="caption">The same cycle, three times over. Each spike is payday; each cliff
-      is the month-end and 1st-of-month run. The peak after payday falls every cycle
-      &mdash; R112,184 in May, R74,535 in June, R76,254 in July &mdash; while the trough
-      goes from R42,792 to below zero. In late July the account was overdrawn for five
-      days, bottoming around R3,200 below zero before payday.</p>
-  </div>
-</section>
-
-<section>
-  <div class="shead">
-    <h2>Cover and savings, side by side</h2>
-    <div class="eyebrow">The two biggest reviewable blocks</div>
-  </div>
-  <p>These are almost the same size, and between them they take 44% of your salary. One is
-    an asset you are building. The other is a cost you have never had reason to add up.</p>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th class="l">Insurance &amp; cover</th><th>Per month</th><th>Per year</th>
-                 <th class="l">Savings &amp; investments</th><th>Per month</th><th>Per year</th></tr></thead>
-      <tbody>
-        <tr><td class="l">Discovery premium</td><td>7,578.00</td><td>90,936.00</td>
-            <td class="l">Scheduled transfer to savings</td><td>9,000.00</td><td>108,000.00</td></tr>
-        <tr><td class="l">FNB Life (Fl105Gz98)</td><td>4,106.61</td><td>49,279.32</td>
-            <td class="l">EasyEquities TFSA</td><td>3,006.22</td><td>36,074.64</td></tr>
-        <tr><td class="l">JAC insurance</td><td>3,836.27</td><td>46,035.24</td>
-            <td class="l">FNB Invest</td><td>2,500.00</td><td>30,000.00</td></tr>
-        <tr><td class="l">Netstar vehicle tracking</td><td>231.38</td><td>2,776.56</td>
-            <td class="l"></td><td></td><td></td></tr>
-        <tr><td class="l">FNB Life (Fl68Zw53)</td><td>33.58</td><td>402.96</td>
-            <td class="l"></td><td></td><td></td></tr>
-        <tr class="total"><td class="l">Total cover &mdash; 22.6% of salary</td>
-            <td>15,785.84</td><td>189,430.08</td>
-            <td class="l">Total saved &mdash; 20.7% of salary</td>
-            <td>14,506.22</td><td>174,074.64</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="callout">
-    <h3>R95,718 a year on life and risk cover, across two providers</h3>
-    <p>The Discovery premium looks like medical aid &mdash; the "Disc Memb" credits of
-      R2,500 in May and R6,245.62 in June are claims coming back. That leaves
-      <strong>FNB Life at R4,140.19 and JAC at R3,836.27</strong> as separate life and
-      risk cover, R7,976.46 a month between them, on top of the medical aid. Two providers
-      carrying risk cover for one person is where duplication hides &mdash; dread disease,
-      disability and income protection often appear on both. Ask each for a schedule of
-      benefits and lay them side by side.</p>
-  </div>
-  <div class="callout" style="border-left-color:var(--warning-dot)">
-    <h3>Your TFSA contribution is R74.64 over the annual limit</h3>
-    <p>R3,006.22 &times; 12 = <strong>R36,074.64</strong>. The tax-free savings annual
-      contribution limit is R36,000 as I understand it, with a R500,000 lifetime cap, and
-      SARS taxes contributions above the annual limit at 40%. An even
-      <strong>R3,000.00</strong> lands exactly on it. Worth confirming with EasyEquities
-      whether the R6.22 is part of the contribution or a platform fee &mdash; and
-      confirming the current limit, since it does get adjusted.</p>
-  </div>
-</section>
-
-<section>
-  <div class="shead">
-    <h2>The card</h2>
-    <div class="eyebrow">Statements 130 &ndash; 132 &middot; 30 May &ndash; 28 Aug 2026</div>
-  </div>
-  <p>The card is not where the money goes. Food and retail on it come to under R1,000 a
-    month. It carries two fixed commitments and, in June, one large medical event.</p>
-  <div class="tiles" style="margin-bottom:26px">
-    <div class="tile">
-      <div class="k">Weekly subscription</div>
-      <div class="v acc">R1,417.74</div>
-      <div class="d">Every week, on its own card.<br>R73,722 a year</div>
-    </div>
-    <div class="tile">
-      <div class="k">June medical, out of pocket</div>
-      <div class="v">R26,061</div>
-      <div class="d">Endodontist, doctor and pharmacy<br>&mdash; R25,874 of it in two days</div>
-    </div>
-    <div class="tile">
-      <div class="k">Everything else on the card</div>
-      <div class="v">R1,725<span style="font-size:16px;color:var(--muted)">/mo</span></div>
-      <div class="d">Groceries, a weekend away,<br>Yuppiechef</div>
-    </div>
-    <div class="tile">
-      <div class="k">iStore budget facility</div>
-      <div class="v">R9,868</div>
-      <div class="d">R23,999 original, 11.50% p.a.,<br>R773.47 a month</div>
-    </div>
-    <div class="tile">
-      <div class="k">Straight-facility interest</div>
-      <div class="v pos">R0.00</div>
-      <div class="d">Paid in full every cycle &mdash;<br>19.25% entirely avoided</div>
-    </div>
-  </div>
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr><th class="l">What the card bought</th><th>Stmt 130</th><th>Stmt 131</th>
-            <th>Stmt 132</th><th>Total</th><th>Avg / month</th></tr>
-      </thead>
-      <tbody>
-        <tr><td class="l">Medical, out of pocket <span class="tag" style="background:var(--critical-wash);color:var(--critical)">one-off</span></td>
-            <td>26,060.66</td><td>0.00</td><td>0.00</td><td>26,060.66</td><td class="avg">8,686.89</td></tr>
-        <tr><td class="l">Happy Hound, weekly <span class="tag">fixed</span></td>
-            <td>5,269.76</td><td>6,787.80</td><td>5,670.96</td><td>17,728.52</td><td class="avg">5,909.51</td></tr>
-        <tr><td class="l">Travel &amp; leisure</td>
-            <td>0.00</td><td>2,199.60</td><td>0.00</td><td>2,199.60</td><td class="avg">733.20</td></tr>
-        <tr><td class="l">Shopping &amp; other</td>
-            <td>299.00</td><td>0.00</td><td>1,505.00</td><td>1,804.00</td><td class="avg">601.33</td></tr>
-        <tr><td class="l">Groceries &amp; eating out</td>
-            <td>110.87</td><td>545.19</td><td>515.34</td><td>1,171.40</td><td class="avg">390.47</td></tr>
-        <tr class="total"><td class="l">Total charged to the card</td>
-            <td>31,740.29</td><td>9,532.59</td><td>7,691.30</td><td>48,964.18</td><td>16,321.39</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="caption">Both card facilities reconcile to the printed balances on all three
-    statements. The straight facility is settled in full each cycle, so the 19.25% rate
-    never bites &mdash; the only card interest paid was R325.20 on the iStore balance at
-    11.50%. Happy Hound is billed weekly, so its per-cycle figure moves with how many
-    Mondays a cycle contains; at R1,417.74 the steady-state cost is R6,143.54 a month.</p>
-</section>
-
-<section>
-  <div class="shead">
-    <h2>Three things worth flagging</h2>
-    <div class="eyebrow">Corrections and loose ends</div>
-  </div>
-  <div class="actions">
-    <div class="action">
-      <div class="amt">+R2,353<br><span style="color:var(--muted);font-weight:400">/month</span></div>
-      <div>
-        <h3>Net worth is rising, even as cash falls
-          <span class="pill good"><i class="swatch"></i> Corrected twice</span></h3>
-        <p>Cash fell R45,161 over three cycles, but R37,000 went into savings and FNB
-          Invest, R9,019 into the TFSA and R6,201 repaid card debt &mdash; a net
-          <strong>+R7,059</strong>, or R2,353 a month, before whatever principal sits
-          inside your loan instalments. Two earlier readings of this got it wrong: the
-          first treated all card payments as debt repayment when most funded new
-          spending, and the second counted your TFSA contribution as an expense.</p>
-      </div>
-    </div>
-    <div class="action">
-      <div class="amt">R5,000<br><span style="color:var(--muted);font-weight:400">unmatched</span></div>
-      <div>
-        <h3>Card payments that never arrived
-          <span class="pill warn"><i class="swatch"></i> Still open</span></h3>
-        <p>Your cheque account shows R60,490.47 paid to "Credit"; the card recorded
-          R55,490.47. The payments of R3,000 on 16 July and R1,000 each on 20 and 21 July
-          have no counterpart on this card, and the R10,000 sent on 7 August posts there
-          dated 20 August. Either there is a second card, or those payments went
-          somewhere else.</p>
-      </div>
-    </div>
-    <div class="action">
-      <div class="amt">R21,891<br><span style="color:var(--muted);font-weight:400">/month</span></div>
-      <div>
-        <h3>The structured loan is 31% of salary on its own</h3>
-        <p>It crept up from R21,828.65 to R21,891.23 in July. Nothing else here moves the
-          needle the way a restructure, a term extension or a rate review would. Prime
-          dropped to 10.50% on 29 May &mdash; worth asking whether that was passed
-          through. Get the balance, rate and remaining term.</p>
-      </div>
-    </div>
+    <p class="caption">Four cycles of the same shape. The buffer fell from R49,838 to
+      R4,677 over the first three, and the account was overdrawn for five days in late
+      July. September closed <em>up</em>, at R8,937 &mdash; but only because R30,000 came
+      in from outside on 20 August. On salary alone that cycle would have closed about
+      R25,740 down. Two large external transfers in one month, R30,000 and R200,000, mean
+      the budget above describes what things cost, not how the account is currently
+      being funded.</p>
   </div>
 </section>
 
 <footer>
-  <p><b>How this was built.</b> All 192 transactions from six FNB statements &mdash; cheque
-  135&ndash;137 and card 130&ndash;132 &mdash; were transcribed to
-  <code>data/transactions.csv</code> and <code>data/card-transactions.csv</code> and
-  categorised by hand, with JAC confirmed as insurance and FWT as an EasyEquities
-  tax-free savings contribution. <code>scripts/analyze.py</code> and
+  <p><b>Where the numbers come from.</b> <code>data/budget.csv</code> is the budget:
+  every line at its current rate, classified fixed, variable or savings.
+  <code>scripts/budget.py</code> produces this page's figures from it. Behind that,
+  <code>data/transactions.csv</code> and <code>data/card-transactions.csv</code> hold
+  all 236 transactions from seven statements &mdash; cheque 135&ndash;138 and card
+  130&ndash;132 &mdash; and <code>scripts/analyze.py</code> and
   <code>scripts/analyze_card.py</code> check every cycle against the opening and closing
-  balances printed on the statements: all three cheque cycles and both facilities on all
-  three card statements tie to R0.00. The fixed schedule on this page lives in
-  <code>data/monthly-commitments.csv</code> at current rates, and
-  <code>scripts/monthly_plan.py</code> produces the walk-through above.</p>
-  <p style="margin-top:1em"><b>Fixed versus variable.</b> Fixed means a standing
-  instruction at a rate you cannot change this month. Prepaid electricity and airtime are
-  treated as variable &mdash; they recur, but you choose when and how much. Savings debit
-  orders are shown separately from fixed costs throughout, because they are money you keep,
-  not money you spend.</p>
-  <p style="margin-top:1em"><b>What this does not cover.</b> Savings, investment,
-  structured-loan and vehicle-finance <em>balances</em>, so the principal you repay each
-  month &mdash; real, and positive for net worth &mdash; is not counted anywhere. The two
-  accounts also run on different cycles (the card closes around the 29th, the cheque account
-  on the 17th), so combined monthly figures are close but not exact, and R5,000 of card
-  payments does not reconcile between them. Nothing here is financial advice &mdash; it is
-  your own data, added up.</p>
+  balances printed on them. All four cheque cycles and both facilities on all three card
+  statements tie to R0.00.</p>
+  <p style="margin-top:1em"><b>How fixed and variable are decided.</b> Fixed means a
+  standing instruction at a rate you cannot change this month, listed at its most recent
+  amount rather than an average. Variable means you choose when and how much, so those
+  lines are four-cycle averages &mdash; prepaid electricity and airtime sit here for that
+  reason, even though they recur. Savings are standing instructions too, but kept in
+  their own column because they are money retained rather than spent. Payments to the
+  second credit account are shown as variable because their timing and size are
+  irregular; if that account turns out to carry a fixed instalment, R7,750 moves columns
+  and the shape of this budget changes.</p>
+  <p style="margin-top:1em"><b>What is still missing.</b> Any statement for the second
+  credit account. Balances for the savings, investment, structured-loan and
+  vehicle-finance accounts, so the principal repaid each month is not counted anywhere.
+  A card statement covering September. The two accounts also run on different cycles
+  &mdash; the card closes around the 29th, the cheque account on the 17th &mdash; so
+  combined monthly figures are close but not exact. Nothing here is financial advice; it
+  is your own data, added up.</p>
 </footer>
 
 </div>
 <script>
+const series = [{"date": "2026-05-16", "balance": 49838.1}, {"date": "2026-05-18", "balance": 44841.9}, {"date": "2026-05-22", "balance": 44371.3}, {"date": "2026-05-23", "balance": 44370.1}, {"date": "2026-05-25", "balance": 109684.49}, {"date": "2026-05-26", "balance": 112184.49}, {"date": "2026-05-27", "balance": 100684.49}, {"date": "2026-05-28", "balance": 100609.5}, {"date": "2026-05-29", "balance": 100180.3}, {"date": "2026-05-30", "balance": 100179.49}, {"date": "2026-05-31", "balance": 100079.44}, {"date": "2026-06-01", "balance": 51241.24}, {"date": "2026-06-05", "balance": 50216.13}, {"date": "2026-06-06", "balance": 48516.24}, {"date": "2026-06-08", "balance": 47144.56}, {"date": "2026-06-09", "balance": 46259.56}, {"date": "2026-06-13", "balance": 45465.28}, {"date": "2026-06-15", "balance": 45292.28}, {"date": "2026-06-17", "balance": 42792.28}, {"date": "2026-06-18", "balance": 42087.28}, {"date": "2026-06-20", "balance": 42087.24}, {"date": "2026-06-23", "balance": 41535.1}, {"date": "2026-06-25", "balance": 68859.02}, {"date": "2026-06-27", "balance": 59566.16}, {"date": "2026-06-30", "balance": 37564.48}, {"date": "2026-07-01", "balance": 17255.02}, {"date": "2026-07-02", "balance": 17066.02}, {"date": "2026-07-03", "balance": 17011.03}, {"date": "2026-07-04", "balance": 16975.02}, {"date": "2026-07-09", "balance": 8429.4}, {"date": "2026-07-10", "balance": 8372.2}, {"date": "2026-07-11", "balance": 8371.4}, {"date": "2026-07-14", "balance": 7994.4}, {"date": "2026-07-16", "balance": 4994.4}, {"date": "2026-07-17", "balance": 2494.4}, {"date": "2026-07-18", "balance": 1789.4}, {"date": "2026-07-20", "balance": -170.6}, {"date": "2026-07-21", "balance": -1170.6}, {"date": "2026-07-22", "balance": -1670.6}, {"date": "2026-07-23", "balance": -3047.15}, {"date": "2026-07-24", "balance": 71053.75}, {"date": "2026-07-25", "balance": 64877.79}, {"date": "2026-07-27", "balance": 55877.79}, {"date": "2026-07-29", "balance": 55817.79}, {"date": "2026-07-31", "balance": 28004.46}, {"date": "2026-08-01", "balance": 11101.71}, {"date": "2026-08-03", "balance": 7696.49}, {"date": "2026-08-04", "balance": 7612.89}, {"date": "2026-08-07", "balance": 7612.89}, {"date": "2026-08-08", "balance": 7298.49}, {"date": "2026-08-11", "balance": 7214.49}, {"date": "2026-08-17", "balance": 4677.25}, {"date": "2026-08-18", "balance": 4022.25}, {"date": "2026-08-19", "balance": 3985.26}, {"date": "2026-08-20", "balance": 7743.26}, {"date": "2026-08-21", "balance": 7421.68}, {"date": "2026-08-22", "balance": 7414.79}, {"date": "2026-08-24", "balance": 6909.79}, {"date": "2026-08-25", "balance": 72224.18}, {"date": "2026-08-26", "balance": 72046.18}, {"date": "2026-08-27", "balance": 63046.18}, {"date": "2026-08-31", "balance": 34921.29}, {"date": "2026-09-01", "balance": 13293.04}, {"date": "2026-09-05", "balance": 13170.84}, {"date": "2026-09-07", "balance": 12250.84}, {"date": "2026-09-08", "balance": 12125.84}, {"date": "2026-09-09", "balance": 12125.84}, {"date": "2026-09-15", "balance": 11436.84}, {"date": "2026-09-17", "balance": 8936.84}];
+const BUDGET = {"salary": 70000.0, "totals": {"fixed": 58542.21, "variable": 16861.18, "savings": 14506.22}, "leftAfterFixed": 11457.79, "leftAfterVariable": -5403.39, "gap": -19909.61, "unidentified": 8600.0, "oneOff": {"name": "Medical, out of pocket (June)", "amount": 26060.66}, "groups": {"fixed": {"Debt": [{"item": "FNB Structured Loan", "amount": 22202.79, "frequency": "Monthly", "day": "31st", "account": "Cheque", "basis": "Standing instruction at the September rate", "status": "rising"}, {"item": "WesBank vehicle finance", "amount": 5749.6, "frequency": "Monthly", "day": "31st", "account": "Cheque", "basis": "Standing instruction at the September rate", "status": ""}, {"item": "iStore budget facility instalment", "amount": 773.47, "frequency": "Monthly", "day": "Statement", "account": "Card 4002", "basis": "11.50% p.a. - R9868.11 still outstanding", "status": ""}, {"item": "FNB Home admin fee", "amount": 69.0, "frequency": "Monthly", "day": "31st", "account": "Cheque", "basis": "Standing instruction", "status": ""}], "Insurance & cover": [{"item": "Discovery premium", "amount": 7578.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "Medical aid - claims refunded in May and June", "status": ""}, {"item": "FNB Life (Fl105Gz98)", "amount": 4106.61, "frequency": "Monthly", "day": "25th", "account": "Cheque", "basis": "Life and risk cover", "status": ""}, {"item": "JAC insurance", "amount": 3836.27, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "Life and risk cover - confirmed by you", "status": ""}, {"item": "Netstar vehicle tracking", "amount": 231.38, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "Usually an insurer requirement", "status": ""}, {"item": "FNB Life (Fl68Zw53)", "amount": 33.58, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "Second small policy", "status": ""}], "Subscriptions": [{"item": "Happy Hound", "amount": 6143.54, "frequency": "Weekly", "day": "Every week", "account": "Card 4002", "basis": "R1417.74 per week x 52/12 - on a dedicated card", "status": ""}], "Connectivity": [{"item": "RSAWEB fibre line 2", "amount": 1728.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "Second fibre line", "status": "duplicate?"}, {"item": "RSAWEB fibre line 1", "amount": 1299.01, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "First fibre line", "status": "duplicate?"}, {"item": "FNB Connect 8858332324", "amount": 749.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "", "status": ""}, {"item": "FNB Connect 8872638615", "amount": 579.0, "frequency": "Monthly", "day": "25th", "account": "Cheque", "basis": "", "status": ""}, {"item": "FNB Connect 8858332521", "amount": 499.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "", "status": ""}, {"item": "Hybrid Connect top-up", "amount": 415.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "", "status": ""}, {"item": "Stratum", "amount": 390.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "", "status": ""}, {"item": "Hybrid Connect top-up", "amount": 145.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "", "status": ""}], "Unidentified": [{"item": "Ril Res001", "amount": 850.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "First appeared 1 September - assumed recurring", "status": "unidentified"}], "Bank charges": [{"item": "Monthly account service fee", "amount": 661.46, "frequency": "Monthly", "day": "18th", "account": "Cheque", "basis": "Rose from 625.00 in July", "status": "rising"}, {"item": "Linked account service charges", "amount": 103.5, "frequency": "Monthly", "day": "31st", "account": "Cheque", "basis": "From account 62724872339", "status": ""}], "Home": [{"item": "Edgekloof levy", "amount": 399.0, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "", "status": ""}]}, "variable": {"Connectivity": [{"item": "Airtime top-ups", "amount": 188.25, "frequency": "Irregular", "day": "-", "account": "Cheque", "basis": "4-cycle average", "status": ""}], "Bank charges": [{"item": "Overdraft and card interest", "amount": 119.85, "frequency": "Irregular", "day": "-", "account": "Both", "basis": "4-cycle average", "status": ""}], "Home": [{"item": "Prepaid electricity", "amount": 625.0, "frequency": "Irregular", "day": "-", "account": "Cheque", "basis": "4-cycle average - you choose when and how much", "status": ""}], "Second credit account": [{"item": "Payments to a second credit account", "amount": 7750.0, "frequency": "Irregular", "day": "Varies", "account": "Unknown", "basis": "4-cycle average of 5 payments - accelerating", "status": "unidentified"}], "Food": [{"item": "Groceries and eating out", "amount": 3196.98, "frequency": "Irregular", "day": "-", "account": "Both", "basis": "4-cycle average across both accounts", "status": ""}], "Family": [{"item": "Family support", "amount": 2662.65, "frequency": "Irregular", "day": "-", "account": "Cheque", "basis": "4-cycle average - PayShap and app transfers", "status": ""}], "Shopping": [{"item": "Shopping and other retail", "amount": 1196.61, "frequency": "Irregular", "day": "-", "account": "Both", "basis": "4-cycle average - Takealot Yuppiechef pets", "status": ""}], "Travel": [{"item": "Travel and leisure", "amount": 777.7, "frequency": "Irregular", "day": "-", "account": "Both", "basis": "4-cycle average - one weekend away", "status": ""}], "Transport": [{"item": "Transport and fuel", "amount": 344.14, "frequency": "Irregular", "day": "-", "account": "Cheque", "basis": "4-cycle average - one fuel purchase in four months", "status": ""}]}, "savings": {"Savings": [{"item": "Scheduled transfer to savings", "amount": 9000.0, "frequency": "Monthly", "day": "27th", "account": "Cheque", "basis": "The flexible one - clears before month-end", "status": ""}, {"item": "EasyEquities TFSA", "amount": 3006.22, "frequency": "Monthly", "day": "1st", "account": "Cheque", "basis": "R74.64/yr over the R36000 annual limit", "status": "check"}, {"item": "FNB Invest", "amount": 2500.0, "frequency": "Monthly", "day": "17th", "account": "Cheque", "basis": "", "status": ""}]}}, "subtotals": {"fixed": {"Debt": 28794.86, "Insurance & cover": 15785.84, "Subscriptions": 6143.54, "Connectivity": 5804.01, "Unidentified": 850.0, "Bank charges": 764.96, "Home": 399.0}, "variable": {"Connectivity": 188.25, "Bank charges": 119.85, "Home": 625.0, "Second credit account": 7750.0, "Food": 3196.98, "Family": 2662.65, "Shopping": 1196.61, "Travel": 777.7, "Transport": 344.14}, "savings": {"Savings": 14506.22}}};
+const PLAN = {"salary": 70000.0, "totalFixed": 58542.21, "totalSavings": 14506.22, "totalVariable": 16861.18, "leftAfterFixed": 11457.79, "leftAfterSavings": -3048.43, "gap": -19909.61, "fixedByCategory": {"Debt": 28794.86, "Insurance & cover": 15785.84, "Subscription": 6143.54, "Connectivity": 5804.01, "Unidentified": 850.0, "Bank charges": 764.96, "Home": 399.0}, "variable": [{"name": "Payments to a second credit account", "amount": 7750.0, "account": "Unknown"}, {"name": "Food, groceries and eating out", "amount": 3196.98, "account": "Both"}, {"name": "Family support", "amount": 2662.65, "account": "Cheque"}, {"name": "Shopping and other retail", "amount": 1196.61, "account": "Both"}, {"name": "Travel and leisure", "amount": 777.7, "account": "Both"}, {"name": "Prepaid electricity", "amount": 625.0, "account": "Cheque"}, {"name": "Transport and fuel", "amount": 344.14, "account": "Cheque"}, {"name": "Airtime top-ups", "amount": 188.25, "account": "Cheque"}, {"name": "Overdraft and card interest", "amount": 119.85, "account": "Both"}], "fixed": [{"day": "25th", "what": "DebiCheck FNB Connect 8872638615", "amount": 579.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "25th", "what": "Internal D/O FNB Life (Fl105Gz98)", "amount": 4106.61, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "31st", "what": "Service charges from 62724872339", "amount": 103.5, "category": "Bank charges", "account": "Cheque", "note": ""}, {"day": "31st", "what": "DebiCheck FNB Home 3000017271", "amount": 69.0, "category": "Debt", "account": "Cheque", "note": ""}, {"day": "31st", "what": "Internal D/O WesBank vehicle finance", "amount": 5749.6, "category": "Debt", "account": "Cheque", "note": ""}, {"day": "31st", "what": "Internal D/O FNB Structured Loan", "amount": 22202.79, "category": "Debt", "account": "Cheque", "note": "Largest single commitment - rose three times in four cycles"}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332521", "amount": 499.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332324", "amount": 749.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 145.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 415.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Internal D/O FNB Life (Fl68Zw53)", "amount": 33.58, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Stratum", "amount": 390.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape RSAWEB fibre line 1", "amount": 1299.01, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape RSAWEB fibre line 2", "amount": 1728.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Discovery premium", "amount": 7578.0, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Netstar vehicle tracking", "amount": 231.38, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape JAC insurance", "amount": 3836.27, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Ril Res001", "amount": 850.0, "category": "Unidentified", "account": "Cheque", "note": "New from 1 September - please identify"}, {"day": "3rd", "what": "Magtape Edgekloof levy", "amount": 399.0, "category": "Home", "account": "Cheque", "note": ""}, {"day": "18th", "what": "Monthly account service fee", "amount": 661.46, "category": "Bank charges", "account": "Cheque", "note": ""}, {"day": "on the card", "what": "Happy Hound (weekly x 52/12)", "amount": 6143.54, "category": "Subscription", "account": "Card", "note": "R1417.74 every week - settled via the card"}, {"day": "on the card", "what": "iStore budget facility instalment", "amount": 773.47, "category": "Debt", "account": "Card", "note": "11.50% p.a. - settled via the card"}], "savingsItems": [{"day": "27th", "what": "Scheduled transfer to savings", "amount": 9000.0, "note": "Clears before the month-end run"}, {"day": "3rd", "what": "Magtape EasyEquities TFSA", "amount": 3006.22, "note": "R74.64/yr over the annual limit"}, {"day": "17th", "what": "FNB Invest collection", "amount": 2500.0, "note": ""}], "steps": [{"day": "25th", "what": "Salary", "amount": 70000.0, "type": "Income", "left": 70000.0}, {"day": "25th", "what": "DebiCheck FNB Connect 8872638615", "amount": 579.0, "type": "Fixed", "left": 69421.0}, {"day": "25th", "what": "Internal D/O FNB Life (Fl105Gz98)", "amount": 4106.61, "type": "Fixed", "left": 65314.39}, {"day": "27th", "what": "Scheduled transfer to savings", "amount": 9000.0, "type": "Savings", "left": 56314.39}, {"day": "31st", "what": "Service charges from 62724872339", "amount": 103.5, "type": "Fixed", "left": 56210.89}, {"day": "31st", "what": "DebiCheck FNB Home 3000017271", "amount": 69.0, "type": "Fixed", "left": 56141.89}, {"day": "31st", "what": "Internal D/O WesBank vehicle finance", "amount": 5749.6, "type": "Fixed", "left": 50392.29}, {"day": "31st", "what": "Internal D/O FNB Structured Loan", "amount": 22202.79, "type": "Fixed", "left": 28189.5}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332521", "amount": 499.0, "type": "Fixed", "left": 27690.5}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332324", "amount": 749.0, "type": "Fixed", "left": 26941.5}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 145.0, "type": "Fixed", "left": 26796.5}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 415.0, "type": "Fixed", "left": 26381.5}, {"day": "1st", "what": "Internal D/O FNB Life (Fl68Zw53)", "amount": 33.58, "type": "Fixed", "left": 26347.92}, {"day": "1st", "what": "Magtape Stratum", "amount": 390.0, "type": "Fixed", "left": 25957.92}, {"day": "1st", "what": "Magtape RSAWEB fibre line 1", "amount": 1299.01, "type": "Fixed", "left": 24658.91}, {"day": "1st", "what": "Magtape RSAWEB fibre line 2", "amount": 1728.0, "type": "Fixed", "left": 22930.91}, {"day": "1st", "what": "Magtape Discovery premium", "amount": 7578.0, "type": "Fixed", "left": 15352.91}, {"day": "1st", "what": "Magtape Netstar vehicle tracking", "amount": 231.38, "type": "Fixed", "left": 15121.53}, {"day": "1st", "what": "Magtape JAC insurance", "amount": 3836.27, "type": "Fixed", "left": 11285.26}, {"day": "1st", "what": "Magtape Ril Res001", "amount": 850.0, "type": "Fixed", "left": 10435.26}, {"day": "3rd", "what": "Magtape Edgekloof levy", "amount": 399.0, "type": "Fixed", "left": 10036.26}, {"day": "3rd", "what": "Magtape EasyEquities TFSA", "amount": 3006.22, "type": "Savings", "left": 7030.04}, {"day": "17th", "what": "FNB Invest collection", "amount": 2500.0, "type": "Savings", "left": 4530.04}, {"day": "18th", "what": "Monthly account service fee", "amount": 661.46, "type": "Fixed", "left": 3868.58}, {"day": "on the card", "what": "Happy Hound (weekly x 52/12)", "amount": 6143.54, "type": "Fixed", "left": -2274.96}, {"day": "on the card", "what": "iStore budget facility instalment", "amount": 773.47, "type": "Fixed", "left": -3048.43}]};
+</script>
+<script>
 const fmt  = n => "R" + Math.round(n).toLocaleString("en-ZA");
 const fmt2 = n => n.toLocaleString("en-ZA",{minimumFractionDigits:2,maximumFractionDigits:2});
-const series = [{"date": "2026-05-16", "balance": 49838.1}, {"date": "2026-05-18", "balance": 44841.9}, {"date": "2026-05-22", "balance": 44371.3}, {"date": "2026-05-23", "balance": 44370.1}, {"date": "2026-05-25", "balance": 109684.49}, {"date": "2026-05-26", "balance": 112184.49}, {"date": "2026-05-27", "balance": 100684.49}, {"date": "2026-05-28", "balance": 100609.5}, {"date": "2026-05-29", "balance": 100180.3}, {"date": "2026-05-30", "balance": 100179.49}, {"date": "2026-05-31", "balance": 100079.44}, {"date": "2026-06-01", "balance": 51241.24}, {"date": "2026-06-05", "balance": 50216.13}, {"date": "2026-06-06", "balance": 48516.24}, {"date": "2026-06-08", "balance": 47144.56}, {"date": "2026-06-09", "balance": 46259.56}, {"date": "2026-06-13", "balance": 45465.28}, {"date": "2026-06-15", "balance": 45292.28}, {"date": "2026-06-17", "balance": 42792.28}, {"date": "2026-06-18", "balance": 42087.28}, {"date": "2026-06-20", "balance": 42087.24}, {"date": "2026-06-23", "balance": 41535.1}, {"date": "2026-06-25", "balance": 68859.02}, {"date": "2026-06-27", "balance": 59566.16}, {"date": "2026-06-30", "balance": 37564.48}, {"date": "2026-07-01", "balance": 17255.02}, {"date": "2026-07-02", "balance": 17066.02}, {"date": "2026-07-03", "balance": 17011.03}, {"date": "2026-07-04", "balance": 16975.02}, {"date": "2026-07-09", "balance": 8429.4}, {"date": "2026-07-10", "balance": 8372.2}, {"date": "2026-07-11", "balance": 8371.4}, {"date": "2026-07-14", "balance": 7994.4}, {"date": "2026-07-16", "balance": 4994.4}, {"date": "2026-07-17", "balance": 2494.4}, {"date": "2026-07-18", "balance": 1789.4}, {"date": "2026-07-20", "balance": -170.6}, {"date": "2026-07-21", "balance": -1170.6}, {"date": "2026-07-22", "balance": -1670.6}, {"date": "2026-07-23", "balance": -3047.15}, {"date": "2026-07-24", "balance": 71053.75}, {"date": "2026-07-25", "balance": 64877.79}, {"date": "2026-07-27", "balance": 55877.79}, {"date": "2026-07-29", "balance": 55817.79}, {"date": "2026-07-31", "balance": 28004.46}, {"date": "2026-08-01", "balance": 11101.71}, {"date": "2026-08-03", "balance": 7696.49}, {"date": "2026-08-04", "balance": 7612.89}, {"date": "2026-08-07", "balance": 7612.89}, {"date": "2026-08-08", "balance": 7298.49}, {"date": "2026-08-11", "balance": 7214.49}, {"date": "2026-08-17", "balance": 4677.25}, {"date": "2026-08-18", "balance": 4022.25}, {"date": "2026-08-19", "balance": 3985.26}, {"date": "2026-08-20", "balance": 7743.26}, {"date": "2026-08-21", "balance": 7421.68}, {"date": "2026-08-22", "balance": 7414.79}, {"date": "2026-08-24", "balance": 6909.79}, {"date": "2026-08-25", "balance": 72224.18}, {"date": "2026-08-26", "balance": 72046.18}, {"date": "2026-08-27", "balance": 63046.18}, {"date": "2026-08-31", "balance": 34921.29}, {"date": "2026-09-01", "balance": 13293.04}, {"date": "2026-09-05", "balance": 13170.84}, {"date": "2026-09-07", "balance": 12250.84}, {"date": "2026-09-08", "balance": 12125.84}, {"date": "2026-09-09", "balance": 12125.84}, {"date": "2026-09-15", "balance": 11436.84}, {"date": "2026-09-17", "balance": 8936.84}];
-const PLAN = {"salary": 70000.0, "totalFixed": 58542.21, "totalSavings": 14506.22, "totalVariable": 16861.18, "leftAfterFixed": 11457.79, "leftAfterSavings": -3048.43, "gap": -19909.61, "fixedByCategory": {"Debt": 28794.86, "Insurance & cover": 15785.84, "Subscription": 6143.54, "Connectivity": 5804.01, "Unidentified": 850.0, "Bank charges": 764.96, "Home": 399.0}, "variable": [{"name": "Payments to a second credit account", "amount": 7750.0, "account": "Unknown"}, {"name": "Food, groceries and eating out", "amount": 3196.98, "account": "Both"}, {"name": "Family support", "amount": 2662.65, "account": "Cheque"}, {"name": "Shopping and other retail", "amount": 1196.61, "account": "Both"}, {"name": "Travel and leisure", "amount": 777.7, "account": "Both"}, {"name": "Prepaid electricity", "amount": 625.0, "account": "Cheque"}, {"name": "Transport and fuel", "amount": 344.14, "account": "Cheque"}, {"name": "Airtime top-ups", "amount": 188.25, "account": "Cheque"}, {"name": "Overdraft and card interest", "amount": 119.85, "account": "Both"}], "fixed": [{"day": "25th", "what": "DebiCheck FNB Connect 8872638615", "amount": 579.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "25th", "what": "Internal D/O FNB Life (Fl105Gz98)", "amount": 4106.61, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "31st", "what": "Service charges from 62724872339", "amount": 103.5, "category": "Bank charges", "account": "Cheque", "note": ""}, {"day": "31st", "what": "DebiCheck FNB Home 3000017271", "amount": 69.0, "category": "Debt", "account": "Cheque", "note": ""}, {"day": "31st", "what": "Internal D/O WesBank vehicle finance", "amount": 5749.6, "category": "Debt", "account": "Cheque", "note": ""}, {"day": "31st", "what": "Internal D/O FNB Structured Loan", "amount": 22202.79, "category": "Debt", "account": "Cheque", "note": "Largest single commitment - rose three times in four cycles"}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332521", "amount": 499.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332324", "amount": 749.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 145.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 415.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Internal D/O FNB Life (Fl68Zw53)", "amount": 33.58, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Stratum", "amount": 390.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape RSAWEB fibre line 1", "amount": 1299.01, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape RSAWEB fibre line 2", "amount": 1728.0, "category": "Connectivity", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Discovery premium", "amount": 7578.0, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Netstar vehicle tracking", "amount": 231.38, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape JAC insurance", "amount": 3836.27, "category": "Insurance & cover", "account": "Cheque", "note": ""}, {"day": "1st", "what": "Magtape Ril Res001", "amount": 850.0, "category": "Unidentified", "account": "Cheque", "note": "New from 1 September - please identify"}, {"day": "3rd", "what": "Magtape Edgekloof levy", "amount": 399.0, "category": "Home", "account": "Cheque", "note": ""}, {"day": "18th", "what": "Monthly account service fee", "amount": 661.46, "category": "Bank charges", "account": "Cheque", "note": ""}, {"day": "on the card", "what": "Happy Hound (weekly x 52/12)", "amount": 6143.54, "category": "Subscription", "account": "Card", "note": "R1417.74 every week - settled via the card"}, {"day": "on the card", "what": "iStore budget facility instalment", "amount": 773.47, "category": "Debt", "account": "Card", "note": "11.50% p.a. - settled via the card"}], "savingsItems": [{"day": "27th", "what": "Scheduled transfer to savings", "amount": 9000.0, "note": "Clears before the month-end run"}, {"day": "3rd", "what": "Magtape EasyEquities TFSA", "amount": 3006.22, "note": "R74.64/yr over the annual limit"}, {"day": "17th", "what": "FNB Invest collection", "amount": 2500.0, "note": ""}], "steps": [{"day": "25th", "what": "Salary", "amount": 70000.0, "type": "Income", "left": 70000.0}, {"day": "25th", "what": "DebiCheck FNB Connect 8872638615", "amount": 579.0, "type": "Fixed", "left": 69421.0}, {"day": "25th", "what": "Internal D/O FNB Life (Fl105Gz98)", "amount": 4106.61, "type": "Fixed", "left": 65314.39}, {"day": "27th", "what": "Scheduled transfer to savings", "amount": 9000.0, "type": "Savings", "left": 56314.39}, {"day": "31st", "what": "Service charges from 62724872339", "amount": 103.5, "type": "Fixed", "left": 56210.89}, {"day": "31st", "what": "DebiCheck FNB Home 3000017271", "amount": 69.0, "type": "Fixed", "left": 56141.89}, {"day": "31st", "what": "Internal D/O WesBank vehicle finance", "amount": 5749.6, "type": "Fixed", "left": 50392.29}, {"day": "31st", "what": "Internal D/O FNB Structured Loan", "amount": 22202.79, "type": "Fixed", "left": 28189.5}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332521", "amount": 499.0, "type": "Fixed", "left": 27690.5}, {"day": "1st", "what": "DebiCheck FNB Connect 8858332324", "amount": 749.0, "type": "Fixed", "left": 26941.5}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 145.0, "type": "Fixed", "left": 26796.5}, {"day": "1st", "what": "Hybrid subscription Connect top-up", "amount": 415.0, "type": "Fixed", "left": 26381.5}, {"day": "1st", "what": "Internal D/O FNB Life (Fl68Zw53)", "amount": 33.58, "type": "Fixed", "left": 26347.92}, {"day": "1st", "what": "Magtape Stratum", "amount": 390.0, "type": "Fixed", "left": 25957.92}, {"day": "1st", "what": "Magtape RSAWEB fibre line 1", "amount": 1299.01, "type": "Fixed", "left": 24658.91}, {"day": "1st", "what": "Magtape RSAWEB fibre line 2", "amount": 1728.0, "type": "Fixed", "left": 22930.91}, {"day": "1st", "what": "Magtape Discovery premium", "amount": 7578.0, "type": "Fixed", "left": 15352.91}, {"day": "1st", "what": "Magtape Netstar vehicle tracking", "amount": 231.38, "type": "Fixed", "left": 15121.53}, {"day": "1st", "what": "Magtape JAC insurance", "amount": 3836.27, "type": "Fixed", "left": 11285.26}, {"day": "1st", "what": "Magtape Ril Res001", "amount": 850.0, "type": "Fixed", "left": 10435.26}, {"day": "3rd", "what": "Magtape Edgekloof levy", "amount": 399.0, "type": "Fixed", "left": 10036.26}, {"day": "3rd", "what": "Magtape EasyEquities TFSA", "amount": 3006.22, "type": "Savings", "left": 7030.04}, {"day": "17th", "what": "FNB Invest collection", "amount": 2500.0, "type": "Savings", "left": 4530.04}, {"day": "18th", "what": "Monthly account service fee", "amount": 661.46, "type": "Fixed", "left": 3868.58}, {"day": "on the card", "what": "Happy Hound (weekly x 52/12)", "amount": 6143.54, "type": "Fixed", "left": -2274.96}, {"day": "on the card", "what": "iStore budget facility instalment", "amount": 773.47, "type": "Fixed", "left": -3048.43}]};
 const ns = "http://www.w3.org/2000/svg";
 const el = (n,a)=>{const e=document.createElementNS(ns,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
 const txt = (a,t)=>Object.assign(el("text",a),{textContent:t});
+const SAL = BUDGET.salary;
+const pct = v => (v/SAL*100).toFixed(1) + "%";
 
-/* ============ 1. the cycle, step by step ============ */
+/* ---------------- 1. the budget summary ---------------- */
+(function summary(){
+  const T=BUDGET.totals;
+  const rows=[
+    ["Salary", SAL, "in"],
+    ["Less fixed expenses", -T.fixed, ""],
+    ["Left after fixed expenses", null, "sub"],
+    ["Less variable expenses", -T.variable, ""],
+    ["Left after fixed and variable", null, "sub"],
+    ["Less savings instructions", -T.savings, ""],
+    ["Monthly gap", null, "end"],
+  ];
+  let bal=0, html="";
+  for(const [name,v,kind] of rows){
+    if(v!==null) bal+=v;
+    const running = kind==="sub"||kind==="end" ? bal : bal;
+    const neg = running<0;
+    if(kind==="sub"||kind==="end"){
+      html += `<tr class="${kind==="end"?"total":""}">
+        <td class="l"><b>${name}</b></td><td></td><td></td>
+        <td class="avg" style="${neg?'color:var(--critical)':'color:var(--good)'}">
+          ${neg?"&minus;":""}R${fmt2(Math.abs(running))}</td></tr>`;
+    } else {
+      // the running total belongs on the subtotal rows only, not on every deduction
+      html += `<tr><td class="l">${name}</td>
+        <td>${v<0?"&minus;":""}${fmt2(Math.abs(v))}</td>
+        <td class="grp">${pct(Math.abs(v))}</td>
+        <td class="grp">${kind==="in"?"":"&nbsp;"}</td></tr>`;
+    }
+  }
+  document.getElementById("summarybody").innerHTML=html;
+})();
+
+/* ---------------- 2. category bars ---------------- */
+function drawBars(id, entries, maxv, cls){
+  document.getElementById(id).innerHTML = entries.map(([lbl,v,note])=>`
+    <div class="bar" tabindex="0" title="${note||""}">
+      <div class="lbl">${lbl}</div>
+      <div class="track"><div class="fill ${cls}" style="width:${(v/maxv*100).toFixed(1)}%"></div></div>
+      <div class="amt">${fmt(v)}</div>
+      <div class="pct">${(v/SAL*100).toFixed(0)}%</div>
+    </div>`).join("");
+}
+const fixSub = Object.entries(BUDGET.subtotals.fixed).sort((a,b)=>b[1]-a[1]);
+const varSub = Object.entries(BUDGET.subtotals.variable).sort((a,b)=>b[1]-a[1]);
+const maxSub = Math.max(...fixSub.map(e=>e[1]), ...varSub.map(e=>e[1]));
+const COUNT = k => Object.fromEntries(Object.entries(BUDGET.groups[k])
+  .map(([c,items])=>[c, items.length]));
+const fc=COUNT("fixed"), vc=COUNT("variable");
+drawBars("fixedbars", fixSub.map(([c,v])=>[c,v,`${fc[c]} item${fc[c]>1?"s":""}`]), maxSub, "");
+drawBars("varbars",  varSub.map(([c,v])=>[c,v,`${vc[c]} item${vc[c]>1?"s":""}`]), maxSub, "var");
+
+/* ---------------- 3. the ledgers ---------------- */
+function ledger(id, kind, cols){
+  const g=BUDGET.groups[kind], sub=BUDGET.subtotals[kind];
+  let html="";
+  for(const cat in g){
+    html += `<tr class="grouphead"><td class="l" colspan="${cols.length-2}">${cat}</td>
+      <td class="avg">${fmt2(sub[cat])}</td><td class="avg">${fmt2(sub[cat]*12)}</td></tr>`;
+    for(const r of g[cat]){
+      const tag = r.status ? `<span class="tag${r.status==="unidentified"?" crit":""}">${r.status}</span>` : "";
+      const mid = kind==="variable"
+        ? `<td class="l grp">${r.account}</td><td class="l grp" style="text-transform:none">${r.basis}</td>`
+        : kind==="savings"
+          ? `<td class="l grp day">${r.day}</td><td class="l grp" style="text-transform:none">${r.basis}</td>`
+          : `<td class="l grp day">${r.day}</td><td class="l grp">${r.account}</td>`;
+      html += `<tr><td class="l">${r.item}${tag}</td>${mid}
+        <td class="avg">${fmt2(r.amount)}</td><td>${fmt2(r.amount*12)}</td></tr>`;
+    }
+  }
+  const tot=BUDGET.totals[kind];
+  html += `<tr class="total"><td class="l">Total ${kind} &mdash; ${pct(tot)} of salary</td>
+    <td></td><td></td><td>${fmt2(tot)}</td><td>${fmt2(tot*12)}</td></tr>`;
+  document.getElementById(id).innerHTML=html;
+}
+ledger("fixedledger","fixed",[0,0,0,0,0]);
+ledger("varledger","variable",[0,0,0,0,0]);
+ledger("savledger","savings",[0,0,0,0,0]);
+
+/* ---------------- 4. the cycle step chart ---------------- */
 (function stepChart(){
   const svg=document.getElementById("stepchart"), tip=document.getElementById("tip2");
   const W=900,H=340,ml=64,mr=20,mt=20,mb=44, iw=W-ml-mr, ih=H-mt-mb;
   const steps=PLAN.steps;
-  const lows=steps.map(s=>s.left);
-  const hi=70000, lo=Math.min(0,Math.floor(Math.min(...lows)/5000)*5000);
-  const X=i=>ml+(i/(steps.length-1))*iw;
-  const Y=v=>mt+ih-((v-lo)/(hi-lo))*ih;
-
-  if(lo<0){
-    svg.appendChild(el("rect",{class:"odband",x:ml,y:Y(0),width:iw,height:Y(lo)-Y(0)}));
-  }
+  const hi=70000, lo=Math.min(0,Math.floor(Math.min(...steps.map(s=>s.left))/5000)*5000);
+  const X=i=>ml+(i/(steps.length-1))*iw, Y=v=>mt+ih-((v-lo)/(hi-lo))*ih;
+  if(lo<0) svg.appendChild(el("rect",{class:"odband",x:ml,y:Y(0),width:iw,height:Y(lo)-Y(0)}));
   for(let v=lo;v<=hi;v+=10000){
     svg.appendChild(el("line",{class:v===0?"zeroline":"gridline",x1:ml,x2:W-mr,y1:Y(v),y2:Y(v)}));
-    svg.appendChild(txt({class:"axlabel",x:ml-9,y:Y(v)+3.5,"text-anchor":"end"},
-      v===0?"R0":"R"+(v/1000)+"k"));
+    svg.appendChild(txt({class:"axlabel",x:ml-9,y:Y(v)+3.5,"text-anchor":"end"},v===0?"R0":"R"+(v/1000)+"k"));
   }
-
-  // the "left after fixed costs" marker
   const yf=Y(PLAN.leftAfterFixed);
   svg.appendChild(el("line",{class:"marker",x1:ml,x2:W-mr,y1:yf,y2:yf}));
   svg.appendChild(txt({class:"markerlabel",x:ml+6,y:yf-7,"text-anchor":"start"},
-    "R11,458 left after fixed costs"));
-
-  // step path, segment by segment so savings can be toned differently
+    fmt(PLAN.leftAfterFixed)+" left after fixed expenses"));
   for(let i=1;i<steps.length;i++){
     const s=steps[i], x0=X(i-1), x1=X(i), y0=Y(steps[i-1].left), y1=Y(s.left);
-    const cls = s.type==="Savings" ? "stepline sav" : "stepline";
-    svg.appendChild(el("path",{class:cls,d:`M${x0.toFixed(1)} ${y0.toFixed(1)} L${x1.toFixed(1)} ${y0.toFixed(1)} L${x1.toFixed(1)} ${y1.toFixed(1)}`}));
+    svg.appendChild(el("path",{class:s.type==="Savings"?"stepline sav":"stepline",
+      d:`M${x0.toFixed(1)} ${y0.toFixed(1)} L${x1.toFixed(1)} ${y0.toFixed(1)} L${x1.toFixed(1)} ${y1.toFixed(1)}`}));
   }
   svg.appendChild(el("circle",{class:"endcap",cx:X(steps.length-1),cy:Y(steps[steps.length-1].left),r:4.5}));
-
-  // day-group labels
-  // label the days that carry a real drop; 27th and 18th are too close to their
-  // neighbours to fit and are named in the caption instead
   const SHOW=new Set(["25th","31st","1st","3rd","17th","on the card"]), seen=new Set();
   steps.forEach((s,i)=>{
-    if(seen.has(s.day) || !SHOW.has(s.day)) return; seen.add(s.day);
+    if(seen.has(s.day)||!SHOW.has(s.day)) return; seen.add(s.day);
     svg.appendChild(txt({class:"axlabel",x:X(i),y:H-24,"text-anchor":"middle"},s.day));
   });
   svg.appendChild(txt({class:"axlabel",x:ml,y:H-8,"text-anchor":"start"},"payday"));
   svg.appendChild(txt({class:"axlabel",x:W-mr,y:H-8,"text-anchor":"end"},"next payday"));
-
-  // callouts on the two big cliffs
-  [["31st","R28,125 clears on the 31st",1],["1st","R17,754 clears on the 1st",1]]
-   .forEach(([d,label,dir])=>{
+  [["31st","R28,125 clears on the 31st"],["1st","R17,754 clears on the 1st"]].forEach(([d,label])=>{
     const idx=steps.map(s=>s.day), i=idx.lastIndexOf(d); if(i<0) return;
-    const first=idx.indexOf(d);
-    const x=(X(first)+X(i))/2;
-    svg.appendChild(txt({class:"cliff",x,y:Y(steps[i].left)+16,"text-anchor":"middle"},label));
+    svg.appendChild(txt({class:"cliff",x:(X(idx.indexOf(d))+X(i))/2,y:Y(steps[i].left)+16,"text-anchor":"middle"},label));
   });
-
-  // hover
   const hl=el("line",{class:"hitline",y1:mt,y2:mt+ih}), hd=el("circle",{class:"hitdot",r:4.5});
   svg.appendChild(hl); svg.appendChild(hd);
   svg.appendChild(el("rect",{x:ml,y:mt,width:iw,height:ih,fill:"transparent"}));
   svg.addEventListener("pointermove",evt=>{
     const r=svg.getBoundingClientRect(), sx=(evt.clientX-r.left)*(W/r.width);
-    let bi=0,bd=1e9;
-    steps.forEach((s,i)=>{const dd=Math.abs(X(i)-sx); if(dd<bd){bd=dd;bi=i;}});
+    let bi=0,bd=1e9; steps.forEach((s,i)=>{const dd=Math.abs(X(i)-sx); if(dd<bd){bd=dd;bi=i;}});
     const s=steps[bi], px=X(bi), py=Y(s.left);
     hl.setAttribute("x1",px); hl.setAttribute("x2",px); hl.style.opacity=1;
     hd.setAttribute("cx",px); hd.setAttribute("cy",py); hd.style.opacity=1;
@@ -873,51 +693,14 @@ const txt = (a,t)=>Object.assign(el("text",a),{textContent:t});
   svg.addEventListener("pointerleave",()=>{tip.style.opacity=0;hl.style.opacity=0;hd.style.opacity=0;});
 })();
 
-/* ============ 2. fixed & variable bars ============ */
-const SAL=PLAN.salary;
-function drawBars(id,rows,maxv){
-  document.getElementById(id).innerHTML = rows.map(([lbl,v,cls,note])=>`
-    <div class="bar" tabindex="0" title="${note}">
-      <div class="lbl">${lbl}</div>
-      <div class="track"><div class="fill ${cls}" style="width:${(v/maxv*100).toFixed(1)}%"></div></div>
-      <div class="amt">${fmt(v)}</div>
-      <div class="pct">${(v/SAL*100).toFixed(0)}%</div>
-    </div>`).join("");
-}
-const FIXNOTE={
-  "Debt":"Structured loan, WesBank, iStore instalment, home-loan fee",
-  "Insurance & cover":"Discovery, FNB Life x2, JAC, Netstar tracking",
-  "Subscription":"Happy Hound, billed weekly on the card",
-  "Connectivity":"FNB Connect x3, two Connect top-ups, RSAWEB x2, Stratum",
-  "Bank charges":"Account service fee and linked-account charges",
-  "Home":"Edgekloof levy",
-};
-const fixRows=Object.entries(PLAN.fixedByCategory).map(([k,v])=>[k,v,"",FIXNOTE[k]||""]);
-drawBars("fixedbars",fixRows,Math.max(...fixRows.map(r=>r[1])));
-
-const varRows=PLAN.variable.map(v=>[v.name,v.amount,"var",v.account+" account"]);
-drawBars("varbars",varRows,Math.max(...fixRows.map(r=>r[1])));
-
-/* ============ 3. fixed schedule table ============ */
-document.getElementById("fixedbody").innerHTML =
-  PLAN.fixed.map(f=>`<tr>
-    <td class="l grp day">${f.day}</td>
-    <td class="l">${f.what}${f.note?`<br><span class="grp" style="text-transform:none">${f.note}</span>`:""}</td>
-    <td class="l grp">${f.category}</td>
-    <td class="l grp">${f.account}</td>
-    <td class="avg">${fmt2(f.amount)}</td></tr>`).join("")
-  + `<tr class="total"><td class="l"></td><td class="l">Total fixed &mdash; ${(PLAN.totalFixed/SAL*100).toFixed(0)}% of salary</td>
-     <td></td><td></td><td>${fmt2(PLAN.totalFixed)}</td></tr>`;
-
-/* ============ 4. historical balance chart ============ */
-(function drawChart(){
+/* ---------------- 5. historical balance ---------------- */
+(function balChart(){
   const svg=document.getElementById("balchart"), tip=document.getElementById("tip");
   const W=900,H=300,ml=62,mr=18,mt=18,mb=30, iw=W-ml-mr, ih=H-mt-mb;
   const t0=new Date(series[0].date).getTime(), t1=new Date(series[series.length-1].date).getTime();
   const vals=series.map(p=>p.balance);
   const hi=Math.ceil(Math.max(...vals)/25000)*25000, lo=Math.min(0,Math.floor(Math.min(...vals)/25000)*25000);
-  const X=d=>ml+((new Date(d).getTime()-t0)/(t1-t0))*iw;
-  const Y=v=>mt+ih-((v-lo)/(hi-lo))*ih;
+  const X=d=>ml+((new Date(d).getTime()-t0)/(t1-t0))*iw, Y=v=>mt+ih-((v-lo)/(hi-lo))*ih;
   if(lo<0){
     svg.appendChild(el("rect",{class:"odband",x:ml,y:Y(0),width:iw,height:Y(lo)-Y(0)}));
     svg.appendChild(txt({class:"odlabel",x:ml+6,y:Y(0)+15},"overdrawn"));

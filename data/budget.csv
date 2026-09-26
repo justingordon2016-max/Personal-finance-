@@ -1,0 +1,35 @@
+type,category,item,amount,frequency,day,account,basis,status
+Fixed,Debt,FNB Structured Loan,22202.79,Monthly,31st,Cheque,Standing instruction at the September rate,rising
+Fixed,Debt,WesBank vehicle finance,5749.60,Monthly,31st,Cheque,Standing instruction at the September rate,
+Fixed,Debt,iStore budget facility instalment,773.47,Monthly,Statement,Card 4002,11.50% p.a. - R9868.11 still outstanding,
+Fixed,Debt,FNB Home admin fee,69.00,Monthly,31st,Cheque,Standing instruction,
+Fixed,Insurance & cover,Discovery premium,7578.00,Monthly,1st,Cheque,Medical aid - claims refunded in May and June,
+Fixed,Insurance & cover,FNB Life (Fl105Gz98),4106.61,Monthly,25th,Cheque,Life and risk cover,
+Fixed,Insurance & cover,JAC insurance,3836.27,Monthly,1st,Cheque,Life and risk cover - confirmed by you,
+Fixed,Insurance & cover,Netstar vehicle tracking,231.38,Monthly,1st,Cheque,Usually an insurer requirement,
+Fixed,Insurance & cover,FNB Life (Fl68Zw53),33.58,Monthly,1st,Cheque,Second small policy,
+Fixed,Subscriptions,Happy Hound,6143.54,Weekly,Every week,Card 4002,R1417.74 per week x 52/12 - on a dedicated card,
+Fixed,Connectivity,RSAWEB fibre line 2,1728.00,Monthly,1st,Cheque,Second fibre line,duplicate?
+Fixed,Connectivity,RSAWEB fibre line 1,1299.01,Monthly,1st,Cheque,First fibre line,duplicate?
+Fixed,Connectivity,FNB Connect 8858332324,749.00,Monthly,1st,Cheque,,
+Fixed,Connectivity,FNB Connect 8872638615,579.00,Monthly,25th,Cheque,,
+Fixed,Connectivity,FNB Connect 8858332521,499.00,Monthly,1st,Cheque,,
+Fixed,Connectivity,Hybrid Connect top-up,415.00,Monthly,1st,Cheque,,
+Fixed,Connectivity,Stratum,390.00,Monthly,1st,Cheque,,
+Fixed,Connectivity,Hybrid Connect top-up,145.00,Monthly,1st,Cheque,,
+Fixed,Unidentified,Ril Res001,850.00,Monthly,1st,Cheque,First appeared 1 September - assumed recurring,unidentified
+Fixed,Bank charges,Monthly account service fee,661.46,Monthly,18th,Cheque,Rose from 625.00 in July,rising
+Fixed,Bank charges,Linked account service charges,103.50,Monthly,31st,Cheque,From account 62724872339,
+Fixed,Home,Edgekloof levy,399.00,Monthly,1st,Cheque,,
+Savings,Savings,Scheduled transfer to savings,9000.00,Monthly,27th,Cheque,The flexible one - clears before month-end,
+Savings,Savings,EasyEquities TFSA,3006.22,Monthly,1st,Cheque,R74.64/yr over the R36000 annual limit,check
+Savings,Savings,FNB Invest,2500.00,Monthly,17th,Cheque,,
+Variable,Second credit account,Payments to a second credit account,7750.00,Irregular,Varies,Unknown,4-cycle average of 5 payments - accelerating,unidentified
+Variable,Food,Groceries and eating out,3196.98,Irregular,-,Both,4-cycle average across both accounts,
+Variable,Family,Family support,2662.65,Irregular,-,Cheque,4-cycle average - PayShap and app transfers,
+Variable,Shopping,Shopping and other retail,1196.61,Irregular,-,Both,4-cycle average - Takealot Yuppiechef pets,
+Variable,Travel,Travel and leisure,777.70,Irregular,-,Both,4-cycle average - one weekend away,
+Variable,Home,Prepaid electricity,625.00,Irregular,-,Cheque,4-cycle average - you choose when and how much,
+Variable,Transport,Transport and fuel,344.14,Irregular,-,Cheque,4-cycle average - one fuel purchase in four months,
+Variable,Connectivity,Airtime top-ups,188.25,Irregular,-,Cheque,4-cycle average,
+Variable,Bank charges,Overdraft and card interest,119.85,Irregular,-,Both,4-cycle average,
