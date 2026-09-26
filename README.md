@@ -21,6 +21,32 @@ top, so the plan runs **R12,214/month** beyond what salary supports. That gap is
 what drained R45,161 of buffer in three months, not overspending: discretionary
 living (food, shopping, travel, fuel) is R5,786/month.
 
+### What you need in the account to clear the debit orders
+
+**For the debit orders alone: nothing extra.** The full run is R64,963.40 against a
+R70,000 salary, so provided the account is at zero or better when salary lands and
+nothing goes out ahead of it, every debit order clears with R5,036.60 to spare.
+
+| Clears | Amount | Debits |
+|---|---|---|
+| 25th | 4,685.61 | 2 |
+| 27th | 9,000.00 | 1 |
+| **31st** | **27,813.33** | 4 — the cliff |
+| 1st | 16,904.24 | 11 |
+| 3rd | 3,405.22 | 2 |
+| 17th | 2,500.00 | 1 |
+| 18th | 655.00 | 1 |
+| **Total** | **64,963.40** | 22 (93% of salary) |
+
+**The date to watch is the 30th: R48,123 has to be there** to carry the 31st, 1st
+and 3rd — 17 debit orders inside four days.
+
+**For the whole cycle you need R12,213 on top of salary.** R82,213 leaves per cycle:
+R64,963 of debit orders, R8,750 settling the card, R8,500 of living off the cheque
+account. And that is *per cycle, not once* — start with R12,213 and you end at zero,
+so the next cycle starts short again. No standing buffer survives a recurring gap;
+carrying it on the overdraft costs about R2,565/year at 21%.
+
 ### Fixed — R57,374/month, 82% of salary
 
 | Category | Per month | % of salary |

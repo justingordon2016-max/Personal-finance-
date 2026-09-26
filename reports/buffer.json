@@ -1,0 +1,22 @@
+{
+  "salary": 70000.0,
+  "debitOrderRun": 64963.4,
+  "byDay": {
+    "25th": 4685.61,
+    "27th": 9000.0,
+    "31st": 27813.33,
+    "1st": 16904.24,
+    "3rd": 3405.22,
+    "17th": 2500.0,
+    "18th": 655.0
+  },
+  "biggestDay": {
+    "day": "31st",
+    "amount": 27813.33
+  },
+  "monthEndRun": 44717.57,
+  "toTheFourth": 48122.79,
+  "spareAfterDebitOrders": 5036.6,
+  "cycleTotal": 82213.04,
+  "openingBalanceNeeded": 12213.04
+}
