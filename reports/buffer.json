@@ -1,22 +1,22 @@
 {
   "salary": 70000.0,
-  "debitOrderRun": 64963.4,
+  "debitOrderRun": 66131.42,
   "byDay": {
     "25th": 4685.61,
     "27th": 9000.0,
-    "31st": 27813.33,
-    "1st": 16904.24,
+    "31st": 28124.89,
+    "1st": 17754.24,
     "3rd": 3405.22,
     "17th": 2500.0,
-    "18th": 655.0
+    "18th": 661.46
   },
   "biggestDay": {
     "day": "31st",
-    "amount": 27813.33
+    "amount": 28124.89
   },
-  "monthEndRun": 44717.57,
-  "toTheFourth": 48122.79,
-  "spareAfterDebitOrders": 5036.6,
-  "cycleTotal": 82213.04,
-  "openingBalanceNeeded": 12213.04
+  "monthEndRun": 45879.13,
+  "toTheFourth": 49284.35,
+  "spareAfterDebitOrders": 3868.58,
+  "cycleTotal": 89909.2,
+  "openingBalanceNeeded": 19909.2
 }

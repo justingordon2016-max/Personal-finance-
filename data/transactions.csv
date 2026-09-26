@@ -139,3 +139,47 @@ statement,period,date,description,amount,direction,category,subcategory,note
 137,2026-07-17..2026-08-17,2026-08-17,Interest On Debit Balance,3.48,Dr,Bank Charges & Interest,Overdraft interest,
 137,2026-07-17..2026-08-17,2026-08-17,Debit Interest Rebate,1.24,Cr,Bank Charges & Interest,Interest rebate,
 137,2026-07-17..2026-08-17,2026-08-17,Other bank fee,35.00,Dr,Bank Charges & Interest,Other fee,
+138,2026-08-17..2026-09-17,2026-08-18,Monthly account service fee,655.00,Dr,Bank Charges & Interest,Service fee,
+138,2026-08-17..2026-09-17,2026-08-19,POS Purchase Checkers Kloof Street,36.99,Dr,Groceries & Eating Out,Groceries,
+138,2026-08-17..2026-09-17,2026-08-20,POS Purchase Yoco Brickfield,242.00,Dr,Groceries & Eating Out,Eating out,
+138,2026-08-17..2026-09-17,2026-08-20,FNB App Transfer From Pool And Tickets,30000.00,Cr,Income,External transfer in,Funded the 26000 of card payments the same day
+138,2026-08-17..2026-09-17,2026-08-20,FNB App Transfer To Credit Card,10000.00,Dr,Credit Card Payments,Card 4002,Matches the 20 Aug credit on card statement 132
+138,2026-08-17..2026-09-17,2026-08-20,FNB App Payment To Credit,16000.00,Dr,Credit Card Payments,Second credit account,Does not appear on card 4002 - see the Transfer vs Payment split
+138,2026-08-17..2026-09-17,2026-08-21,POS Purchase Yoco Se Supermarket,86.80,Dr,Groceries & Eating Out,Groceries,
+138,2026-08-17..2026-09-17,2026-08-21,POS Purchase Granola Inc,234.78,Dr,Groceries & Eating Out,Groceries,
+138,2026-08-17..2026-09-17,2026-08-22,Service fee balance,6.46,Dr,Bank Charges & Interest,Service fee,Brings the monthly fee to 661.46
+138,2026-08-17..2026-09-17,2026-08-22,Byc Debit 63026278118,0.43,Dr,Bank Charges & Interest,Misc bank debit,
+138,2026-08-17..2026-09-17,2026-08-24,PayShap Account Off-Us,505.00,Dr,Family Support,Transfer to person,
+138,2026-08-17..2026-09-17,2026-08-25,FNB App Payment From Salary,70000.00,Cr,Income,Salary,
+138,2026-08-17..2026-09-17,2026-08-25,DebiCheck FNB Connect 8872638615,579.00,Dr,Connectivity & Subscriptions,FNB Connect,
+138,2026-08-17..2026-09-17,2026-08-25,Internal D/O FNB Life Fl105Gz98,4106.61,Dr,Insurance & Medical,FNB Life,
+138,2026-08-17..2026-09-17,2026-08-26,POS Purchase Canopy By Hilton,78.00,Dr,Travel & Leisure,Travel,
+138,2026-08-17..2026-09-17,2026-08-26,POS Purchase Hpy Urbanconnect,100.00,Dr,Travel & Leisure,Travel,
+138,2026-08-17..2026-09-17,2026-08-27,Scheduled Trf To Savings,9000.00,Dr,Savings & Investments,Savings transfer,
+138,2026-08-17..2026-09-17,2026-08-31,Service Charges From 62724872339,103.50,Dr,Bank Charges & Interest,Linked acct charges,
+138,2026-08-17..2026-09-17,2026-08-31,DebiCheck FNB Home 3000017271,69.00,Dr,Debt & Loans,Home loan admin fee,
+138,2026-08-17..2026-09-17,2026-08-31,Internal D/O WesBank Vehicle Finance,5749.60,Dr,Debt & Loans,WesBank vehicle finance,
+138,2026-08-17..2026-09-17,2026-08-31,Internal D/O FNB Structured Loan,22202.79,Dr,Debt & Loans,FNB Structured Loan,Third increase - up 311.56 from July
+138,2026-08-17..2026-09-17,2026-09-01,POS Purchase Mr D,468.80,Dr,Groceries & Eating Out,Food delivery,
+138,2026-08-17..2026-09-17,2026-09-01,Hybrid Subscription Fee Connect Topup,415.00,Dr,Connectivity & Subscriptions,Connect top-up,
+138,2026-08-17..2026-09-17,2026-09-01,DebiCheck FNB Connect 8858332521,499.00,Dr,Connectivity & Subscriptions,FNB Connect,
+138,2026-08-17..2026-09-17,2026-09-01,DebiCheck FNB Connect 8858332324,749.00,Dr,Connectivity & Subscriptions,FNB Connect,
+138,2026-08-17..2026-09-17,2026-09-01,Hybrid Subscription Fee Connect Topup,145.00,Dr,Connectivity & Subscriptions,Connect top-up,
+138,2026-08-17..2026-09-17,2026-09-01,Internal D/O FNB Life Fl68Zw53,33.58,Dr,Insurance & Medical,FNB Life (small policy),
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit Stratum,390.00,Dr,Connectivity & Subscriptions,Stratum,
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit RSAWEB,1299.00,Dr,Connectivity & Subscriptions,RSAWEB fibre 1,
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit RSAWEB,1728.00,Dr,Connectivity & Subscriptions,RSAWEB fibre 2,
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit Discovery Premium,7578.00,Dr,Insurance & Medical,Discovery premium,
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit Netstar,231.38,Dr,Insurance & Medical,Vehicle tracking,
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit Edgekloof Kl17057,399.00,Dr,Home & Utilities,Edgekloof levy,
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit Ril Res001 282060,850.00,Dr,Unidentified Recurring,Ril Res001,NEW this cycle - first appearance - please identify
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit FWT Ri-3872010,3006.22,Dr,Savings & Investments,EasyEquities TFSA,Tax-free savings account contribution
+138,2026-08-17..2026-09-17,2026-09-01,Magtape Debit JAC U260914046,3836.27,Dr,Insurance & Medical,JAC insurance,Insurance premium
+138,2026-08-17..2026-09-17,2026-09-05,POS Purchase Yoco Se Supermarket,122.00,Dr,Groceries & Eating Out,Groceries,
+138,2026-08-17..2026-09-17,2026-09-05,Byc Debit 63026278118,0.20,Dr,Bank Charges & Interest,Misc bank debit,
+138,2026-08-17..2026-09-17,2026-09-07,POS Purchase Yoco Bruce Beyer,920.00,Dr,Groceries & Eating Out,Eating out,
+138,2026-08-17..2026-09-17,2026-09-08,Airtime Topup 27745894636,125.00,Dr,Connectivity & Subscriptions,Airtime,
+138,2026-08-17..2026-09-17,2026-09-09,FNB App Transfer From Fif Payment,200000.00,Cr,Pass-through,Money in,Funded the capital repayment the same day
+138,2026-08-17..2026-09-17,2026-09-09,FNB App Payment To Capital Repayment,200000.00,Dr,Pass-through,Capital repayment,R200000 off a loan - the single biggest event in the dataset
+138,2026-08-17..2026-09-17,2026-09-15,POS Purchase Mr D,689.00,Dr,Groceries & Eating Out,Food delivery,
+138,2026-08-17..2026-09-17,2026-09-17,FNB OB Coll Fnbinvest Xd3N58D14Q,2500.00,Dr,Savings & Investments,FNB Invest,

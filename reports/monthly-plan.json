@@ -1,58 +1,64 @@
 {
   "salary": 70000.0,
-  "totalFixed": 57374.19,
+  "totalFixed": 58542.21,
   "totalSavings": 14506.22,
-  "totalVariable": 10333.17,
-  "leftAfterFixed": 12625.81,
-  "leftAfterSavings": -1880.41,
-  "gap": -12213.58,
+  "totalVariable": 16861.18,
+  "leftAfterFixed": 11457.79,
+  "leftAfterSavings": -3048.43,
+  "gap": -19909.61,
   "fixedByCategory": {
-    "Debt": 28483.3,
+    "Debt": 28794.86,
     "Insurance & cover": 15785.84,
     "Subscription": 6143.54,
     "Connectivity": 5804.01,
-    "Bank charges": 758.5,
+    "Unidentified": 850.0,
+    "Bank charges": 764.96,
     "Home": 399.0
   },
   "variable": [
     {
-      "name": "Family support",
-      "amount": 3381.87,
-      "account": "Cheque"
+      "name": "Payments to a second credit account",
+      "amount": 7750.0,
+      "account": "Unknown"
     },
     {
       "name": "Food, groceries and eating out",
-      "amount": 3199.02,
+      "amount": 3196.98,
       "account": "Both"
     },
     {
+      "name": "Family support",
+      "amount": 2662.65,
+      "account": "Cheque"
+    },
+    {
       "name": "Shopping and other retail",
-      "amount": 1395.03,
+      "amount": 1196.61,
+      "account": "Both"
+    },
+    {
+      "name": "Travel and leisure",
+      "amount": 777.7,
       "account": "Both"
     },
     {
       "name": "Prepaid electricity",
-      "amount": 833.33,
+      "amount": 625.0,
       "account": "Cheque"
     },
     {
-      "name": "Travel and leisure",
-      "amount": 733.2,
-      "account": "Card"
-    },
-    {
       "name": "Transport and fuel",
-      "amount": 458.85,
+      "amount": 344.14,
       "account": "Cheque"
     },
     {
       "name": "Airtime top-ups",
-      "amount": 209.33,
+      "amount": 188.25,
       "account": "Cheque"
     },
     {
       "name": "Overdraft and card interest",
-      "amount": 122.54,
+      "amount": 119.85,
       "account": "Both"
     }
   ],
@@ -100,10 +106,10 @@
     {
       "day": "31st",
       "what": "Internal D/O FNB Structured Loan",
-      "amount": 21891.23,
+      "amount": 22202.79,
       "category": "Debt",
       "account": "Cheque",
-      "note": "Largest single commitment"
+      "note": "Largest single commitment - rose three times in four cycles"
     },
     {
       "day": "1st",
@@ -194,6 +200,14 @@
       "note": ""
     },
     {
+      "day": "1st",
+      "what": "Magtape Ril Res001",
+      "amount": 850.0,
+      "category": "Unidentified",
+      "account": "Cheque",
+      "note": "New from 1 September - please identify"
+    },
+    {
       "day": "3rd",
       "what": "Magtape Edgekloof levy",
       "amount": 399.0,
@@ -204,7 +218,7 @@
     {
       "day": "18th",
       "what": "Monthly account service fee",
-      "amount": 655.0,
+      "amount": 661.46,
       "category": "Bank charges",
       "account": "Cheque",
       "note": ""
@@ -299,128 +313,135 @@
     {
       "day": "31st",
       "what": "Internal D/O FNB Structured Loan",
-      "amount": 21891.23,
+      "amount": 22202.79,
       "type": "Fixed",
-      "left": 28501.06
+      "left": 28189.5
     },
     {
       "day": "1st",
       "what": "DebiCheck FNB Connect 8858332521",
       "amount": 499.0,
       "type": "Fixed",
-      "left": 28002.06
+      "left": 27690.5
     },
     {
       "day": "1st",
       "what": "DebiCheck FNB Connect 8858332324",
       "amount": 749.0,
       "type": "Fixed",
-      "left": 27253.06
+      "left": 26941.5
     },
     {
       "day": "1st",
       "what": "Hybrid subscription Connect top-up",
       "amount": 145.0,
       "type": "Fixed",
-      "left": 27108.06
+      "left": 26796.5
     },
     {
       "day": "1st",
       "what": "Hybrid subscription Connect top-up",
       "amount": 415.0,
       "type": "Fixed",
-      "left": 26693.06
+      "left": 26381.5
     },
     {
       "day": "1st",
       "what": "Internal D/O FNB Life (Fl68Zw53)",
       "amount": 33.58,
       "type": "Fixed",
-      "left": 26659.48
+      "left": 26347.92
     },
     {
       "day": "1st",
       "what": "Magtape Stratum",
       "amount": 390.0,
       "type": "Fixed",
-      "left": 26269.48
+      "left": 25957.92
     },
     {
       "day": "1st",
       "what": "Magtape RSAWEB fibre line 1",
       "amount": 1299.01,
       "type": "Fixed",
-      "left": 24970.47
+      "left": 24658.91
     },
     {
       "day": "1st",
       "what": "Magtape RSAWEB fibre line 2",
       "amount": 1728.0,
       "type": "Fixed",
-      "left": 23242.47
+      "left": 22930.91
     },
     {
       "day": "1st",
       "what": "Magtape Discovery premium",
       "amount": 7578.0,
       "type": "Fixed",
-      "left": 15664.47
+      "left": 15352.91
     },
     {
       "day": "1st",
       "what": "Magtape Netstar vehicle tracking",
       "amount": 231.38,
       "type": "Fixed",
-      "left": 15433.09
+      "left": 15121.53
     },
     {
       "day": "1st",
       "what": "Magtape JAC insurance",
       "amount": 3836.27,
       "type": "Fixed",
-      "left": 11596.82
+      "left": 11285.26
+    },
+    {
+      "day": "1st",
+      "what": "Magtape Ril Res001",
+      "amount": 850.0,
+      "type": "Fixed",
+      "left": 10435.26
     },
     {
       "day": "3rd",
       "what": "Magtape Edgekloof levy",
       "amount": 399.0,
       "type": "Fixed",
-      "left": 11197.82
+      "left": 10036.26
     },
     {
       "day": "3rd",
       "what": "Magtape EasyEquities TFSA",
       "amount": 3006.22,
       "type": "Savings",
-      "left": 8191.6
+      "left": 7030.04
     },
     {
       "day": "17th",
       "what": "FNB Invest collection",
       "amount": 2500.0,
       "type": "Savings",
-      "left": 5691.6
+      "left": 4530.04
     },
     {
       "day": "18th",
       "what": "Monthly account service fee",
-      "amount": 655.0,
+      "amount": 661.46,
       "type": "Fixed",
-      "left": 5036.6
+      "left": 3868.58
     },
     {
       "day": "on the card",
       "what": "Happy Hound (weekly x 52/12)",
       "amount": 6143.54,
       "type": "Fixed",
-      "left": -1106.94
+      "left": -2274.96
     },
     {
       "day": "on the card",
       "what": "iStore budget facility instalment",
       "amount": 773.47,
       "type": "Fixed",
-      "left": -1880.41
+      "left": -3048.43
     }
   ]
 }

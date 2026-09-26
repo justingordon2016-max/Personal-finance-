@@ -14,7 +14,7 @@ SALARY = 70000.00
 
 # Variable spend splits across the two accounts; the card portion is settled
 # through the cheque account when the card is paid, so both land here in the end.
-CHEQUE_VARIABLE = 8499.63
+CHEQUE_VARIABLE = 7277.77 + 7750.00  # incl. payments to a second credit account
 CARD_VARIABLE   = 1833.00
 CARD_FIXED      = 6917.01   # Happy Hound 6143.54 + iStore instalment 773.47
 

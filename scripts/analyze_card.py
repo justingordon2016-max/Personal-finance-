@@ -107,11 +107,25 @@ def debt_and_payments(rows, cheque):
     print("=" * 76)
     out = [r for r in cheque if r["category"] == "Credit Card Payments"]
     tot_out = sum(float(r["amount"]) for r in out)
+
+    # The wording splits them cleanly: "Transfer To Credit" (plus the Fnbcc debit
+    # order) lands on THIS card; "Payment To Credit" lands somewhere else.
+    def kind(r):
+        d = r["description"]
+        return "transfer" if ("Transfer To Credit" in d
+                              or "DebiCheck FNB Credit Card" in d) else "payment"
+
     for r in sorted(out, key=lambda x: x["date"]):
-        print(f"    {r['date']}  {r['description']:<44} {float(r['amount']):>10,.2f}")
-    print(f"    {'TOTAL out of the cheque account':<56} {tot_out:>10,.2f}")
-    print(f"    {'TOTAL received by this card':<56} {paid:>10,.2f}")
-    print(f"    {'UNMATCHED':<56} {tot_out - paid:>10,.2f}")
+        mark = "->4002" if kind(r) == "transfer" else "  ??? "
+        print(f"    {r['date']}  {mark}  {float(r['amount']):>10,.2f}  {r['description']}")
+    t_tr = sum(float(r["amount"]) for r in out if kind(r) == "transfer")
+    t_pm = sum(float(r["amount"]) for r in out if kind(r) == "payment")
+    print(f"\n    {'TOTAL out of the cheque account':<50} {tot_out:>10,.2f}")
+    print(f"    {'  of which Transfer To Credit (+ Fnbcc D/O)':<50} {t_tr:>10,.2f}")
+    print(f"    {'  of which Payment To Credit':<50} {t_pm:>10,.2f}")
+    print(f"    {'TOTAL received by card 4002':<50} {paid:>10,.2f}")
+    print(f"\n    Transfers vs card 4002 receipts: {t_tr - paid:+,.2f}")
+    print(f"    Unexplained (a second credit account): {t_pm:,.2f}")
 
 
 if __name__ == "__main__":

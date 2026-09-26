@@ -15,14 +15,15 @@ SALARY = 70000.00
 # Variable spend, 3-cycle averages, both accounts. Anything not on the standing
 # schedule: bought when needed, in amounts that change month to month.
 VARIABLE = [
-    ("Family support",            3381.87, "Cheque"),
-    ("Food, groceries and eating out", 3199.02, "Both"),
-    ("Shopping and other retail", 1395.03, "Both"),
-    ("Prepaid electricity",        833.33, "Cheque"),
-    ("Travel and leisure",         733.20, "Card"),
-    ("Transport and fuel",         458.85, "Cheque"),
-    ("Airtime top-ups",            209.33, "Cheque"),
-    ("Overdraft and card interest", 122.54, "Both"),
+    ("Payments to a second credit account", 7750.00, "Unknown"),
+    ("Food, groceries and eating out", 3196.98, "Both"),
+    ("Family support",            2662.65, "Cheque"),
+    ("Shopping and other retail", 1196.61, "Both"),
+    ("Travel and leisure",         777.70, "Both"),
+    ("Prepaid electricity",        625.00, "Cheque"),
+    ("Transport and fuel",         344.14, "Cheque"),
+    ("Airtime top-ups",            188.25, "Cheque"),
+    ("Overdraft and card interest", 119.85, "Both"),
 ]
 ONE_OFF = ("Medical, out of pocket (June)", 8686.89)
 
@@ -65,7 +66,7 @@ def main():
     print(f"  Savings debit orders (scheduled)             -{tot_sav:>12,.2f}")
     print(f"  {'-'*62}")
     print(f"  LEFT AFTER SAVINGS TOO                        {SALARY - tot_fixed - tot_sav:>12,.2f}")
-    print(f"  Variable spending (3-cycle average)          -{tot_var:>12,.2f}")
+    print(f"  Variable spending (4-cycle average)          -{tot_var:>12,.2f}")
     print(f"  {'-'*62}")
     print(f"  MONTHLY GAP                                   "
           f"{SALARY - tot_fixed - tot_sav - tot_var:>12,.2f}")
@@ -81,7 +82,7 @@ def main():
     print(f"  {'TOTAL FIXED':<24} {tot_fixed:>12,.2f}   {tot_fixed/SALARY*100:>5.1f}%")
 
     print("\n" + "=" * 78)
-    print("VARIABLE / DISCRETIONARY (3-cycle average)")
+    print("VARIABLE / DISCRETIONARY (4-cycle average)")
     print("=" * 78)
     for n, a, acct in VARIABLE:
         print(f"  {n:<34} {a:>10,.2f}   {acct}")

@@ -16,10 +16,12 @@ STATEMENTS = OrderedDict([
     ("135", dict(label="16 May – 17 Jun 2026", opening=49838.10, closing=42792.28)),
     ("136", dict(label="17 Jun – 17 Jul 2026", opening=42792.28, closing=2494.40)),
     ("137", dict(label="17 Jul – 17 Aug 2026", opening=2494.40, closing=4677.25)),
+    ("138", dict(label="17 Aug – 17 Sep 2026", opening=4677.25, closing=8936.84)),
 ])
 
 # Order in which categories are reported (largest structural items first).
 CATEGORY_ORDER = [
+    "Unidentified Recurring",
     "Debt & Loans",
     "Insurance & Medical",
     "Savings & Investments",
