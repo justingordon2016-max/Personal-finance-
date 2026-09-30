@@ -1,0 +1,12 @@
+{
+ "title": "iX USA: management accounts deadline and who receives the pack",
+ "entity": "ixusa",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "handover",
+ "order": 24,
+ "createdAt": "2026-09-29T08:00:00Z"
+}

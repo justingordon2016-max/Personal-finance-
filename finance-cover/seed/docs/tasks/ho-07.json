@@ -1,0 +1,12 @@
+{
+ "title": "Payroll: system logins, cut off and pay dates per entity, December plan, bonuses",
+ "entity": "general",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "handover",
+ "order": 7,
+ "createdAt": "2026-09-24T08:00:00Z"
+}

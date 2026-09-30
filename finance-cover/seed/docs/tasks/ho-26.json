@@ -1,0 +1,12 @@
+{
+ "title": "iX USA: logins for Dext, HubSpot, Chase and Mercury",
+ "entity": "ixusa",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "handover",
+ "order": 26,
+ "createdAt": "2026-09-29T08:00:00Z"
+}

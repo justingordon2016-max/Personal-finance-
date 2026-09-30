@@ -1,0 +1,12 @@
+{
+ "title": "SARS eFiling: access to each entity's PAYE and VAT profiles. Note each VAT category",
+ "entity": "general",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "handover",
+ "order": 5,
+ "createdAt": "2026-09-24T08:00:00Z"
+}

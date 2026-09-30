@@ -1,0 +1,332 @@
+[
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-01",
+    "data": {
+      "title": "Walk through her SOP for all three entities, line by line",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "handover",
+      "order": 1,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-02",
+    "data": {
+      "title": "Motion Ads weekly payment run: confirm the day, bank, approver and cut off. Do one run together",
+      "entity": "motion",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "handover",
+      "order": 2,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-03",
+    "data": {
+      "title": "Bank access: add me as capturer and releaser on each entity's banking profile",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "handover",
+      "order": 3,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-04",
+    "data": {
+      "title": "Xero: adviser access to Motion Ads, iXperience and Country Hotels",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 4,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-05",
+    "data": {
+      "title": "SARS eFiling: access to each entity's PAYE and VAT profiles. Note each VAT category",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "handover",
+      "order": 5,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-06",
+    "data": {
+      "title": "Confirm the EMP501 interim (March to August) is filed, or who files it by 30 October",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "handover",
+      "order": 6,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-07",
+    "data": {
+      "title": "Payroll: system logins, cut off and pay dates per entity, December plan, bonuses",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 7,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-08",
+    "data": {
+      "title": "Client invoicing: which clients get invoiced when, repeating invoices, who approves",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 8,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-09",
+    "data": {
+      "title": "Open items list: unreconciled lines, supplier queries, disputes, overdue debtors",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 9,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-10",
+    "data": {
+      "title": "Email: delegate access to the finance inboxes and a list of who emails about what",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 10,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-11",
+    "data": {
+      "title": "Get added as admin on the Motion Ads finance group and post an intro",
+      "entity": "motion",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 11,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-12",
+    "data": {
+      "title": "Country Hotels: what the FM did each week, open issues, who signs off what",
+      "entity": "country",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 12,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-13",
+    "data": {
+      "title": "iXperience: weekly report owners and access to the pricing forecast",
+      "entity": "ix",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 13,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-14",
+    "data": {
+      "title": "Contacts: auditors, bankers, payroll provider, key suppliers, MDs",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 14,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-15",
+    "data": {
+      "title": "Month end timetable and management accounts deadlines per entity",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 15,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "ho-16",
+    "data": {
+      "title": "Her out of office and a note to clients and staff pointing finance queries to me",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": false,
+      "status": "open",
+      "source": "handover",
+      "order": 16,
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "setup-01",
+    "data": {
+      "title": "Connect the Motion Ads, iXperience and Country Hotels Xero orgs to Claude (only CJ Consulting Group is linked today)",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-09",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "claude",
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "setup-02",
+    "data": {
+      "title": "Send Claude the SOP so the placeholder days and times get confirmed",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-13",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "claude",
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "tasks",
+    "doc_id": "setup-03",
+    "data": {
+      "title": "Decide on the morning inbox routine and the Friday Mr H run",
+      "entity": "general",
+      "block": "admin",
+      "due": "2026-10-09",
+      "queue": "later",
+      "must": true,
+      "status": "open",
+      "source": "claude",
+      "createdAt": "2026-09-24T08:00:00Z"
+    }
+  },
+  {
+    "op": "set",
+    "collection": "briefs",
+    "doc_id": "2026-09-24",
+    "data": {
+      "date": "2026-09-24",
+      "title": "Welcome to the desk",
+      "body": "This is where the morning brief lands each day before 08:00.\n\nFor now, three things matter before 14 October:\n1. Work through the handover checklist with her. Five items are marked Must.\n2. Confirm whether the EMP501 interim is filed. It is due 30 October, two weeks into your cover.\n3. Get bank release rights and eFiling access in place, so nothing waits on her once she is off.\n\nAnything with a Confirm with SOP tag is my best guess until I see her SOP."
+    }
+  }
+]

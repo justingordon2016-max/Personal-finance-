@@ -1,0 +1,12 @@
+{
+ "title": "iX USA: who approves BD and referral payouts, and who approves Danny's offshore payments?",
+ "entity": "ixusa",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "handover",
+ "order": 25,
+ "createdAt": "2026-09-29T08:00:00Z"
+}

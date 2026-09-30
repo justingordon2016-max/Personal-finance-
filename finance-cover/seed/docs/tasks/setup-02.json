@@ -1,0 +1,11 @@
+{
+ "title": "Send Claude the SOP so the placeholder days and times get confirmed",
+ "entity": "general",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "claude",
+ "createdAt": "2026-09-24T08:00:00Z"
+}

@@ -1,0 +1,12 @@
+{
+ "title": "Walk through her SOP for all three entities, line by line",
+ "entity": "general",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "handover",
+ "order": 1,
+ "createdAt": "2026-09-24T08:00:00Z"
+}

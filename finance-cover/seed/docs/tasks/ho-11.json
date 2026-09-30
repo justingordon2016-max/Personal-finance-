@@ -1,0 +1,12 @@
+{
+ "title": "Get added as admin on the Motion Ads finance group and post an intro",
+ "entity": "motion",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "handover",
+ "order": 11,
+ "createdAt": "2026-09-24T08:00:00Z"
+}

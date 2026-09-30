@@ -1,0 +1,12 @@
+{
+ "title": "Bank access: add me as capturer and releaser on each entity's banking profile",
+ "entity": "general",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "handover",
+ "order": 3,
+ "createdAt": "2026-09-24T08:00:00Z"
+}

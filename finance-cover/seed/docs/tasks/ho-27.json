@@ -1,0 +1,12 @@
+{
+ "title": "Country Hotels: no SOP. Ask for the FM's weekly and monthly list",
+ "entity": "country",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "handover",
+ "order": 27,
+ "createdAt": "2026-09-29T08:00:00Z"
+}
