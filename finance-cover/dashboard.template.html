@@ -71,6 +71,7 @@ button{cursor:pointer}
 
 /* Rows */
 .list{display:flex;flex-direction:column}
+.dext-ent{padding:10px 0;border-top:1px solid var(--line)}.dext-ent:first-child{border-top:0}.dext-line{display:grid;grid-template-columns:62px 1fr auto;gap:8px;align-items:center;margin-top:6px}.dext-line code{font-size:12px;overflow-wrap:anywhere}
 .row{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
 .list .row:first-child{border-top:0}
 .row.timed{grid-template-columns:52px 22px 1fr auto}
@@ -270,6 +271,17 @@ button{cursor:pointer}
           <button class="linkbtn" id="dl-toggle">Show all</button>
         </div>
         <div class="list" id="deadlines"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">Email receipts and invoices straight into Dext</div>
+            <h2>Dext inboxes</h2>
+          </div>
+        </div>
+        <div class="list" id="dext"></div>
+        <div class="hint">Single: one document per attachment. Multiple: one PDF holding several documents, split by Dext.</div>
       </section>
     </div>
 
@@ -478,7 +490,7 @@ button{cursor:pointer}
   function render(){
     const today=ymd(new Date());
     renderHeader(today); renderNow(today); renderToday(today); renderWeek(today);
-    renderDeadlines(today); renderXero(today); renderMissing(); renderReplies(); renderBrief(); renderHandover(); renderLater();
+    renderDeadlines(today); renderDext(); renderXero(today); renderMissing(); renderReplies(); renderBrief(); renderHandover(); renderLater();
   }
 
   function nextDeadline(today){
@@ -619,6 +631,20 @@ button{cursor:pointer}
     hols.forEach(h=>box.append(el("div",{class:"day"},el("h3",{text:nice(h)}),el("div",{class:"holiday",text:BRAIN.publicHolidays[h]+". Banks closed, move payments earlier."}))));
   }
 
+  function renderDext(){
+    const box=$("dext"); box.textContent="";
+    Object.keys(BRAIN.entities).forEach(k=>{
+      const e=BRAIN.entities[k]; if(!e.dext) return;
+      const line=(label,addr)=>el("div",{class:"dext-line"},
+        el("span",{class:"hint",text:label}),
+        el("code",{text:addr}),
+        el("button",{class:"ghost small",type:"button",text:"Copy",onclick:()=>copyText(addr)}));
+      box.append(el("div",{class:"dext-ent"},
+        el("strong",{text:e.name}),
+        e.login?el("div",{class:"hint",text:"Login: "+e.login}):null,
+        line("Single",e.dext.single), line("Multiple",e.dext.multiple)));
+    });
+  }
   function renderDeadlines(today){
     const box=$("deadlines"); box.replaceChildren();
     let list=BRAIN.deadlines.slice().sort((a,b)=>a.date.localeCompare(b.date));
