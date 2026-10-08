@@ -1,0 +1,12 @@
+{
+ "title": "CIPC: check Danni has filed and paid, and Aaron answered the beneficial ownership questions",
+ "entity": "ix",
+ "block": "admin",
+ "due": "2026-10-26",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "claude",
+ "notes": "Ask for the CIPC confirmation. It goes to Melissa's personal Gmail unless the email on the account is changed.",
+ "createdAt": "2026-10-08T08:00:00Z"
+}

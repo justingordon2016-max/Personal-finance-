@@ -470,6 +470,14 @@
    "title": "Cover starts"
   },
   {
+   "id": "cipc-ix",
+   "date": "2026-10-28",
+   "entity": "ix",
+   "kind": "CIPC",
+   "title": "iX ZA CIPC annual return and beneficial ownership, submitted and paid (reg 2013/159509/07)",
+   "note": "Danni files. You supply the FY25 turnover. Order: beneficial ownership first (Aaron's input and the share register), then the annual return, then pay by EFT into the CIPC account or by company card. Login is in your password manager."
+  },
+  {
    "id": "vat-ix-sep",
    "date": "2026-10-30",
    "entity": "ix",
@@ -499,6 +507,14 @@
    "entity": "ix",
    "kind": "SARS",
    "title": "iX ZA VAT201 for October (SARS last day)"
+  },
+  {
+   "id": "motion-vat",
+   "date": "2026-11-30",
+   "entity": "motion",
+   "kind": "SARS",
+   "title": "Motion Ads VAT201, bi-monthly: confirm which months",
+   "note": "Open point in the Motion Ads SOP. If the cycle is Category B this return is due today; if Category A, 30 October and 31 December."
   },
   {
    "id": "emp201-nov",
@@ -537,14 +553,6 @@
    "kind": "SARS",
    "title": "EMP201 for January: submit and pay",
    "note": "7 February is a Sunday so SARS wants it Friday 5th. iX ZA internal date is Thursday 4th."
-  },
-  {
-   "id": "motion-vat",
-   "date": "2026-11-30",
-   "entity": "motion",
-   "kind": "SARS",
-   "title": "Motion Ads VAT201, bi-monthly: confirm which months",
-   "note": "Open point in the Motion Ads SOP. If the cycle is Category B this return is due today; if Category A, 30 October and 31 December."
   },
   {
    "id": "handback",
