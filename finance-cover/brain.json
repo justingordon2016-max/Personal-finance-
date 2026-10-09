@@ -15,8 +15,8 @@
    },
    "login": "ronell@motionads.co.za (password in your password manager)",
    "people": [
-    "Mike or Tristan: keep the PO list",
-    "Mark: confirms PO work is complete before payment",
+    "Mike or Tristan: own the PO sheet (you update it weekly)",
+    "Mark: confirms work is complete before supplier payments",
     "Erin, John, Elan: chase for slips",
     "Fabi, Tristan, Ilan, John, Beverly: email Melissa directly",
     "Kelso: IT, mailbox access"
@@ -145,7 +145,7 @@
   },
   {
    "id": "xero-hour",
-   "title": "Xero queue: POs and requests captured today",
+   "title": "Xero queue: requests captured today",
    "entity": "general",
    "block": "xero",
    "time": "16:45",
@@ -221,7 +221,7 @@
   },
   {
    "id": "ixusa-receipts",
-   "title": "iX USA: remind the US trip team to upload Mercury receipts",
+   "title": "iX USA: send Danny the missing receipts list",
    "entity": "ixusa",
    "block": "chase",
    "time": "10:30",
@@ -266,7 +266,7 @@
     ]
    },
    "must": true,
-   "how": "Mike or Tristan keep the PO list. Most supplier invoices come straight to accounts@ (one or two via Mike): forward each to Dext, then enter the invoice date and number on the PO tracker. Terms are mostly 30 days from invoice date; a few want a 50% deposit upfront. From the aged payables, send Mark the list of POs now due and ask him to confirm the work is complete before paying, because the tracker isn't always right. Then check each bill isn't already paid and bank details match the supplier record, and load the batch so it goes out on Friday."
+   "how": "From aged payables, list the supplier invoices due this week (mostly 30 days from invoice date; a few need a 50% deposit upfront). Send Mark the list and ask him to confirm the work is complete before paying. Check each bill isn't already paid and bank details match the supplier record, then load the batch so it goes out on Friday."
   },
   {
    "id": "ix-weekly",
@@ -476,10 +476,163 @@
     ]
    },
    "block": "payments",
-   "title": "iX: process last week's payments so aged payables is right",
+   "title": "iX USA: post last week's payments",
    "must": true,
-   "confirm": true,
-   "how": "Post every payment made last week (Danny loads the Mercury payments) against its bill in Xero, so aged payables is right for the week. Confirm with Melissa whether this covers iX ZA as well as iX USA."
+   "confirm": false,
+   "how": "Danny loads the Mercury payments. Post each one against its bill in Xero so aged payables is right for the week."
+  },
+  {
+   "id": "motion-mon",
+   "entity": "motion",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     1
+    ]
+   },
+   "block": "review",
+   "title": "Motion Ads: inbox sweep and plan the week",
+   "must": false,
+   "confirm": false,
+   "how": "Clear accounts@ of supplier invoices (forward each to Dext). Look at aged payables and receivables and note what's due this week. Download and import the bank statement if it's behind."
+  },
+  {
+   "id": "motion-po",
+   "entity": "motion",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     2
+    ]
+   },
+   "block": "payments",
+   "title": "Motion Ads: update the PO sheet",
+   "must": true,
+   "confirm": false,
+   "how": "Against each PO, add the invoice date and number for every supplier invoice received this week and mark what has been paid. Do it before Wednesday's payment run so the list for Mark is right."
+  },
+  {
+   "id": "motion-thu",
+   "entity": "motion",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     4
+    ]
+   },
+   "block": "debtors",
+   "title": "Motion Ads: Dext and debtors",
+   "must": false,
+   "confirm": false,
+   "how": "Publish the week's supplier invoices from Dext and match them to payments. Follow up any customer who has gone past due, starting with Kauai, Go Solar and Dog Stores."
+  },
+  {
+   "id": "ix-mon-za",
+   "entity": "ix",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     1
+    ]
+   },
+   "block": "payments",
+   "title": "iX ZA: post last week's payments",
+   "must": true,
+   "confirm": false,
+   "how": "Post every payment made last week against its bill so aged payables is right for the week."
+  },
+  {
+   "id": "ix-tue",
+   "entity": "ix",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     2
+    ]
+   },
+   "block": "xero",
+   "title": "iX ZA: bills and Dext",
+   "must": false,
+   "confirm": false,
+   "how": "Capture bills from valid tax invoices only, check for duplicates, and publish the Dext inbox."
+  },
+  {
+   "id": "ix-wed",
+   "entity": "ix",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     3
+    ]
+   },
+   "block": "payments",
+   "title": "iX ZA: prepare Thursday's payment list",
+   "must": false,
+   "confirm": false,
+   "how": "List what is due, check each bill is approved and the bank details match, and send the list to the reviewer to approve for Thursday's run."
+  },
+  {
+   "id": "ix-fri",
+   "entity": "ix",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     5
+    ]
+   },
+   "block": "review",
+   "title": "iX ZA: Suspense and daily log check",
+   "must": false,
+   "confirm": false,
+   "how": "Clear Suspense or send what is left to the reviewer. Check the daily log has a balance for every day this week."
+  },
+  {
+   "id": "ixusa-wed",
+   "entity": "ixusa",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     3
+    ]
+   },
+   "block": "xero",
+   "title": "iX USA: Dext and the Chase credit card",
+   "must": false,
+   "confirm": false,
+   "how": "Publish the Dext inbox and reconcile the Chase credit card with the right tracking category."
+  },
+  {
+   "id": "ixusa-thu",
+   "entity": "ixusa",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     4
+    ]
+   },
+   "block": "review",
+   "title": "iX USA: unknown spend with Danny",
+   "must": false,
+   "confirm": false,
+   "how": "Go through anything you can't code with Danny and clear it, so Friday's Mr H run is clean."
   }
  ],
  "deadlines": [
@@ -643,7 +796,7 @@
    {
     "id": "xero-work",
     "flag": "Xero work",
-    "match": "PO, bill, invoice, credit note or statement request",
+    "match": "bill, invoice, credit note or statement request",
     "do": "Acknowledge now with the holding template. Do the work in the 16:00 Xero hour."
    }
   ],
@@ -671,12 +824,6 @@
     "name": "Proof of payment",
     "when": "Payment released",
     "body": "Hi [Name],\n\nPlease find attached proof of payment for R[amount] covering invoice [number]. It should reflect within one to two business days.\n\n[Signoff]"
-   },
-   {
-    "id": "po",
-    "name": "PO request",
-    "when": "Someone needs a PO",
-    "body": "Hi [Name],\n\nThanks. To raise the PO I need the supplier, a quote or amount, and which cost centre it falls under. I'll create it in this afternoon's Xero session and send it to you by 17:00.\n\n[Signoff]"
    },
    {
     "id": "debtor",
