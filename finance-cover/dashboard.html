@@ -28,6 +28,7 @@
   --motion:#E88A5E; --ix:#6BC393; --ixusa:#6CC0DB; --country:#AE93D8; --general:#95A4A7;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--ground);color:var(--ink);font:15px/1.5 var(--sans);padding-inline:16px;padding-block:20px 48px}
 .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 h1,h2,h3{font-family:var(--cond);font-weight:600;margin:0;text-wrap:balance;letter-spacing:.005em}
@@ -156,6 +157,30 @@ button{cursor:pointer}
 .day li.sars{font-weight:600;color:var(--bad)}
 .day .holiday{font-size:12px;color:var(--warn)}
 
+/* Company tabs */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.tab{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:500;white-space:nowrap}
+.tab:hover{background:var(--sunk)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.tab .n{font:500 11px var(--mono);opacity:.7}
+.company{border-left:4px solid var(--c,var(--general))}
+.company[data-e="motion"]{--c:var(--motion)} .company[data-e="ix"]{--c:var(--ix)} .company[data-e="ixusa"]{--c:var(--ixusa)} .company[data-e="country"]{--c:var(--country)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.cgrid > div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.cgrid .big{font:500 18px/1.3 var(--mono)}
+.btime{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.btime input{border:1px solid var(--line);background:var(--ground);border-radius:6px;padding:4px 6px;font:13px var(--mono)}
+body.co #email-panel{order:10}
+/* Day plan */
+.dayplan{display:flex;flex-direction:column;gap:4px}
+.slot{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;padding:6px 10px;border-radius:6px;background:var(--ground);border:1px solid transparent;border-left:4px solid var(--c,var(--line));text-align:left;width:100%}
+.slot[data-e="motion"]{--c:var(--motion)} .slot[data-e="ix"]{--c:var(--ix)} .slot[data-e="ixusa"]{--c:var(--ixusa)} .slot[data-e="country"]{--c:var(--country)}
+button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
+.slot.on{background:var(--accent-soft);border-color:var(--accent);border-left-color:var(--c,var(--accent))}
+.slot .t{font:500 12px var(--mono);color:var(--muted)}
+.slot b{font-weight:600}
+.slot .n{font:500 11px var(--mono);color:var(--muted)}
+
 /* Brief */
 .brief{font-size:14px;white-space:pre-wrap}
 .brief-meta{font-size:12px;color:var(--muted)}
@@ -182,7 +207,7 @@ button{cursor:pointer}
 @media (prefers-reduced-motion:no-preference){.row,.dl{transition:background .15s}}
 </style>
 
-<script id="brain" type="application/json">{"cover": {"start": "2026-10-14", "end": "2027-02-14", "note": "Rhythm built from Melissa's SOPs dated 28 Sep 2026 (Motion Ads, iXperience ZA, iXperience USA). Country Hotels has no SOP yet. Items tagged confirm are open points in the SOPs."}, "entities": {"motion": {"name": "Motion Ads", "role": "Finance role", "systems": "Xero, PaySoft, Mr H", "dext": {"multiple": "melissa.beattie.motion.ads@multiple.dext.cc", "single": "melissa.beattie.motion.ads@dext.cc"}, "login": "ronell@motionads.co.za (password in your password manager)"}, "ix": {"name": "iX ZA", "role": "Finance role", "systems": "Xero, eFiling, Mr H. Reviewer approves all SARS returns and releases payments", "dext": {"multiple": "melissa.lemmer.ixperience.pty.ltd@multiple.dext.cc", "single": "melissa.lemmer.ixperience.pty.ltd@dext.cc"}, "login": "melissa@ixperience.co (password in your password manager)"}, "ixusa": {"name": "iX USA", "role": "Finance role", "systems": "Xero, Dext, HubSpot, Mercury, Chase, Mr H", "dext": {"multiple": "melissa.lemmer.ixperience.usa@multiple.dext.cc", "single": "melissa.lemmer.ixperience.usa@dext.cc"}, "login": "melissa@ixperience.co (password in your password manager)"}, "country": {"name": "Country Hotels", "role": "FM gap cover", "systems": "No SOP yet"}, "general": {"name": "All entities", "role": ""}}, "blocks": {"email": "Inbox", "chase": "Chasing", "xero": "Xero hour", "payments": "Payment run", "debtors": "Debtors", "payroll": "Payroll", "sars": "SARS", "close": "Month end", "review": "Mr H review", "revenue": "Revenue", "admin": "Admin"}, "publicHolidays": {"2026-09-24": "Heritage Day", "2026-12-16": "Day of Reconciliation", "2026-12-25": "Christmas Day", "2026-12-26": "Day of Goodwill", "2027-01-01": "New Year's Day", "2027-03-22": "Human Rights Day (observed)"}, "rhythm": [{"id": "am-inbox", "title": "Morning inbox, all entities", "entity": "general", "block": "email", "time": "08:00", "end": "08:45", "when": {"type": "daily"}, "must": true, "how": "Read Claude's brief and the draft replies first. Send or fix the drafts. Anything needing Xero goes into the capture box for the Xero hour. Log ad hoc requests from the Motion Ads team and follow them until closed."}, {"id": "am-chase", "title": "Chase missing documents and unknown transactions", "entity": "general", "block": "chase", "time": "08:45", "end": "09:00", "when": {"type": "daily"}, "must": true, "how": "Open Missing documents. Claude has already built the list from Mercury and Xero, grouped by person. Copy each chase message and send it. Unknown bank lines sit in Suspense with a note until someone answers."}, {"id": "xero-motion", "title": "Motion Ads: bank feeds, supplier and sales invoices, anomalies, reconcile", "entity": "motion", "block": "xero", "time": "16:00", "end": "16:15", "when": {"type": "daily"}, "must": true, "how": "Code all new bank lines. Capture supplier invoices and match to payments. Process any sale against its client contract on the day it arrives. Look for unusual, duplicate or unexpected lines. Reconcile to the latest statement balance."}, {"id": "xero-ix", "title": "iX ZA: bank lines, balance check, bills and sales invoices, daily log", "entity": "ix", "block": "xero", "time": "16:15", "end": "16:30", "when": {"type": "daily"}, "must": true, "how": "Every feed line matched or coded with the right VAT rate and a document attached. Unknowns go to Suspense and to the reviewer today. Agree each Xero balance to the bank and record it in the daily log (date, account, balance, initials). Capture bills only from valid tax invoices, check for duplicates."}, {"id": "xero-ixusa", "title": "iX USA: four feeds and the Dext inbox", "entity": "ixusa", "block": "xero", "time": "16:30", "end": "16:45", "when": {"type": "daily"}, "must": true, "how": "Reconcile Mercury main, Chase main, Chase credit card and Aaron's Mercury card, with account and tracking category. Publish Dext items after checking supplier, date, number, amount, currency and tax. Match bills already paid to the bank line."}, {"id": "xero-hour", "title": "Xero queue: POs and requests captured today", "entity": "general", "block": "xero", "time": "16:45", "end": "17:00", "when": {"type": "daily"}, "must": true, "how": "Work the queue top down. Anything not finished rolls to tomorrow."}, {"id": "wrap", "title": "Daily sign off and tomorrow's musts", "entity": "general", "block": "admin", "time": "17:00", "end": "17:10", "when": {"type": "daily"}, "must": false, "how": "All feeds processed, balances agree, bills and invoices captured, Suspense items sent to the reviewer. Mark tomorrow's musts."}, {"id": "mon-plan", "title": "Plan the week: aged receivables and payables per entity", "entity": "general", "block": "review", "time": "09:00", "end": "09:30", "when": {"type": "weekly", "dow": [1]}, "must": true, "how": "Ask Claude for the aged lists per org. Anything over 30 days gets a follow up. Note what is due in this week's payment runs."}, {"id": "country-fm", "title": "Country Hotels FM check in", "entity": "country", "block": "admin", "time": "09:30", "end": "10:30", "when": {"type": "weekly", "dow": [1]}, "must": true, "confirm": true, "how": "No SOP yet. Cover the FM basics: cash position, payables due, payroll inputs, anything waiting on sign off."}, {"id": "ixusa-weekly", "title": "iX USA weekly: HubSpot invoices into Xero and match receipts", "entity": "ixusa", "block": "revenue", "time": "09:00", "end": "10:30", "when": {"type": "weekly", "dow": [2]}, "must": true, "confirm": true, "how": "Bring in every HubSpot invoice since the last run with the channel tracking (Cape Town, Online, Lisbon). Count and total must agree to HubSpot. Match customer receipts, handle deposits, part payments and refunds. List anything paid in HubSpot with no bank receipt, or the reverse."}, {"id": "ixusa-receipts", "title": "iX USA: remind the US trip team to upload Mercury receipts", "entity": "ixusa", "block": "chase", "time": "10:30", "end": "10:45", "when": {"type": "weekly", "dow": [2]}, "must": true, "how": "Claude lists card spend without a receipt by cardholder. Send each person their list and ask them to upload in the Mercury app. Attach the receipts in Xero once they land."}, {"id": "ixusa-bd", "title": "iX USA: BD incentive and referral payouts", "entity": "ixusa", "block": "payments", "time": "10:45", "end": "11:30", "when": {"type": "weekly", "dow": [2]}, "must": true, "confirm": true, "how": "Calculate from the incentive trackers. Check each payout against a booked and paid sale. Get approval (approver still to confirm), pay and record in Xero."}, {"id": "motion-pay", "title": "Motion Ads: prepare supplier payments and load for Friday", "entity": "motion", "block": "payments", "time": "10:00", "end": "11:00", "when": {"type": "weekly", "dow": [3]}, "must": true, "how": "Compile what is due this week, check each bill is approved and not already paid, and bank details match the supplier record. Get approval and load the batch so it goes out on Friday."}, {"id": "ix-weekly", "title": "iX ZA weekly: supplier payments and Mr H review", "entity": "ix", "block": "payments", "time": "09:00", "end": "11:00", "when": {"type": "weekly", "dow": [4]}, "must": true, "confirm": true, "how": "Aged payables: list bills due by end of next week. Check approved, not paid, bank details match. Send the list with total and available balance to the reviewer, load once approved (reviewer releases), send remittances. Then confirm the daily sign offs, export the week's GL, bills and invoices to the Mr H folder raw subfolder and run Mr H. Correct or explain every flag."}, {"id": "motion-fri", "title": "Motion Ads: payments out, remittances, Mr H, missing invoices, PaySoft recon", "entity": "motion", "block": "review", "time": "09:00", "end": "10:30", "when": {"type": "weekly", "dow": [5]}, "must": true, "how": "Confirm Wednesday's batch released and send proofs of payment. Run Mr H on the week and fix what it flags. Request any supplier invoices still missing. Reconcile PaySoft for the week."}, {"id": "ixusa-mrh", "title": "iX USA: Mr H weekly run", "entity": "ixusa", "block": "review", "time": "10:30", "end": "11:15", "when": {"type": "weekly", "dow": [5]}, "must": true, "how": "Once HubSpot, receipts and payouts are posted, run Mr H and clear the exceptions."}, {"id": "ix-report", "title": "iXperience weekly financial report", "entity": "ixusa", "block": "review", "time": "11:15", "end": "12:00", "when": {"type": "weekly", "dow": [5]}, "must": false, "confirm": true, "how": "Ask Claude to run the iX weekly report, review the draft, then publish."}, {"id": "motion-statements", "title": "Motion Ads: send statements and this month's invoices", "entity": "motion", "block": "debtors", "time": "09:00", "end": "11:00", "when": {"type": "monthly", "day": 1, "shift": "next_business"}, "must": true, "how": "Statements for anything still outstanding from last month, plus every invoice due this month so clients have them on hand."}, {"id": "ix-emp201", "title": "iX ZA: EMP201 to reviewer, then submit and pay", "entity": "ix", "block": "sars", "time": "09:00", "end": "11:00", "when": {"type": "sars_internal", "day": 7}, "must": true, "how": "Internal deadline, one business day ahead of SARS. Payroll final, pull PAYE, UIF and SDL, agree to the control accounts, prepare on eFiling, send to the reviewer with the payroll report. Once approved, submit and pay with the PRN. Post the payment in Xero."}, {"id": "motion-payroll-info", "title": "Motion Ads: collect payroll changes and send to Justin and Ilan", "entity": "motion", "block": "payroll", "time": "09:00", "end": "10:00", "when": {"type": "monthly", "day": 15, "shift": "prev_business"}, "must": true, "how": "Gather leave, overtime, new starters and leavers for the month."}, {"id": "motion-reminders", "title": "Motion Ads: payment reminders to all customers", "entity": "motion", "block": "debtors", "time": "09:00", "end": "10:00", "when": {"type": "monthly", "day": 20, "shift": "prev_business"}, "must": true, "how": "Remind every customer before their due date on the 25th or 30th. Claude can draft these."}, {"id": "motion-payroll", "title": "Motion Ads: pay payroll", "entity": "motion", "block": "payroll", "time": "09:00", "end": "10:30", "when": {"type": "monthly", "day": 25, "shift": "prev_business"}, "must": true, "how": "Process salary payments."}, {"id": "ix-vat-payroll", "title": "iX ZA: payroll and VAT201", "entity": "ix", "block": "sars", "time": "10:30", "end": "12:30", "when": {"type": "monthly", "day": 25, "shift": "prev_business"}, "must": true, "how": "Confirm the period's invoices are captured and banks reconciled. Run the Xero VAT report, check output VAT, input VAT only on valid tax invoices, zero rated and exempt coding. Agree to the VAT control account. Send to the reviewer stating payment or refund and the amount. Submit once approved. SARS deadline is the last business day of the month."}, {"id": "motion-close", "title": "Motion Ads month end: PaySoft journal, supplier invoices, VAT close off, royalty recon", "entity": "motion", "block": "close", "time": "09:00", "end": "12:00", "when": {"type": "monthly_last_business"}, "must": true, "how": "Post the PaySoft journal. Request invoices that don't arrive by themselves, such as rentals. Close VAT off every month: agree the VAT control account to the Xero VAT report. Royalty recon with Tristan."}, {"id": "ixusa-close", "title": "iX USA month end with Mr H, ready for management accounts", "entity": "ixusa", "block": "close", "time": "09:00", "end": "12:00", "when": {"type": "monthly_business_day", "n": 3}, "must": true, "how": "Four accounts reconciled to statements, Suspense cleared, aged payables and receivables reviewed, every Mercury card line has a receipt. HubSpot agrees to Xero by channel. BD, referral and Danny's offshore payments checked. Cost review. Run Mr H month end and hand over for management accounts."}, {"id": "ix-close", "title": "iX ZA month end with Mr H", "entity": "ix", "block": "close", "time": "12:00", "end": "13:00", "when": {"type": "monthly_business_day", "n": 3}, "must": true, "how": "Run Mr H month end on iX ZA. Clear exceptions before management accounts."}], "deadlines": [{"id": "handover", "date": "2026-10-13", "entity": "general", "kind": "Handover", "title": "Last handover day with Melissa: open SOP points, logins, release rights"}, {"id": "cover-start", "date": "2026-10-14", "entity": "general", "kind": "Milestone", "title": "Cover starts"}, {"id": "cipc-ix", "date": "2026-10-28", "entity": "ix", "kind": "CIPC", "title": "iX ZA CIPC annual return and beneficial ownership, submitted and paid (reg 2013/159509/07)", "note": "Danni files. You supply the FY25 turnover. Order: beneficial ownership first (Aaron's input and the share register), then the annual return, then pay by EFT into the CIPC account or by company card. Login is in your password manager."}, {"id": "vat-ix-sep", "date": "2026-10-30", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for September (SARS last day)", "note": "Target is the 25th with payroll."}, {"id": "emp501-interim", "date": "2026-10-30", "entity": "general", "kind": "SARS", "title": "EMP501 interim reconciliation, March to August 2026", "note": "Not in any SOP. Confirm with Melissa it is filed for iX ZA and Motion Ads before she leaves."}, {"id": "emp201-oct", "date": "2026-11-06", "entity": "general", "kind": "SARS", "title": "EMP201 for October: submit and pay", "note": "7 November is a Saturday so SARS wants it Friday 6th. iX ZA internal date is Thursday 5th."}, {"id": "vat-ix-oct", "date": "2026-11-30", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for October (SARS last day)"}, {"id": "motion-vat", "date": "2026-11-30", "entity": "motion", "kind": "SARS", "title": "Motion Ads VAT201, bi-monthly: confirm which months", "note": "Open point in the Motion Ads SOP. If the cycle is Category B this return is due today; if Category A, 30 October and 31 December."}, {"id": "emp201-nov", "date": "2026-12-07", "entity": "general", "kind": "SARS", "title": "EMP201 for November: submit and pay", "note": "iX ZA internal date is Friday 4th."}, {"id": "vat-ix-nov", "date": "2026-12-31", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for November (SARS last day)"}, {"id": "emp201-dec", "date": "2027-01-07", "entity": "general", "kind": "SARS", "title": "EMP201 for December: submit and pay", "note": "iX ZA internal date is Wednesday 6th."}, {"id": "vat-ix-dec", "date": "2027-01-29", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for December (SARS last day)"}, {"id": "emp201-jan", "date": "2027-02-05", "entity": "general", "kind": "SARS", "title": "EMP201 for January: submit and pay", "note": "7 February is a Sunday so SARS wants it Friday 5th. iX ZA internal date is Thursday 4th."}, {"id": "handback", "date": "2027-02-12", "entity": "general", "kind": "Handover", "title": "Hand back pack ready: open items, what changed, SARS status"}, {"id": "cover-end", "date": "2027-02-14", "entity": "general", "kind": "Milestone", "title": "Expected return"}, {"id": "irp6-feb", "date": "2027-02-26", "entity": "general", "kind": "SARS", "title": "IRP6 second provisional for February year ends", "note": "Two weeks after the return. Agree who owns it at hand back."}], "email": {"signoff": "Kind regards", "tone": ["Short, warm and direct. Three to six sentences unless the question needs more.", "South African English spelling. Amounts as R12,500.00.", "Always say what happens next and when: a day or a date, never 'soon'.", "Never promise a payment date unless the bill is approved and in a payment run.", "Do not use dashes as punctuation.", "No attachments are mentioned unless they are actually attached."], "rules": [{"id": "bank-change", "flag": "Bank detail change", "match": "supplier or staff asks to change banking details", "do": "Never change details from an email. Reply with the verification template and call the supplier on a number already on file."}, {"id": "payroll-private", "flag": "Payroll confidential", "match": "salary, payslip or someone else's pay", "do": "Reply only to the employee concerned. Never copy others."}, {"id": "sars", "flag": "SARS", "match": "any letter or email from SARS", "do": "Put it on today's list as a must. Check eFiling before replying."}, {"id": "urgent-pay", "flag": "Urgent payment", "match": "request to pay today, outside the payment run", "do": "Get written approval from the MD before loading. Treat urgency plus new bank details as likely fraud."}, {"id": "xero-work", "flag": "Xero work", "match": "PO, bill, invoice, credit note or statement request", "do": "Acknowledge now with the holding template. Do the work in the 16:00 Xero hour."}], "templates": [{"id": "holding", "name": "Received, doing it today", "when": "Anything that needs Xero", "body": "Hi [Name],\n\nThanks, received. I'll process this in this afternoon's Xero session and send it through by 17:00 today.\n\n[Signoff]"}, {"id": "when-paid", "name": "When will I be paid", "when": "Supplier asks about payment", "body": "Hi [Name],\n\nThanks for following up. Invoice [number] for R[amount] is approved and scheduled for our [day] payment run on [date]. I'll send the proof of payment as soon as it is released.\n\n[Signoff]"}, {"id": "not-received", "name": "Invoice not on our system", "when": "We can't find the invoice", "body": "Hi [Name],\n\nI can't find invoice [number] on our system. Please could you resend it with the purchase order number on it? Once I have it, it goes into the next payment run on [day].\n\n[Signoff]"}, {"id": "pop", "name": "Proof of payment", "when": "Payment released", "body": "Hi [Name],\n\nPlease find attached proof of payment for R[amount] covering invoice [number]. It should reflect within one to two business days.\n\n[Signoff]"}, {"id": "po", "name": "PO request", "when": "Someone needs a PO", "body": "Hi [Name],\n\nThanks. To raise the PO I need the supplier, a quote or amount, and which cost centre it falls under. I'll create it in this afternoon's Xero session and send it to you by 17:00.\n\n[Signoff]"}, {"id": "debtor", "name": "Overdue reminder to client", "when": "Client invoice overdue", "body": "Hi [Name],\n\nA friendly reminder that invoice [number] for R[amount] was due on [date]. Please could you let me know when we can expect payment? I've attached a statement for your records.\n\n[Signoff]"}, {"id": "bank-change", "name": "Bank detail change, verification", "when": "Any request to change bank details", "body": "Hi [Name],\n\nThanks for letting us know. For security we don't update banking details from an email. Please send a signed letter on your letterhead together with a bank confirmation letter, and we will confirm the change by phone with our existing contact before any payment is made to the new account.\n\n[Signoff]"}, {"id": "payroll", "name": "Payroll query", "when": "Employee asks about their pay", "body": "Hi [Name],\n\nThanks for your message. I'm checking this against the payroll and will come back to you by [day].\n\n[Signoff]"}, {"id": "receipt", "name": "Missing receipt", "when": "Card spend without a receipt", "body": "Hi [Name],\n\nThese card transactions still have no receipt in Mercury:\n\n[list]\n\nPlease upload a photo of each one in the Mercury app by Friday so I can close the week.\n\n[Signoff]"}]}}</script>
+<script id="brain" type="application/json">{"cover": {"start": "2026-10-14", "end": "2027-02-14", "note": "Rhythm built from Melissa's SOPs dated 28 Sep 2026 (Motion Ads, iXperience ZA, iXperience USA). Country Hotels has no SOP yet. Items tagged confirm are open points in the SOPs."}, "entities": {"motion": {"name": "Motion Ads", "role": "Finance role", "systems": "Xero, PaySoft, Mr H", "dext": {"multiple": "melissa.beattie.motion.ads@multiple.dext.cc", "single": "melissa.beattie.motion.ads@dext.cc"}, "login": "ronell@motionads.co.za (password in your password manager)"}, "ix": {"name": "iX ZA", "role": "Finance role", "systems": "Xero, eFiling, Mr H. Reviewer approves all SARS returns and releases payments", "dext": {"multiple": "melissa.lemmer.ixperience.pty.ltd@multiple.dext.cc", "single": "melissa.lemmer.ixperience.pty.ltd@dext.cc"}, "login": "melissa@ixperience.co (password in your password manager)"}, "ixusa": {"name": "iX USA", "role": "Finance role", "systems": "Xero, Dext, HubSpot, Mercury, Chase, Mr H", "dext": {"multiple": "melissa.lemmer.ixperience.usa@multiple.dext.cc", "single": "melissa.lemmer.ixperience.usa@dext.cc"}, "login": "melissa@ixperience.co (password in your password manager)"}, "country": {"name": "Country Hotels", "role": "FM gap cover", "systems": "No SOP yet"}, "general": {"name": "All entities", "role": ""}}, "blocks": {"email": "Inbox", "chase": "Chasing", "xero": "Xero hour", "payments": "Payment run", "debtors": "Debtors", "payroll": "Payroll", "sars": "SARS", "close": "Month end", "review": "Mr H review", "revenue": "Revenue", "admin": "Admin"}, "publicHolidays": {"2026-09-24": "Heritage Day", "2026-12-16": "Day of Reconciliation", "2026-12-25": "Christmas Day", "2026-12-26": "Day of Goodwill", "2027-01-01": "New Year's Day", "2027-03-22": "Human Rights Day (observed)"}, "rhythm": [{"id": "am-inbox", "title": "Morning inbox, all entities", "entity": "general", "block": "email", "time": "08:00", "end": "08:45", "when": {"type": "daily"}, "must": true, "how": "Read Claude's brief and the draft replies first. Send or fix the drafts. Anything needing Xero goes into the capture box for the Xero hour. Log ad hoc requests from the Motion Ads team and follow them until closed."}, {"id": "am-chase", "title": "Chase missing documents and unknown transactions", "entity": "general", "block": "chase", "time": "08:45", "end": "09:00", "when": {"type": "daily"}, "must": true, "how": "Open Missing documents. Claude has already built the list from Mercury and Xero, grouped by person. Copy each chase message and send it. Unknown bank lines sit in Suspense with a note until someone answers."}, {"id": "xero-motion", "title": "Motion Ads: bank feeds, supplier and sales invoices, anomalies, reconcile", "entity": "motion", "block": "xero", "time": "16:00", "end": "16:15", "when": {"type": "daily"}, "must": true, "how": "Code all new bank lines. Capture supplier invoices and match to payments. Process any sale against its client contract on the day it arrives. Look for unusual, duplicate or unexpected lines. Reconcile to the latest statement balance."}, {"id": "xero-ix", "title": "iX ZA: bank lines, balance check, bills and sales invoices, daily log", "entity": "ix", "block": "xero", "time": "16:15", "end": "16:30", "when": {"type": "daily"}, "must": true, "how": "Every feed line matched or coded with the right VAT rate and a document attached. Unknowns go to Suspense and to the reviewer today. Agree each Xero balance to the bank and record it in the daily log (date, account, balance, initials). Capture bills only from valid tax invoices, check for duplicates."}, {"id": "xero-ixusa", "title": "iX USA: four feeds and the Dext inbox", "entity": "ixusa", "block": "xero", "time": "16:30", "end": "16:45", "when": {"type": "daily"}, "must": true, "how": "Reconcile Mercury main, Chase main, Chase credit card and Aaron's Mercury card, with account and tracking category. Publish Dext items after checking supplier, date, number, amount, currency and tax. Match bills already paid to the bank line."}, {"id": "xero-hour", "title": "Xero queue: POs and requests captured today", "entity": "general", "block": "xero", "time": "16:45", "end": "17:00", "when": {"type": "daily"}, "must": true, "how": "Work the queue top down. Anything not finished rolls to tomorrow."}, {"id": "wrap", "title": "Daily sign off and tomorrow's musts", "entity": "general", "block": "admin", "time": "17:00", "end": "17:10", "when": {"type": "daily"}, "must": false, "how": "All feeds processed, balances agree, bills and invoices captured, Suspense items sent to the reviewer. Mark tomorrow's musts."}, {"id": "mon-plan", "title": "Plan the week: aged receivables and payables per entity", "entity": "general", "block": "review", "time": "09:00", "end": "09:30", "when": {"type": "weekly", "dow": [1]}, "must": true, "how": "Ask Claude for the aged lists per org. Anything over 30 days gets a follow up. Note what is due in this week's payment runs."}, {"id": "country-fm", "title": "Country Hotels FM check in", "entity": "country", "block": "admin", "time": "09:30", "end": "10:30", "when": {"type": "weekly", "dow": [1]}, "must": true, "confirm": true, "how": "No SOP yet. Cover the FM basics: cash position, payables due, payroll inputs, anything waiting on sign off."}, {"id": "ixusa-weekly", "title": "iX USA weekly: HubSpot invoices into Xero and match receipts", "entity": "ixusa", "block": "revenue", "time": "09:00", "end": "10:30", "when": {"type": "weekly", "dow": [2]}, "must": true, "confirm": true, "how": "Bring in every HubSpot invoice since the last run with the channel tracking (Cape Town, Online, Lisbon). Count and total must agree to HubSpot. Match customer receipts, handle deposits, part payments and refunds. List anything paid in HubSpot with no bank receipt, or the reverse."}, {"id": "ixusa-receipts", "title": "iX USA: remind the US trip team to upload Mercury receipts", "entity": "ixusa", "block": "chase", "time": "10:30", "end": "10:45", "when": {"type": "weekly", "dow": [2]}, "must": true, "how": "Claude lists card spend without a receipt by cardholder. Send each person their list and ask them to upload in the Mercury app. Attach the receipts in Xero once they land."}, {"id": "ixusa-bd", "title": "iX USA: BD incentive and referral payouts", "entity": "ixusa", "block": "payments", "time": "10:45", "end": "11:30", "when": {"type": "weekly", "dow": [2]}, "must": true, "confirm": true, "how": "Calculate from the incentive trackers. Check each payout against a booked and paid sale. Get approval (approver still to confirm), pay and record in Xero."}, {"id": "motion-pay", "title": "Motion Ads: prepare supplier payments and load for Friday", "entity": "motion", "block": "payments", "time": "10:00", "end": "11:00", "when": {"type": "weekly", "dow": [3]}, "must": true, "how": "Compile what is due this week, check each bill is approved and not already paid, and bank details match the supplier record. Get approval and load the batch so it goes out on Friday."}, {"id": "ix-weekly", "title": "iX ZA weekly: supplier payments and Mr H review", "entity": "ix", "block": "payments", "time": "09:00", "end": "11:00", "when": {"type": "weekly", "dow": [4]}, "must": true, "confirm": true, "how": "Aged payables: list bills due by end of next week. Check approved, not paid, bank details match. Send the list with total and available balance to the reviewer, load once approved (reviewer releases), send remittances. Then confirm the daily sign offs, export the week's GL, bills and invoices to the Mr H folder raw subfolder and run Mr H. Correct or explain every flag."}, {"id": "motion-fri", "title": "Motion Ads: payments out, remittances, Mr H, missing invoices, PaySoft recon", "entity": "motion", "block": "review", "time": "09:00", "end": "10:30", "when": {"type": "weekly", "dow": [5]}, "must": true, "how": "Confirm Wednesday's batch released and send proofs of payment. Run Mr H on the week and fix what it flags. Request any supplier invoices still missing. Reconcile PaySoft for the week."}, {"id": "ixusa-mrh", "title": "iX USA: Mr H weekly run", "entity": "ixusa", "block": "review", "time": "10:30", "end": "11:15", "when": {"type": "weekly", "dow": [5]}, "must": true, "how": "Once HubSpot, receipts and payouts are posted, run Mr H and clear the exceptions."}, {"id": "ix-report", "title": "iXperience weekly financial report", "entity": "ixusa", "block": "review", "time": "11:15", "end": "12:00", "when": {"type": "weekly", "dow": [5]}, "must": false, "confirm": true, "how": "Ask Claude to run the iX weekly report, review the draft, then publish."}, {"id": "motion-statements", "title": "Motion Ads: send statements and this month's invoices", "entity": "motion", "block": "debtors", "time": "09:00", "end": "11:00", "when": {"type": "monthly", "day": 1, "shift": "next_business"}, "must": true, "how": "Statements for anything still outstanding from last month, plus every invoice due this month so clients have them on hand."}, {"id": "ix-emp201", "title": "iX ZA: EMP201 to reviewer, then submit and pay", "entity": "ix", "block": "sars", "time": "09:00", "end": "11:00", "when": {"type": "sars_internal", "day": 7}, "must": true, "how": "Internal deadline, one business day ahead of SARS. Payroll final, pull PAYE, UIF and SDL, agree to the control accounts, prepare on eFiling, send to the reviewer with the payroll report. Once approved, submit and pay with the PRN. Post the payment in Xero."}, {"id": "motion-payroll-info", "title": "Motion Ads: collect payroll changes and send to Justin and Ilan", "entity": "motion", "block": "payroll", "time": "09:00", "end": "10:00", "when": {"type": "monthly", "day": 15, "shift": "prev_business"}, "must": true, "how": "Gather leave, overtime, new starters and leavers for the month."}, {"id": "motion-reminders", "title": "Motion Ads: payment reminders to all customers", "entity": "motion", "block": "debtors", "time": "09:00", "end": "10:00", "when": {"type": "monthly", "day": 20, "shift": "prev_business"}, "must": true, "how": "Remind every customer before their due date on the 25th or 30th. Claude can draft these."}, {"id": "motion-payroll", "title": "Motion Ads: pay payroll", "entity": "motion", "block": "payroll", "time": "09:00", "end": "10:30", "when": {"type": "monthly", "day": 25, "shift": "prev_business"}, "must": true, "how": "Process salary payments."}, {"id": "ix-vat-payroll", "title": "iX ZA: payroll and VAT201", "entity": "ix", "block": "sars", "time": "10:30", "end": "12:30", "when": {"type": "monthly", "day": 25, "shift": "prev_business"}, "must": true, "how": "Confirm the period's invoices are captured and banks reconciled. Run the Xero VAT report, check output VAT, input VAT only on valid tax invoices, zero rated and exempt coding. Agree to the VAT control account. Send to the reviewer stating payment or refund and the amount. Submit once approved. SARS deadline is the last business day of the month."}, {"id": "motion-close", "title": "Motion Ads month end: PaySoft journal, supplier invoices, VAT close off, royalty recon", "entity": "motion", "block": "close", "time": "09:00", "end": "12:00", "when": {"type": "monthly_last_business"}, "must": true, "how": "Post the PaySoft journal. Request invoices that don't arrive by themselves, such as rentals. Close VAT off every month: agree the VAT control account to the Xero VAT report. Royalty recon with Tristan."}, {"id": "ixusa-close", "title": "iX USA month end with Mr H, ready for management accounts", "entity": "ixusa", "block": "close", "time": "09:00", "end": "12:00", "when": {"type": "monthly_business_day", "n": 3}, "must": true, "how": "Four accounts reconciled to statements, Suspense cleared, aged payables and receivables reviewed, every Mercury card line has a receipt. HubSpot agrees to Xero by channel. BD, referral and Danny's offshore payments checked. Cost review. Run Mr H month end and hand over for management accounts."}, {"id": "ix-close", "title": "iX ZA month end with Mr H", "entity": "ix", "block": "close", "time": "12:00", "end": "13:00", "when": {"type": "monthly_business_day", "n": 3}, "must": true, "how": "Run Mr H month end on iX ZA. Clear exceptions before management accounts."}], "deadlines": [{"id": "handover", "date": "2026-10-13", "entity": "general", "kind": "Handover", "title": "Last handover day with Melissa: open SOP points, logins, release rights"}, {"id": "cover-start", "date": "2026-10-14", "entity": "general", "kind": "Milestone", "title": "Cover starts"}, {"id": "cipc-ix", "date": "2026-10-28", "entity": "ix", "kind": "CIPC", "title": "iX ZA CIPC annual return and beneficial ownership, submitted and paid (reg 2013/159509/07)", "note": "Danni files. You supply the FY25 turnover. Order: beneficial ownership first (Aaron's input and the share register), then the annual return, then pay by EFT into the CIPC account or by company card. Login is in your password manager."}, {"id": "vat-ix-sep", "date": "2026-10-30", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for September (SARS last day)", "note": "Target is the 25th with payroll."}, {"id": "emp501-interim", "date": "2026-10-30", "entity": "general", "kind": "SARS", "title": "EMP501 interim reconciliation, March to August 2026", "note": "Not in any SOP. Confirm with Melissa it is filed for iX ZA and Motion Ads before she leaves."}, {"id": "emp201-oct", "date": "2026-11-06", "entity": "general", "kind": "SARS", "title": "EMP201 for October: submit and pay", "note": "7 November is a Saturday so SARS wants it Friday 6th. iX ZA internal date is Thursday 5th."}, {"id": "vat-ix-oct", "date": "2026-11-30", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for October (SARS last day)"}, {"id": "motion-vat", "date": "2026-11-30", "entity": "motion", "kind": "SARS", "title": "Motion Ads VAT201, bi-monthly: confirm which months", "note": "Open point in the Motion Ads SOP. If the cycle is Category B this return is due today; if Category A, 30 October and 31 December."}, {"id": "emp201-nov", "date": "2026-12-07", "entity": "general", "kind": "SARS", "title": "EMP201 for November: submit and pay", "note": "iX ZA internal date is Friday 4th."}, {"id": "vat-ix-nov", "date": "2026-12-31", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for November (SARS last day)"}, {"id": "emp201-dec", "date": "2027-01-07", "entity": "general", "kind": "SARS", "title": "EMP201 for December: submit and pay", "note": "iX ZA internal date is Wednesday 6th."}, {"id": "vat-ix-dec", "date": "2027-01-29", "entity": "ix", "kind": "SARS", "title": "iX ZA VAT201 for December (SARS last day)"}, {"id": "emp201-jan", "date": "2027-02-05", "entity": "general", "kind": "SARS", "title": "EMP201 for January: submit and pay", "note": "7 February is a Sunday so SARS wants it Friday 5th. iX ZA internal date is Thursday 4th."}, {"id": "handback", "date": "2027-02-12", "entity": "general", "kind": "Handover", "title": "Hand back pack ready: open items, what changed, SARS status"}, {"id": "cover-end", "date": "2027-02-14", "entity": "general", "kind": "Milestone", "title": "Expected return"}, {"id": "irp6-feb", "date": "2027-02-26", "entity": "general", "kind": "SARS", "title": "IRP6 second provisional for February year ends", "note": "Two weeks after the return. Agree who owns it at hand back."}], "email": {"signoff": "Kind regards", "tone": ["Short, warm and direct. Three to six sentences unless the question needs more.", "South African English spelling. Amounts as R12,500.00.", "Always say what happens next and when: a day or a date, never 'soon'.", "Never promise a payment date unless the bill is approved and in a payment run.", "Do not use dashes as punctuation.", "No attachments are mentioned unless they are actually attached."], "rules": [{"id": "bank-change", "flag": "Bank detail change", "match": "supplier or staff asks to change banking details", "do": "Never change details from an email. Reply with the verification template and call the supplier on a number already on file."}, {"id": "payroll-private", "flag": "Payroll confidential", "match": "salary, payslip or someone else's pay", "do": "Reply only to the employee concerned. Never copy others."}, {"id": "sars", "flag": "SARS", "match": "any letter or email from SARS", "do": "Put it on today's list as a must. Check eFiling before replying."}, {"id": "urgent-pay", "flag": "Urgent payment", "match": "request to pay today, outside the payment run", "do": "Get written approval from the MD before loading. Treat urgency plus new bank details as likely fraud."}, {"id": "xero-work", "flag": "Xero work", "match": "PO, bill, invoice, credit note or statement request", "do": "Acknowledge now with the holding template. Do the work in the 16:00 Xero hour."}], "templates": [{"id": "holding", "name": "Received, doing it today", "when": "Anything that needs Xero", "body": "Hi [Name],\n\nThanks, received. I'll process this in this afternoon's Xero session and send it through by 17:00 today.\n\n[Signoff]"}, {"id": "when-paid", "name": "When will I be paid", "when": "Supplier asks about payment", "body": "Hi [Name],\n\nThanks for following up. Invoice [number] for R[amount] is approved and scheduled for our [day] payment run on [date]. I'll send the proof of payment as soon as it is released.\n\n[Signoff]"}, {"id": "not-received", "name": "Invoice not on our system", "when": "We can't find the invoice", "body": "Hi [Name],\n\nI can't find invoice [number] on our system. Please could you resend it with the purchase order number on it? Once I have it, it goes into the next payment run on [day].\n\n[Signoff]"}, {"id": "pop", "name": "Proof of payment", "when": "Payment released", "body": "Hi [Name],\n\nPlease find attached proof of payment for R[amount] covering invoice [number]. It should reflect within one to two business days.\n\n[Signoff]"}, {"id": "po", "name": "PO request", "when": "Someone needs a PO", "body": "Hi [Name],\n\nThanks. To raise the PO I need the supplier, a quote or amount, and which cost centre it falls under. I'll create it in this afternoon's Xero session and send it to you by 17:00.\n\n[Signoff]"}, {"id": "debtor", "name": "Overdue reminder to client", "when": "Client invoice overdue", "body": "Hi [Name],\n\nA friendly reminder that invoice [number] for R[amount] was due on [date]. Please could you let me know when we can expect payment? I've attached a statement for your records.\n\n[Signoff]"}, {"id": "bank-change", "name": "Bank detail change, verification", "when": "Any request to change bank details", "body": "Hi [Name],\n\nThanks for letting us know. For security we don't update banking details from an email. Please send a signed letter on your letterhead together with a bank confirmation letter, and we will confirm the change by phone with our existing contact before any payment is made to the new account.\n\n[Signoff]"}, {"id": "payroll", "name": "Payroll query", "when": "Employee asks about their pay", "body": "Hi [Name],\n\nThanks for your message. I'm checking this against the payroll and will come back to you by [day].\n\n[Signoff]"}, {"id": "receipt", "name": "Missing receipt", "when": "Card spend without a receipt", "body": "Hi [Name],\n\nThese card transactions still have no receipt in Mercury:\n\n[list]\n\nPlease upload a photo of each one in the Mercury app by Friday so I can close the week.\n\n[Signoff]"}]}, "companyBlocks": {"motion": {"start": "09:30", "end": "11:00"}, "ix": {"start": "11:00", "end": "12:30"}, "country": {"start": "13:30", "end": "14:30"}, "ixusa": {"start": "14:30", "end": "16:00"}}, "dayPlan": [{"start": "08:00", "end": "09:00", "label": "Inbox and chasing, all companies"}, {"start": "09:00", "end": "09:30", "label": "Replies. Mondays: plan the week"}, {"start": "12:30", "end": "13:30", "label": "Lunch"}, {"start": "16:00", "end": "17:00", "label": "Xero hour, 15 minutes per company"}, {"start": "17:00", "end": "17:10", "label": "Sign off"}]}</script>
 
 <div class="wrap">
   <header class="top">
@@ -194,9 +219,13 @@ button{cursor:pointer}
     <div class="stats" id="stats"></div>
   </header>
 
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Company"></nav>
+
   <div class="banner" id="banner" hidden></div>
 
   <section class="now" id="now" aria-live="polite"></section>
+
+  <section class="panel company" id="company" hidden></section>
 
   <section class="panel" id="email-panel">
     <div class="panel-head">
@@ -248,6 +277,7 @@ button{cursor:pointer}
             <button class="iconbtn" id="next-day" aria-label="Next day">›</button>
           </div>
         </div>
+        <div class="dayplan" id="dayplan"></div>
         <div class="progress" aria-hidden="true"><i id="today-progress" style="width:0"></i></div>
         <div class="list" id="today-list"></div>
       </section>
@@ -273,7 +303,7 @@ button{cursor:pointer}
         <div class="list" id="deadlines"></div>
       </section>
 
-      <section class="panel">
+      <section class="panel" id="dext-panel">
         <div class="panel-head">
           <div>
             <div class="eyebrow">Email receipts and invoices straight into Dext</div>
@@ -387,7 +417,7 @@ button{cursor:pointer}
     db: null, live: false, readOnly: false,
     tasks: [], missing: [], missState: null, replies: [], checks: {}, dlState: {}, brief: null,
     view: ymd(new Date()), showAllDl: false,
-    unsubChecks: null, dest: "xero"
+    unsubChecks: null, dest: "xero", ent: "all", blocks: {}
   };
 
   // ---------- dates ----------
@@ -418,7 +448,16 @@ button{cursor:pointer}
     if(t.type==="monthly_business_day") return nthBusiness(y,m,t.n)===s;
     return false;
   }
-  function rulesFor(s){ return BRAIN.rhythm.filter(r=>ruleOn(r,s)).sort((a,b)=>a.time.localeCompare(b.time)); }
+  function blockOf(e){ const o=(S.blocks||{})[e]; return o&&o.start&&o.end ? o : (BRAIN.companyBlocks||{})[e]||null; }
+  function eff(r){ const b=blockOf(r.entity); return b && r.block!=="xero" ? Object.assign({},r,{time:b.start,end:b.end}) : r; }
+  function rulesFor(s){ return BRAIN.rhythm.filter(r=>ruleOn(r,s)).map(eff).sort((a,b)=>a.time.localeCompare(b.time)||(a.entity||"").localeCompare(b.entity||"")); }
+  const inEnt = e => S.ent==="all" || (e||"general")===S.ent;
+  const COMPANIES = () => Object.keys(BRAIN.entities).filter(k=>k!=="general");
+  function slots(){
+    const out=(BRAIN.dayPlan||[]).map(x=>Object.assign({},x));
+    COMPANIES().forEach(k=>{ const b=blockOf(k); if(b) out.push({start:b.start,end:b.end,label:entName(k),e:k}); });
+    return out.sort((a,b)=>a.start.localeCompare(b.start));
+  }
 
   // ---------- helpers ----------
   function el(tag, attrs, ...kids){
@@ -463,6 +502,7 @@ button{cursor:pointer}
       else if(i>=0) arr[i]=Object.assign({},mode==="update"?arr[i]:{},data,{id});
       else arr.push(Object.assign({},data,{id}));
     } else if(col==="checks"){ S.checks=Object.assign({},data); }
+    else if(path==="state/blocks"){ S.blocks=Object.assign({},data); }
     else if(col==="state"){ S.dlState=Object.assign({},data); }
     render(); return true;
   }
@@ -489,12 +529,12 @@ button{cursor:pointer}
   // ---------- render ----------
   function render(){
     const today=ymd(new Date());
-    renderHeader(today); renderNow(today); renderToday(today); renderWeek(today);
+    renderTabs(today); renderHeader(today); renderNow(today); renderCompany(today); renderToday(today); renderWeek(today);
     renderDeadlines(today); renderDext(); renderXero(today); renderMissing(); renderReplies(); renderBrief(); renderHandover(); renderLater();
   }
 
   function nextDeadline(today){
-    return BRAIN.deadlines.filter(d=>d.kind==="SARS" && d.date>=today && !(S.dlState[d.id]||{}).done).sort((a,b)=>a.date.localeCompare(b.date))[0];
+    return BRAIN.deadlines.filter(d=>d.kind==="SARS" && inEnt(d.entity) && d.date>=today && !(S.dlState[d.id]||{}).done).sort((a,b)=>a.date.localeCompare(b.date))[0];
   }
 
   function renderHeader(today){
@@ -505,10 +545,10 @@ button{cursor:pointer}
     else sub="Cover period ended "+nice(c.end)+".";
     $("sub").textContent=sub;
 
-    const open=S.tasks.filter(t=>t.status!=="done");
+    const open=S.tasks.filter(t=>t.status!=="done" && inEnt(t.entity));
     const overdue=open.filter(t=>t.due && t.due<today).length;
     const xero=open.filter(t=>t.queue==="xero").length;
-    const miss=S.missing.length;
+    const miss=S.missing.filter(m=>inEnt(m.entity)).length;
     const nd=nextDeadline(today);
     const stats=$("stats"); stats.replaceChildren();
     const stat=(label,val,cls)=>stats.append(el("div",{class:"stat "+(cls||"")},el("span",{class:"eyebrow",text:label}),el("b",{text:String(val)})));
@@ -532,7 +572,12 @@ button{cursor:pointer}
     else if(cur){ what=cur.title; how=cur.how; }
     else if(hm<"08:00"){ what="Before the day starts"; how="Open Claude's morning brief below, then start the inbox scrub at 08:00."; }
     else if(hm>="17:10"){ what="Day closed"; how="Anything still open rolls to tomorrow."; }
-    else { what="Focus time"; how="Answer emails and clear today's must dos. Xero work waits for 16:00."; }
+    else {
+      const sl=slots().find(x=>hm>=x.start && hm<x.end);
+      if(sl && sl.e){ what=sl.label+" block until "+sl.end; how="This block's rhythm is done. Work through "+sl.label+"'s open items, or capture anything for other companies."; }
+      else if(sl){ what=sl.label; how="Xero work waits for 16:00."; }
+      else { what="Focus time"; how="Answer emails and clear today's must dos. Xero work waits for 16:00."; }
+    }
     box.append(
       el("div",{class:"clock",text:hm}),
       el("div",{},el("div",{class:"what",text:what}),el("div",{class:"how",text:how})),
@@ -540,6 +585,73 @@ button{cursor:pointer}
     );
   }
 
+  function countFor(k, today){
+    const t=S.tasks.filter(x=>x.status!=="done" && x.entity===k && (x.queue==="xero" || x.queue==="today" || (x.due && x.due<=today))).length;
+    return t + S.missing.filter(m=>m.entity===k).length + S.replies.filter(r=>r.entity===k).length;
+  }
+  function setEnt(k){
+    S.ent=k; try{ localStorage.setItem("desk.ent",k); }catch(e){}
+    if(k!=="all") entSel.value=k, emEnt.value=k;
+    render(); window.scrollTo({top:0});
+  }
+  function renderTabs(today){
+    document.body.classList.toggle("co",S.ent!=="all");
+    const nav=$("tabs"); nav.replaceChildren();
+    [["all","All companies"]].concat(COMPANIES().map(k=>[k,entName(k)])).forEach(([k,label])=>{
+      const n=k==="all"?null:countFor(k,today);
+      nav.append(el("button",{class:"tab",role:"tab","aria-selected":String(S.ent===k),type:"button",onclick:()=>setEnt(k)},
+        k==="all"?null:el("span",{class:"dot",dataset:{e:k}}), label, n?el("span",{class:"n",text:String(n)}):null));
+    });
+    const sel=nav.querySelector('[aria-selected="true"]');
+    if(sel && nav.scrollWidth>nav.clientWidth) nav.scrollLeft=Math.max(0,sel.offsetLeft-nav.offsetLeft-16);
+  }
+  function xeroSlot(k){ const r=BRAIN.rhythm.find(r=>r.entity===k && r.block==="xero"); return r?r.time+" to "+r.end:null; }
+  function renderCompany(today){
+    const box=$("company");
+    if(S.ent==="all"){ box.hidden=true; box.replaceChildren(); return; }
+    const k=S.ent, e=BRAIN.entities[k]||{}, b=blockOf(k);
+    box.hidden=false; box.dataset.e=k; box.replaceChildren();
+    const st=el("input",{type:"time",value:b?b.start:"","aria-label":"Block start"}), en=el("input",{type:"time",value:b?b.end:"","aria-label":"Block end"});
+    const save=el("button",{class:"ghost small",type:"button",text:"Save times",onclick:()=>{
+      if(!st.value||!en.value||en.value<=st.value){ toast("End must be after start"); return; }
+      const next=Object.assign({},S.blocks,{[k]:{start:st.value,end:en.value}});
+      S.blocks=next; render(); write("state/blocks",next,"set").then(ok=>ok&&toast("Block saved"));
+    }});
+    const open=S.tasks.filter(t=>t.entity===k && t.status!=="done");
+    const nd=BRAIN.deadlines.filter(d=>d.entity===k && d.date>=today && !(S.dlState[d.id]||{}).done).sort((a,b)=>a.date.localeCompare(b.date))[0];
+    const miss=S.missing.filter(m=>m.entity===k).length;
+    const xs=xeroSlot(k);
+    box.append(
+      el("div",{class:"panel-head"},el("div",{},el("div",{class:"eyebrow",text:e.role||"Company"}),el("h2",{text:e.name||k}))),
+      el("div",{class:"cgrid"},
+        el("div",{},el("span",{class:"eyebrow",text:"Blocked time, Mon to Fri"}),
+          el("div",{class:"big",text:b?b.start+" to "+b.end:"Not set"}),
+          xs?el("div",{class:"hint",text:"Plus Xero "+xs}):null,
+          el("div",{class:"btime"},st,el("span",{class:"hint",text:"to"}),en,save)),
+        el("div",{},el("span",{class:"eyebrow",text:"Open"}),
+          el("div",{class:"big",text:open.length+" tasks"}),
+          el("div",{class:"hint",text:miss?miss+" documents missing":"No documents missing"})),
+        el("div",{},el("span",{class:"eyebrow",text:"Next deadline"}),
+          nd?el("div",{class:"big",text:nice(nd.date)}):el("div",{class:"big",text:"None open"}),
+          nd?el("div",{class:"hint",text:nd.title}):null),
+        el("div",{},el("span",{class:"eyebrow",text:"Systems"}),
+          el("div",{text:e.systems||""}),
+          e.login?el("div",{class:"hint",text:"Login: "+e.login}):null)));
+  }
+  function renderDayPlan(today){
+    const box=$("dayplan"); box.replaceChildren();
+    if(S.ent!=="all" || !isBusiness(S.view)){ box.hidden=true; return; }
+    box.hidden=false;
+    const d=new Date(), hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+    const live=S.view===today;
+    slots().forEach(x=>{
+      const on=live && hm>=x.start && hm<x.end;
+      const n=x.e?rulesFor(S.view).filter(r=>r.entity===x.e && r.block!=="xero" && !S.checks[r.id]).length:0;
+      const kids=[el("span",{class:"t",text:x.start+" to "+x.end}),el("b",{text:x.label}),x.e?el("span",{class:"n",text:n?n+" to do":"Open items"}):el("span")];
+      box.append(x.e?el("button",{type:"button",class:"slot"+(on?" on":""),dataset:{e:x.e},title:"Open "+x.label,onclick:()=>setEnt(x.e)},...kids)
+                    :el("div",{class:"slot"+(on?" on":"")},...kids));
+    });
+  }
   function taskRow(t, today, opts){
     const late=t.due && t.due<today && t.status!=="done";
     const meta=el("div",{class:"meta"}, entPill(t.entity), blockPill(t.block),
@@ -566,7 +678,8 @@ button{cursor:pointer}
     if(hol) list.append(el("div",{class:"empty",text:hol+". Public holiday, no rhythm."}));
     else if(!isBusiness(v)) list.append(el("div",{class:"empty",text:"Weekend."}));
 
-    const rules=rulesFor(v);
+    renderDayPlan(today);
+    const rules=rulesFor(v).filter(r=>inEnt(r.entity));
     const hm=(()=>{const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");})();
     let done=0,total=0;
     rules.forEach(r=>{
@@ -586,7 +699,7 @@ button{cursor:pointer}
     });
 
     // deadlines on this day
-    BRAIN.deadlines.filter(d=>d.date===v).forEach(d=>{
+    BRAIN.deadlines.filter(d=>d.date===v && inEnt(d.entity)).forEach(d=>{
       const ok=!!(S.dlState[d.id]||{}).done; total++; if(ok) done++;
       list.append(el("div",{class:"row timed"+(ok?" done":"")},
         el("span",{class:"t",text:"Due"}),
@@ -597,13 +710,15 @@ button{cursor:pointer}
 
     // tasks: due on/before this day, or queued for today
     const tasks=S.tasks.filter(t=>{
-      if(t.queue==="xero") return false;
+      if(t.queue==="xero" || !inEnt(t.entity)) return false;
       if(isToday) return (t.status!=="done" && ((t.due && t.due<=v) || t.queue==="today")) || (t.status==="done" && t.doneAt && ymd(new Date(t.doneAt))===v && (t.queue==="today"||t.due));
       return t.due===v;
     }).sort((a,b)=>(b.must?1:0)-(a.must?1:0) || (a.due||"9").localeCompare(b.due||"9"));
     if(tasks.length){
       list.append(el("div",{class:"eyebrow",style:"padding-top:12px",text:"Your list"}));
       tasks.forEach(t=>{ total++; if(t.status==="done") done++; list.append(taskRow(t,today,{moveXero:true,hideDue:!isToday})); });
+    } else if(isBusiness(v) && S.ent!=="all") {
+      list.append(el("div",{class:"empty",style:"padding-top:12px",text:"No tasks due for "+entName(S.ent)+". Use the block for open items below."}));
     } else if(isBusiness(v)) {
       list.append(el("div",{class:"empty",style:"padding-top:12px",text:"No extra tasks due. Captured requests go to the Xero hour unless you send them to today."}));
     }
@@ -617,9 +732,9 @@ button{cursor:pointer}
       if(isBusiness(s)){
         n++;
         const items=[];
-        rulesFor(s).filter(r=>r.when.type!=="daily").forEach(r=>items.push({e:r.entity,t:r.title}));
-        BRAIN.deadlines.filter(d=>d.date===s).forEach(d=>items.push({e:d.entity,t:d.title,sars:d.kind==="SARS"}));
-        S.tasks.filter(t=>t.due===s && t.status!=="done").forEach(t=>items.push({e:t.entity,t:t.title}));
+        rulesFor(s).filter(r=>r.when.type!=="daily" && inEnt(r.entity)).forEach(r=>items.push({e:r.entity,t:r.title}));
+        BRAIN.deadlines.filter(d=>d.date===s && inEnt(d.entity)).forEach(d=>items.push({e:d.entity,t:d.title,sars:d.kind==="SARS"}));
+        S.tasks.filter(t=>t.due===s && t.status!=="done" && inEnt(t.entity)).forEach(t=>items.push({e:t.entity,t:t.title}));
         box.append(el("div",{class:"day"+(s===today?" today":"")},
           el("h3",{},el("span",{text:nice(s)}),s===today?el("span",{class:"eyebrow",text:"Today"}):null),
           items.length?el("ul",{},items.map(i=>el("li",{class:i.sars?"sars":""},el("span",{class:"dot",dataset:{e:i.e}}),el("span",{text:i.t})))):el("div",{class:"hint",text:"Daily rhythm only"})));
@@ -633,8 +748,10 @@ button{cursor:pointer}
 
   function renderDext(){
     const box=$("dext"); box.textContent="";
-    Object.keys(BRAIN.entities).forEach(k=>{
-      const e=BRAIN.entities[k]; if(!e.dext) return;
+    const keys=Object.keys(BRAIN.entities).filter(k=>BRAIN.entities[k].dext && inEnt(k));
+    $("dext-panel").hidden=!keys.length;
+    keys.forEach(k=>{
+      const e=BRAIN.entities[k];
       const line=(label,addr)=>el("div",{class:"dext-line"},
         el("span",{class:"hint",text:label}),
         el("code",{text:addr}),
@@ -647,7 +764,7 @@ button{cursor:pointer}
   }
   function renderDeadlines(today){
     const box=$("deadlines"); box.replaceChildren();
-    let list=BRAIN.deadlines.slice().sort((a,b)=>a.date.localeCompare(b.date));
+    let list=BRAIN.deadlines.filter(d=>inEnt(d.entity)).sort((a,b)=>a.date.localeCompare(b.date));
     if(!S.showAllDl) list=list.filter(d=>!(S.dlState[d.id]||{}).done && d.date>=addDays(today,-3)).slice(0,6);
     $("dl-toggle").textContent=S.showAllDl?"Show next six":"Show all";
     if(!list.length) box.append(el("div",{class:"empty",text:"Nothing open."}));
@@ -665,7 +782,7 @@ button{cursor:pointer}
 
   function renderXero(today){
     const box=$("xero-list"); box.replaceChildren();
-    const q=S.tasks.filter(t=>t.queue==="xero" && (t.status!=="done" || (t.doneAt && ymd(new Date(t.doneAt))===today)))
+    const q=S.tasks.filter(t=>t.queue==="xero" && inEnt(t.entity) && (t.status!=="done" || (t.doneAt && ymd(new Date(t.doneAt))===today)))
       .sort((a,b)=>(a.status==="done")-(b.status==="done") || (b.must?1:0)-(a.must?1:0) || (a.entity||"").localeCompare(b.entity||"") || (a.createdAt||"").localeCompare(b.createdAt||""));
     const open=q.filter(t=>t.status!=="done").length;
     $("xero-count").textContent=open+" open";
@@ -687,15 +804,16 @@ button{cursor:pointer}
   }
   function renderMissing(){
     const box=$("miss-list"); box.replaceChildren();
-    $("miss-count").textContent=S.missing.length+" missing";
+    const ALL=S.missing.filter(m=>inEnt(m.entity));
+    $("miss-count").textContent=ALL.length+" missing";
     const st=S.missState;
     $("miss-checked").textContent=st&&st.checkedAt?"Last checked "+new Date(st.checkedAt).toLocaleString("en-ZA",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+(st.sources?" in "+st.sources.join(", "):"")+".":"";
-    if(!S.missing.length){
+    if(!ALL.length){
       box.append(el("div",{class:"empty",text:st&&st.checkedAt?"Nothing missing. Every card transaction has a receipt.":"Not checked yet. Claude checks Mercury for card spend without a receipt and Xero for payments without an invoice, then lists them here by person."}));
       return;
     }
     const byEnt={};
-    S.missing.forEach(m=>{ (byEnt[m.entity||"general"]=byEnt[m.entity||"general"]||{}); const k=m.person||"Unassigned"; (byEnt[m.entity||"general"][k]=byEnt[m.entity||"general"][k]||[]).push(m); });
+    ALL.forEach(m=>{ (byEnt[m.entity||"general"]=byEnt[m.entity||"general"]||{}); const k=m.person||"Unassigned"; (byEnt[m.entity||"general"][k]=byEnt[m.entity||"general"][k]||[]).push(m); });
     Object.keys(byEnt).forEach(e=>{
       const g=el("div",{class:"entgroup"},el("div",{},entPill(e)));
       Object.entries(byEnt[e]).sort((a,b)=>b[1].length-a[1].length).forEach(([person,items])=>{
@@ -721,7 +839,7 @@ button{cursor:pointer}
 
   function renderHandover(){
     const box=$("ho-list"); box.replaceChildren();
-    const h=S.tasks.filter(t=>t.source==="handover").sort((a,b)=>(a.status==="done")-(b.status==="done") || (a.order||0)-(b.order||0));
+    const h=S.tasks.filter(t=>t.source==="handover" && inEnt(t.entity)).sort((a,b)=>(a.status==="done")-(b.status==="done") || (a.order||0)-(b.order||0));
     const done=h.filter(t=>t.status==="done").length;
     $("ho-count").textContent=done+" of "+h.length;
     $("ho-progress").style.width=(h.length?Math.round(done/h.length*100):0)+"%";
@@ -731,7 +849,7 @@ button{cursor:pointer}
 
   function renderLater(){
     const box=$("later-list"); box.replaceChildren();
-    const l=S.tasks.filter(t=>t.queue==="later" && t.status!=="done" && t.source!=="handover");
+    const l=S.tasks.filter(t=>t.queue==="later" && t.status!=="done" && t.source!=="handover" && inEnt(t.entity));
     $("later-count").textContent=l.length+" open";
     if(!l.length) box.append(el("div",{class:"empty",text:"Nothing parked."}));
     l.forEach(t=>box.append(taskRow(t,ymd(new Date()),{moveToday:true,moveXero:true})));
@@ -779,7 +897,7 @@ button{cursor:pointer}
   }
   function renderReplies(){
     const box=$("reply-list"); box.replaceChildren();
-    const ready=S.replies.filter(r=>r.status==="ready").sort((a,b)=>(b.flags&&b.flags.length?1:0)-(a.flags&&a.flags.length?1:0) || (a.received||"").localeCompare(b.received||""));
+    const ready=S.replies.filter(r=>r.status==="ready" && inEnt(r.entity)).sort((a,b)=>(b.flags&&b.flags.length?1:0)-(a.flags&&a.flags.length?1:0) || (a.received||"").localeCompare(b.received||""));
     $("reply-count").textContent=ready.length+" to review";
     if(!ready.length){ box.append(el("div",{class:"empty",text:"Nothing waiting. When the morning routine runs, Claude saves reply drafts in Gmail and lists them here for you to check and send."})); return; }
     ready.forEach(r=>{
@@ -871,6 +989,8 @@ button{cursor:pointer}
   }
   const mapDocs=snap=>snap.docs.map(d=>Object.assign({},d.data(),{id:d.id}));
 
+  try{ const k=localStorage.getItem("desk.ent"); if(k && (k==="all"||BRAIN.entities[k])) S.ent=k; }catch(e){}
+  if(S.ent!=="all"){ entSel.value=S.ent; emEnt.value=S.ent; }
   render();
   setInterval(()=>{ const t=ymd(new Date()); if(S.view!==t && S._lastToday && S._lastToday!==t){ setView(t); } S._lastToday=t; render(); },60000);
   S._lastToday=ymd(new Date());
@@ -888,6 +1008,7 @@ button{cursor:pointer}
     db.collection("missing").onSnapshot(s=>{ S.missing=mapDocs(s); render(); },fail);
     db.doc("state/missing").onSnapshot(s=>{ S.missState=s.exists?s.data():null; render(); },fail);
     db.collection("replies").where("status","==","ready").onSnapshot(s=>{ S.replies=mapDocs(s); render(); },fail);
+    db.doc("state/blocks").onSnapshot(s=>{ S.blocks=s.exists?Object.assign({},s.data()):{}; render(); },fail);
     db.doc("state/deadlines").onSnapshot(s=>{ S.dlState=s.exists?Object.assign({},s.data()):{}; render(); },fail);
     db.collection("briefs").orderBy("date","desc").limit(1).onSnapshot(s=>{ S.brief=s.empty?null:s.docs[0].data(); render(); },fail);
     subscribeChecks();

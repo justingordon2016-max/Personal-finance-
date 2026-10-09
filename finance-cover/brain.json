@@ -675,5 +675,50 @@
     "body": "Hi [Name],\n\nThese card transactions still have no receipt in Mercury:\n\n[list]\n\nPlease upload a photo of each one in the Mercury app by Friday so I can close the week.\n\n[Signoff]"
    }
   ]
- }
+ },
+ "companyBlocks": {
+  "motion": {
+   "start": "09:30",
+   "end": "11:00"
+  },
+  "ix": {
+   "start": "11:00",
+   "end": "12:30"
+  },
+  "country": {
+   "start": "13:30",
+   "end": "14:30"
+  },
+  "ixusa": {
+   "start": "14:30",
+   "end": "16:00"
+  }
+ },
+ "dayPlan": [
+  {
+   "start": "08:00",
+   "end": "09:00",
+   "label": "Inbox and chasing, all companies"
+  },
+  {
+   "start": "09:00",
+   "end": "09:30",
+   "label": "Replies. Mondays: plan the week"
+  },
+  {
+   "start": "12:30",
+   "end": "13:30",
+   "label": "Lunch"
+  },
+  {
+   "start": "16:00",
+   "end": "17:00",
+   "label": "Xero hour, 15 minutes per company"
+  },
+  {
+   "start": "17:00",
+   "end": "17:10",
+   "label": "Sign off"
+  }
+ ]
 }

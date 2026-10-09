@@ -28,6 +28,7 @@
   --motion:#E88A5E; --ix:#6BC393; --ixusa:#6CC0DB; --country:#AE93D8; --general:#95A4A7;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--ground);color:var(--ink);font:15px/1.5 var(--sans);padding-inline:16px;padding-block:20px 48px}
 .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 h1,h2,h3{font-family:var(--cond);font-weight:600;margin:0;text-wrap:balance;letter-spacing:.005em}
@@ -156,6 +157,30 @@ button{cursor:pointer}
 .day li.sars{font-weight:600;color:var(--bad)}
 .day .holiday{font-size:12px;color:var(--warn)}
 
+/* Company tabs */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.tab{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:500;white-space:nowrap}
+.tab:hover{background:var(--sunk)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.tab .n{font:500 11px var(--mono);opacity:.7}
+.company{border-left:4px solid var(--c,var(--general))}
+.company[data-e="motion"]{--c:var(--motion)} .company[data-e="ix"]{--c:var(--ix)} .company[data-e="ixusa"]{--c:var(--ixusa)} .company[data-e="country"]{--c:var(--country)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.cgrid > div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.cgrid .big{font:500 18px/1.3 var(--mono)}
+.btime{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.btime input{border:1px solid var(--line);background:var(--ground);border-radius:6px;padding:4px 6px;font:13px var(--mono)}
+body.co #email-panel{order:10}
+/* Day plan */
+.dayplan{display:flex;flex-direction:column;gap:4px}
+.slot{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;padding:6px 10px;border-radius:6px;background:var(--ground);border:1px solid transparent;border-left:4px solid var(--c,var(--line));text-align:left;width:100%}
+.slot[data-e="motion"]{--c:var(--motion)} .slot[data-e="ix"]{--c:var(--ix)} .slot[data-e="ixusa"]{--c:var(--ixusa)} .slot[data-e="country"]{--c:var(--country)}
+button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
+.slot.on{background:var(--accent-soft);border-color:var(--accent);border-left-color:var(--c,var(--accent))}
+.slot .t{font:500 12px var(--mono);color:var(--muted)}
+.slot b{font-weight:600}
+.slot .n{font:500 11px var(--mono);color:var(--muted)}
+
 /* Brief */
 .brief{font-size:14px;white-space:pre-wrap}
 .brief-meta{font-size:12px;color:var(--muted)}
@@ -194,9 +219,13 @@ button{cursor:pointer}
     <div class="stats" id="stats"></div>
   </header>
 
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Company"></nav>
+
   <div class="banner" id="banner" hidden></div>
 
   <section class="now" id="now" aria-live="polite"></section>
+
+  <section class="panel company" id="company" hidden></section>
 
   <section class="panel" id="email-panel">
     <div class="panel-head">
@@ -248,6 +277,7 @@ button{cursor:pointer}
             <button class="iconbtn" id="next-day" aria-label="Next day">›</button>
           </div>
         </div>
+        <div class="dayplan" id="dayplan"></div>
         <div class="progress" aria-hidden="true"><i id="today-progress" style="width:0"></i></div>
         <div class="list" id="today-list"></div>
       </section>
@@ -273,7 +303,7 @@ button{cursor:pointer}
         <div class="list" id="deadlines"></div>
       </section>
 
-      <section class="panel">
+      <section class="panel" id="dext-panel">
         <div class="panel-head">
           <div>
             <div class="eyebrow">Email receipts and invoices straight into Dext</div>
@@ -387,7 +417,7 @@ button{cursor:pointer}
     db: null, live: false, readOnly: false,
     tasks: [], missing: [], missState: null, replies: [], checks: {}, dlState: {}, brief: null,
     view: ymd(new Date()), showAllDl: false,
-    unsubChecks: null, dest: "xero"
+    unsubChecks: null, dest: "xero", ent: "all", blocks: {}
   };
 
   // ---------- dates ----------
@@ -418,7 +448,16 @@ button{cursor:pointer}
     if(t.type==="monthly_business_day") return nthBusiness(y,m,t.n)===s;
     return false;
   }
-  function rulesFor(s){ return BRAIN.rhythm.filter(r=>ruleOn(r,s)).sort((a,b)=>a.time.localeCompare(b.time)); }
+  function blockOf(e){ const o=(S.blocks||{})[e]; return o&&o.start&&o.end ? o : (BRAIN.companyBlocks||{})[e]||null; }
+  function eff(r){ const b=blockOf(r.entity); return b && r.block!=="xero" ? Object.assign({},r,{time:b.start,end:b.end}) : r; }
+  function rulesFor(s){ return BRAIN.rhythm.filter(r=>ruleOn(r,s)).map(eff).sort((a,b)=>a.time.localeCompare(b.time)||(a.entity||"").localeCompare(b.entity||"")); }
+  const inEnt = e => S.ent==="all" || (e||"general")===S.ent;
+  const COMPANIES = () => Object.keys(BRAIN.entities).filter(k=>k!=="general");
+  function slots(){
+    const out=(BRAIN.dayPlan||[]).map(x=>Object.assign({},x));
+    COMPANIES().forEach(k=>{ const b=blockOf(k); if(b) out.push({start:b.start,end:b.end,label:entName(k),e:k}); });
+    return out.sort((a,b)=>a.start.localeCompare(b.start));
+  }
 
   // ---------- helpers ----------
   function el(tag, attrs, ...kids){
@@ -463,6 +502,7 @@ button{cursor:pointer}
       else if(i>=0) arr[i]=Object.assign({},mode==="update"?arr[i]:{},data,{id});
       else arr.push(Object.assign({},data,{id}));
     } else if(col==="checks"){ S.checks=Object.assign({},data); }
+    else if(path==="state/blocks"){ S.blocks=Object.assign({},data); }
     else if(col==="state"){ S.dlState=Object.assign({},data); }
     render(); return true;
   }
@@ -489,12 +529,12 @@ button{cursor:pointer}
   // ---------- render ----------
   function render(){
     const today=ymd(new Date());
-    renderHeader(today); renderNow(today); renderToday(today); renderWeek(today);
+    renderTabs(today); renderHeader(today); renderNow(today); renderCompany(today); renderToday(today); renderWeek(today);
     renderDeadlines(today); renderDext(); renderXero(today); renderMissing(); renderReplies(); renderBrief(); renderHandover(); renderLater();
   }
 
   function nextDeadline(today){
-    return BRAIN.deadlines.filter(d=>d.kind==="SARS" && d.date>=today && !(S.dlState[d.id]||{}).done).sort((a,b)=>a.date.localeCompare(b.date))[0];
+    return BRAIN.deadlines.filter(d=>d.kind==="SARS" && inEnt(d.entity) && d.date>=today && !(S.dlState[d.id]||{}).done).sort((a,b)=>a.date.localeCompare(b.date))[0];
   }
 
   function renderHeader(today){
@@ -505,10 +545,10 @@ button{cursor:pointer}
     else sub="Cover period ended "+nice(c.end)+".";
     $("sub").textContent=sub;
 
-    const open=S.tasks.filter(t=>t.status!=="done");
+    const open=S.tasks.filter(t=>t.status!=="done" && inEnt(t.entity));
     const overdue=open.filter(t=>t.due && t.due<today).length;
     const xero=open.filter(t=>t.queue==="xero").length;
-    const miss=S.missing.length;
+    const miss=S.missing.filter(m=>inEnt(m.entity)).length;
     const nd=nextDeadline(today);
     const stats=$("stats"); stats.replaceChildren();
     const stat=(label,val,cls)=>stats.append(el("div",{class:"stat "+(cls||"")},el("span",{class:"eyebrow",text:label}),el("b",{text:String(val)})));
@@ -532,7 +572,12 @@ button{cursor:pointer}
     else if(cur){ what=cur.title; how=cur.how; }
     else if(hm<"08:00"){ what="Before the day starts"; how="Open Claude's morning brief below, then start the inbox scrub at 08:00."; }
     else if(hm>="17:10"){ what="Day closed"; how="Anything still open rolls to tomorrow."; }
-    else { what="Focus time"; how="Answer emails and clear today's must dos. Xero work waits for 16:00."; }
+    else {
+      const sl=slots().find(x=>hm>=x.start && hm<x.end);
+      if(sl && sl.e){ what=sl.label+" block until "+sl.end; how="This block's rhythm is done. Work through "+sl.label+"'s open items, or capture anything for other companies."; }
+      else if(sl){ what=sl.label; how="Xero work waits for 16:00."; }
+      else { what="Focus time"; how="Answer emails and clear today's must dos. Xero work waits for 16:00."; }
+    }
     box.append(
       el("div",{class:"clock",text:hm}),
       el("div",{},el("div",{class:"what",text:what}),el("div",{class:"how",text:how})),
@@ -540,6 +585,73 @@ button{cursor:pointer}
     );
   }
 
+  function countFor(k, today){
+    const t=S.tasks.filter(x=>x.status!=="done" && x.entity===k && (x.queue==="xero" || x.queue==="today" || (x.due && x.due<=today))).length;
+    return t + S.missing.filter(m=>m.entity===k).length + S.replies.filter(r=>r.entity===k).length;
+  }
+  function setEnt(k){
+    S.ent=k; try{ localStorage.setItem("desk.ent",k); }catch(e){}
+    if(k!=="all") entSel.value=k, emEnt.value=k;
+    render(); window.scrollTo({top:0});
+  }
+  function renderTabs(today){
+    document.body.classList.toggle("co",S.ent!=="all");
+    const nav=$("tabs"); nav.replaceChildren();
+    [["all","All companies"]].concat(COMPANIES().map(k=>[k,entName(k)])).forEach(([k,label])=>{
+      const n=k==="all"?null:countFor(k,today);
+      nav.append(el("button",{class:"tab",role:"tab","aria-selected":String(S.ent===k),type:"button",onclick:()=>setEnt(k)},
+        k==="all"?null:el("span",{class:"dot",dataset:{e:k}}), label, n?el("span",{class:"n",text:String(n)}):null));
+    });
+    const sel=nav.querySelector('[aria-selected="true"]');
+    if(sel && nav.scrollWidth>nav.clientWidth) nav.scrollLeft=Math.max(0,sel.offsetLeft-nav.offsetLeft-16);
+  }
+  function xeroSlot(k){ const r=BRAIN.rhythm.find(r=>r.entity===k && r.block==="xero"); return r?r.time+" to "+r.end:null; }
+  function renderCompany(today){
+    const box=$("company");
+    if(S.ent==="all"){ box.hidden=true; box.replaceChildren(); return; }
+    const k=S.ent, e=BRAIN.entities[k]||{}, b=blockOf(k);
+    box.hidden=false; box.dataset.e=k; box.replaceChildren();
+    const st=el("input",{type:"time",value:b?b.start:"","aria-label":"Block start"}), en=el("input",{type:"time",value:b?b.end:"","aria-label":"Block end"});
+    const save=el("button",{class:"ghost small",type:"button",text:"Save times",onclick:()=>{
+      if(!st.value||!en.value||en.value<=st.value){ toast("End must be after start"); return; }
+      const next=Object.assign({},S.blocks,{[k]:{start:st.value,end:en.value}});
+      S.blocks=next; render(); write("state/blocks",next,"set").then(ok=>ok&&toast("Block saved"));
+    }});
+    const open=S.tasks.filter(t=>t.entity===k && t.status!=="done");
+    const nd=BRAIN.deadlines.filter(d=>d.entity===k && d.date>=today && !(S.dlState[d.id]||{}).done).sort((a,b)=>a.date.localeCompare(b.date))[0];
+    const miss=S.missing.filter(m=>m.entity===k).length;
+    const xs=xeroSlot(k);
+    box.append(
+      el("div",{class:"panel-head"},el("div",{},el("div",{class:"eyebrow",text:e.role||"Company"}),el("h2",{text:e.name||k}))),
+      el("div",{class:"cgrid"},
+        el("div",{},el("span",{class:"eyebrow",text:"Blocked time, Mon to Fri"}),
+          el("div",{class:"big",text:b?b.start+" to "+b.end:"Not set"}),
+          xs?el("div",{class:"hint",text:"Plus Xero "+xs}):null,
+          el("div",{class:"btime"},st,el("span",{class:"hint",text:"to"}),en,save)),
+        el("div",{},el("span",{class:"eyebrow",text:"Open"}),
+          el("div",{class:"big",text:open.length+" tasks"}),
+          el("div",{class:"hint",text:miss?miss+" documents missing":"No documents missing"})),
+        el("div",{},el("span",{class:"eyebrow",text:"Next deadline"}),
+          nd?el("div",{class:"big",text:nice(nd.date)}):el("div",{class:"big",text:"None open"}),
+          nd?el("div",{class:"hint",text:nd.title}):null),
+        el("div",{},el("span",{class:"eyebrow",text:"Systems"}),
+          el("div",{text:e.systems||""}),
+          e.login?el("div",{class:"hint",text:"Login: "+e.login}):null)));
+  }
+  function renderDayPlan(today){
+    const box=$("dayplan"); box.replaceChildren();
+    if(S.ent!=="all" || !isBusiness(S.view)){ box.hidden=true; return; }
+    box.hidden=false;
+    const d=new Date(), hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+    const live=S.view===today;
+    slots().forEach(x=>{
+      const on=live && hm>=x.start && hm<x.end;
+      const n=x.e?rulesFor(S.view).filter(r=>r.entity===x.e && r.block!=="xero" && !S.checks[r.id]).length:0;
+      const kids=[el("span",{class:"t",text:x.start+" to "+x.end}),el("b",{text:x.label}),x.e?el("span",{class:"n",text:n?n+" to do":"Open items"}):el("span")];
+      box.append(x.e?el("button",{type:"button",class:"slot"+(on?" on":""),dataset:{e:x.e},title:"Open "+x.label,onclick:()=>setEnt(x.e)},...kids)
+                    :el("div",{class:"slot"+(on?" on":"")},...kids));
+    });
+  }
   function taskRow(t, today, opts){
     const late=t.due && t.due<today && t.status!=="done";
     const meta=el("div",{class:"meta"}, entPill(t.entity), blockPill(t.block),
@@ -566,7 +678,8 @@ button{cursor:pointer}
     if(hol) list.append(el("div",{class:"empty",text:hol+". Public holiday, no rhythm."}));
     else if(!isBusiness(v)) list.append(el("div",{class:"empty",text:"Weekend."}));
 
-    const rules=rulesFor(v);
+    renderDayPlan(today);
+    const rules=rulesFor(v).filter(r=>inEnt(r.entity));
     const hm=(()=>{const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");})();
     let done=0,total=0;
     rules.forEach(r=>{
@@ -586,7 +699,7 @@ button{cursor:pointer}
     });
 
     // deadlines on this day
-    BRAIN.deadlines.filter(d=>d.date===v).forEach(d=>{
+    BRAIN.deadlines.filter(d=>d.date===v && inEnt(d.entity)).forEach(d=>{
       const ok=!!(S.dlState[d.id]||{}).done; total++; if(ok) done++;
       list.append(el("div",{class:"row timed"+(ok?" done":"")},
         el("span",{class:"t",text:"Due"}),
@@ -597,13 +710,15 @@ button{cursor:pointer}
 
     // tasks: due on/before this day, or queued for today
     const tasks=S.tasks.filter(t=>{
-      if(t.queue==="xero") return false;
+      if(t.queue==="xero" || !inEnt(t.entity)) return false;
       if(isToday) return (t.status!=="done" && ((t.due && t.due<=v) || t.queue==="today")) || (t.status==="done" && t.doneAt && ymd(new Date(t.doneAt))===v && (t.queue==="today"||t.due));
       return t.due===v;
     }).sort((a,b)=>(b.must?1:0)-(a.must?1:0) || (a.due||"9").localeCompare(b.due||"9"));
     if(tasks.length){
       list.append(el("div",{class:"eyebrow",style:"padding-top:12px",text:"Your list"}));
       tasks.forEach(t=>{ total++; if(t.status==="done") done++; list.append(taskRow(t,today,{moveXero:true,hideDue:!isToday})); });
+    } else if(isBusiness(v) && S.ent!=="all") {
+      list.append(el("div",{class:"empty",style:"padding-top:12px",text:"No tasks due for "+entName(S.ent)+". Use the block for open items below."}));
     } else if(isBusiness(v)) {
       list.append(el("div",{class:"empty",style:"padding-top:12px",text:"No extra tasks due. Captured requests go to the Xero hour unless you send them to today."}));
     }
@@ -617,9 +732,9 @@ button{cursor:pointer}
       if(isBusiness(s)){
         n++;
         const items=[];
-        rulesFor(s).filter(r=>r.when.type!=="daily").forEach(r=>items.push({e:r.entity,t:r.title}));
-        BRAIN.deadlines.filter(d=>d.date===s).forEach(d=>items.push({e:d.entity,t:d.title,sars:d.kind==="SARS"}));
-        S.tasks.filter(t=>t.due===s && t.status!=="done").forEach(t=>items.push({e:t.entity,t:t.title}));
+        rulesFor(s).filter(r=>r.when.type!=="daily" && inEnt(r.entity)).forEach(r=>items.push({e:r.entity,t:r.title}));
+        BRAIN.deadlines.filter(d=>d.date===s && inEnt(d.entity)).forEach(d=>items.push({e:d.entity,t:d.title,sars:d.kind==="SARS"}));
+        S.tasks.filter(t=>t.due===s && t.status!=="done" && inEnt(t.entity)).forEach(t=>items.push({e:t.entity,t:t.title}));
         box.append(el("div",{class:"day"+(s===today?" today":"")},
           el("h3",{},el("span",{text:nice(s)}),s===today?el("span",{class:"eyebrow",text:"Today"}):null),
           items.length?el("ul",{},items.map(i=>el("li",{class:i.sars?"sars":""},el("span",{class:"dot",dataset:{e:i.e}}),el("span",{text:i.t})))):el("div",{class:"hint",text:"Daily rhythm only"})));
@@ -633,8 +748,10 @@ button{cursor:pointer}
 
   function renderDext(){
     const box=$("dext"); box.textContent="";
-    Object.keys(BRAIN.entities).forEach(k=>{
-      const e=BRAIN.entities[k]; if(!e.dext) return;
+    const keys=Object.keys(BRAIN.entities).filter(k=>BRAIN.entities[k].dext && inEnt(k));
+    $("dext-panel").hidden=!keys.length;
+    keys.forEach(k=>{
+      const e=BRAIN.entities[k];
       const line=(label,addr)=>el("div",{class:"dext-line"},
         el("span",{class:"hint",text:label}),
         el("code",{text:addr}),
@@ -647,7 +764,7 @@ button{cursor:pointer}
   }
   function renderDeadlines(today){
     const box=$("deadlines"); box.replaceChildren();
-    let list=BRAIN.deadlines.slice().sort((a,b)=>a.date.localeCompare(b.date));
+    let list=BRAIN.deadlines.filter(d=>inEnt(d.entity)).sort((a,b)=>a.date.localeCompare(b.date));
     if(!S.showAllDl) list=list.filter(d=>!(S.dlState[d.id]||{}).done && d.date>=addDays(today,-3)).slice(0,6);
     $("dl-toggle").textContent=S.showAllDl?"Show next six":"Show all";
     if(!list.length) box.append(el("div",{class:"empty",text:"Nothing open."}));
@@ -665,7 +782,7 @@ button{cursor:pointer}
 
   function renderXero(today){
     const box=$("xero-list"); box.replaceChildren();
-    const q=S.tasks.filter(t=>t.queue==="xero" && (t.status!=="done" || (t.doneAt && ymd(new Date(t.doneAt))===today)))
+    const q=S.tasks.filter(t=>t.queue==="xero" && inEnt(t.entity) && (t.status!=="done" || (t.doneAt && ymd(new Date(t.doneAt))===today)))
       .sort((a,b)=>(a.status==="done")-(b.status==="done") || (b.must?1:0)-(a.must?1:0) || (a.entity||"").localeCompare(b.entity||"") || (a.createdAt||"").localeCompare(b.createdAt||""));
     const open=q.filter(t=>t.status!=="done").length;
     $("xero-count").textContent=open+" open";
@@ -687,15 +804,16 @@ button{cursor:pointer}
   }
   function renderMissing(){
     const box=$("miss-list"); box.replaceChildren();
-    $("miss-count").textContent=S.missing.length+" missing";
+    const ALL=S.missing.filter(m=>inEnt(m.entity));
+    $("miss-count").textContent=ALL.length+" missing";
     const st=S.missState;
     $("miss-checked").textContent=st&&st.checkedAt?"Last checked "+new Date(st.checkedAt).toLocaleString("en-ZA",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+(st.sources?" in "+st.sources.join(", "):"")+".":"";
-    if(!S.missing.length){
+    if(!ALL.length){
       box.append(el("div",{class:"empty",text:st&&st.checkedAt?"Nothing missing. Every card transaction has a receipt.":"Not checked yet. Claude checks Mercury for card spend without a receipt and Xero for payments without an invoice, then lists them here by person."}));
       return;
     }
     const byEnt={};
-    S.missing.forEach(m=>{ (byEnt[m.entity||"general"]=byEnt[m.entity||"general"]||{}); const k=m.person||"Unassigned"; (byEnt[m.entity||"general"][k]=byEnt[m.entity||"general"][k]||[]).push(m); });
+    ALL.forEach(m=>{ (byEnt[m.entity||"general"]=byEnt[m.entity||"general"]||{}); const k=m.person||"Unassigned"; (byEnt[m.entity||"general"][k]=byEnt[m.entity||"general"][k]||[]).push(m); });
     Object.keys(byEnt).forEach(e=>{
       const g=el("div",{class:"entgroup"},el("div",{},entPill(e)));
       Object.entries(byEnt[e]).sort((a,b)=>b[1].length-a[1].length).forEach(([person,items])=>{
@@ -721,7 +839,7 @@ button{cursor:pointer}
 
   function renderHandover(){
     const box=$("ho-list"); box.replaceChildren();
-    const h=S.tasks.filter(t=>t.source==="handover").sort((a,b)=>(a.status==="done")-(b.status==="done") || (a.order||0)-(b.order||0));
+    const h=S.tasks.filter(t=>t.source==="handover" && inEnt(t.entity)).sort((a,b)=>(a.status==="done")-(b.status==="done") || (a.order||0)-(b.order||0));
     const done=h.filter(t=>t.status==="done").length;
     $("ho-count").textContent=done+" of "+h.length;
     $("ho-progress").style.width=(h.length?Math.round(done/h.length*100):0)+"%";
@@ -731,7 +849,7 @@ button{cursor:pointer}
 
   function renderLater(){
     const box=$("later-list"); box.replaceChildren();
-    const l=S.tasks.filter(t=>t.queue==="later" && t.status!=="done" && t.source!=="handover");
+    const l=S.tasks.filter(t=>t.queue==="later" && t.status!=="done" && t.source!=="handover" && inEnt(t.entity));
     $("later-count").textContent=l.length+" open";
     if(!l.length) box.append(el("div",{class:"empty",text:"Nothing parked."}));
     l.forEach(t=>box.append(taskRow(t,ymd(new Date()),{moveToday:true,moveXero:true})));
@@ -779,7 +897,7 @@ button{cursor:pointer}
   }
   function renderReplies(){
     const box=$("reply-list"); box.replaceChildren();
-    const ready=S.replies.filter(r=>r.status==="ready").sort((a,b)=>(b.flags&&b.flags.length?1:0)-(a.flags&&a.flags.length?1:0) || (a.received||"").localeCompare(b.received||""));
+    const ready=S.replies.filter(r=>r.status==="ready" && inEnt(r.entity)).sort((a,b)=>(b.flags&&b.flags.length?1:0)-(a.flags&&a.flags.length?1:0) || (a.received||"").localeCompare(b.received||""));
     $("reply-count").textContent=ready.length+" to review";
     if(!ready.length){ box.append(el("div",{class:"empty",text:"Nothing waiting. When the morning routine runs, Claude saves reply drafts in Gmail and lists them here for you to check and send."})); return; }
     ready.forEach(r=>{
@@ -871,6 +989,8 @@ button{cursor:pointer}
   }
   const mapDocs=snap=>snap.docs.map(d=>Object.assign({},d.data(),{id:d.id}));
 
+  try{ const k=localStorage.getItem("desk.ent"); if(k && (k==="all"||BRAIN.entities[k])) S.ent=k; }catch(e){}
+  if(S.ent!=="all"){ entSel.value=S.ent; emEnt.value=S.ent; }
   render();
   setInterval(()=>{ const t=ymd(new Date()); if(S.view!==t && S._lastToday && S._lastToday!==t){ setView(t); } S._lastToday=t; render(); },60000);
   S._lastToday=ymd(new Date());
@@ -888,6 +1008,7 @@ button{cursor:pointer}
     db.collection("missing").onSnapshot(s=>{ S.missing=mapDocs(s); render(); },fail);
     db.doc("state/missing").onSnapshot(s=>{ S.missState=s.exists?s.data():null; render(); },fail);
     db.collection("replies").where("status","==","ready").onSnapshot(s=>{ S.replies=mapDocs(s); render(); },fail);
+    db.doc("state/blocks").onSnapshot(s=>{ S.blocks=s.exists?Object.assign({},s.data()):{}; render(); },fail);
     db.doc("state/deadlines").onSnapshot(s=>{ S.dlState=s.exists?Object.assign({},s.data()):{}; render(); },fail);
     db.collection("briefs").orderBy("date","desc").limit(1).onSnapshot(s=>{ S.brief=s.empty?null:s.docs[0].data(); render(); },fail);
     subscribeChecks();
