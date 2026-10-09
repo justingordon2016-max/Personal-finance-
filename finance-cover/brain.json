@@ -13,7 +13,14 @@
     "multiple": "melissa.beattie.motion.ads@multiple.dext.cc",
     "single": "melissa.beattie.motion.ads@dext.cc"
    },
-   "login": "ronell@motionads.co.za (password in your password manager)"
+   "login": "ronell@motionads.co.za (password in your password manager)",
+   "people": [
+    "Mike or Tristan: keep the PO list",
+    "Mark: confirms PO work is complete before payment",
+    "Erin, John, Elan: chase for slips",
+    "Fabi, Tristan, Ilan, John, Beverly: email Melissa directly",
+    "Kelso: IT, mailbox access"
+   ]
   },
   "ix": {
    "name": "iX ZA",
@@ -33,7 +40,11 @@
     "multiple": "melissa.lemmer.ixperience.usa@multiple.dext.cc",
     "single": "melissa.lemmer.ixperience.usa@dext.cc"
    },
-   "login": "melissa@ixperience.co (password in your password manager)"
+   "login": "melissa@ixperience.co (password in your password manager)",
+   "people": [
+    "Danny: loads Mercury payments, chases receipts, knows what spend was for",
+    "Erin and the US trip team: Mercury receipts"
+   ]
   },
   "country": {
    "name": "Country Hotels",
@@ -104,7 +115,7 @@
     "type": "daily"
    },
    "must": true,
-   "how": "Code all new bank lines. Capture supplier invoices and match to payments. Process any sale against its client contract on the day it arrives. Look for unusual, duplicate or unexpected lines. Reconcile to the latest statement balance."
+   "how": "The Motion Ads bank feed doesn't link, so download the statement from the bank and import it into Xero (daily, or every second day at worst). Code new lines, match supplier invoices to payments, process any sale against its client contract, look for unusual or duplicate lines, and reconcile to the statement balance. Card spend with no slip: chase Erin, John or Elan."
   },
   {
    "id": "xero-ix",
@@ -193,7 +204,7 @@
   },
   {
    "id": "ixusa-weekly",
-   "title": "iX USA weekly: HubSpot invoices into Xero and match receipts",
+   "title": "iX USA HubSpot batch: revenue invoices, payments and payouts",
    "entity": "ixusa",
    "block": "revenue",
    "time": "09:00",
@@ -201,12 +212,12 @@
    "when": {
     "type": "weekly",
     "dow": [
-     2
+     5
     ]
    },
    "must": true,
-   "confirm": true,
-   "how": "Bring in every HubSpot invoice since the last run with the channel tracking (Cape Town, Online, Lisbon). Count and total must agree to HubSpot. Match customer receipts, handle deposits, part payments and refunds. List anything paid in HubSpot with no bank receipt, or the reverse."
+   "confirm": false,
+   "how": "Pick one day and stick to it; catching up later is painful. 1) Revenue: in HubSpot Invoices find the last number already in Xero, export the newer ones to Excel. Skip any still 'open' (the payment never went through). Raise each in Xero: new contact for the student, invoice date, HubSpot invoice number as reference, the programme line (e.g. Premed Cape Town deposit), channel tracking. 2) Payments: HubSpot Payments, status 'succeeded'. Export, keep date, amount and name, save as CSV, import as a statement into the 'HubSpot payments' bank account in Xero, and match each to its invoice. 3) Payouts: Payments, Payouts and reports. For each payout to Mercury, code the payout to the HubSpot control account and the HubSpot fee to the city expense account (Cape Town, Lisbon, Online, New York). The Mercury receipt also goes to the HubSpot control account, so the control account nets to zero. A 'duplicate' warning on import means it is already in."
   },
   {
    "id": "ixusa-receipts",
@@ -222,7 +233,7 @@
     ]
    },
    "must": true,
-   "how": "Claude lists card spend without a receipt by cardholder. Send each person their list and ask them to upload in the Mercury app. Attach the receipts in Xero once they land."
+   "how": "Claude lists card spend without a receipt by cardholder. Danny owns the chase: send her the list and she follows up with the team (Erin and the US trip team). Attach the receipts in Xero once they land. Danny loads Mercury payments but doesn't process in Xero; she knows what most spend was for (subscriptions, team lunches), so ask her before coding unknowns."
   },
   {
    "id": "ixusa-bd",
@@ -255,7 +266,7 @@
     ]
    },
    "must": true,
-   "how": "Compile what is due this week, check each bill is approved and not already paid, and bank details match the supplier record. Get approval and load the batch so it goes out on Friday."
+   "how": "Mike or Tristan keep the PO list. Most supplier invoices come straight to accounts@ (one or two via Mike): forward each to Dext, then enter the invoice date and number on the PO tracker. Terms are mostly 30 days from invoice date; a few want a 50% deposit upfront. From the aged payables, send Mark the list of POs now due and ask him to confirm the work is complete before paying, because the tracker isn't always right. Then check each bill isn't already paid and bank details match the supplier record, and load the batch so it goes out on Friday."
   },
   {
    "id": "ix-weekly",
@@ -336,7 +347,7 @@
     "shift": "next_business"
    },
    "must": true,
-   "how": "Statements for anything still outstanding from last month, plus every invoice due this month so clients have them on hand."
+   "how": "On the 1st (or the following Monday if it falls on a weekend). Pull aged receivables. Customers who are up to date get only the new month's invoice. Anyone behind gets their statement plus the new invoice, with a note on what is past due. Start with the problem accounts: Dog Stores (backdated items), Go Solar (overdue since about July) and Kauai (unpaid, and needs a PO before you can invoice them)."
   },
   {
    "id": "ix-emp201",
@@ -380,7 +391,7 @@
     "shift": "prev_business"
    },
    "must": true,
-   "how": "Remind every customer before their due date on the 25th or 30th. Claude can draft these."
+   "how": "Between the 20th and 22nd, send each customer a short reminder: invoice sent on the 1st, due on the 25th or 30th. Claude can draft these."
   },
   {
    "id": "motion-payroll",
@@ -423,7 +434,7 @@
     "type": "monthly_last_business"
    },
    "must": true,
-   "how": "Post the PaySoft journal. Request invoices that don't arrive by themselves, such as rentals. Close VAT off every month: agree the VAT control account to the Xero VAT report. Royalty recon with Tristan."
+   "how": "Post the PaySoft journal. Request invoices that don't arrive by themselves, such as rentals. Close VAT off every month: agree the VAT control account to the Xero VAT report. Royalty recon with Tristan. Update the campaign payments sheet (which campaigns have paid) and send it on so monday.com can be updated for John and Elan."
   },
   {
    "id": "ixusa-close",
@@ -452,6 +463,23 @@
    },
    "must": true,
    "how": "Run Mr H month end on iX ZA. Clear exceptions before management accounts."
+  },
+  {
+   "id": "ix-mon-payments",
+   "entity": "ixusa",
+   "time": "09:00",
+   "end": "10:00",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     1
+    ]
+   },
+   "block": "payments",
+   "title": "iX: process last week's payments so aged payables is right",
+   "must": true,
+   "confirm": true,
+   "how": "Post every payment made last week (Danny loads the Mercury payments) against its bill in Xero, so aged payables is right for the week. Confirm with Melissa whether this covers iX ZA as well as iX USA."
   }
  ],
  "deadlines": [

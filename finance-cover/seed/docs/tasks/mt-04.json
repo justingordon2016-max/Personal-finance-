@@ -1,0 +1,13 @@
+{
+ "title": "Get the campaign payments sheet and campaign breakdown from Melissa",
+ "entity": "motion",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "handover",
+ "order": 32,
+ "notes": "She keeps a sheet of which campaigns have paid, updated at month end, so monday.com can be updated for John and Elan. It's manual; agree a simpler way. She's sending a breakdown, including Willis.",
+ "createdAt": "2026-10-09T08:00:00Z"
+}

@@ -1,0 +1,11 @@
+{
+ "title": "Motion Ads debtors: Kauai (unpaid, needs a PO before invoicing), Go Solar (overdue since about July), Dog Stores (backdated)",
+ "entity": "motion",
+ "block": "debtors",
+ "due": "2026-10-20",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "me",
+ "createdAt": "2026-10-09T08:00:00Z"
+}

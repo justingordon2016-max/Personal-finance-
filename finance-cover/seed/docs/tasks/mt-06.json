@@ -1,0 +1,12 @@
+{
+ "title": "Try to connect the Motion Ads bank feed in Xero",
+ "entity": "motion",
+ "block": "xero",
+ "due": "2026-10-16",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "me",
+ "notes": "Melissa couldn't get it to link, so she downloads statements manually.",
+ "createdAt": "2026-10-09T08:00:00Z"
+}

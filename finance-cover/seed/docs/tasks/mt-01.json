@@ -1,0 +1,13 @@
+{
+ "title": "Get accounts@motionads linked to your Gmail through Kelso, to send and receive",
+ "entity": "motion",
+ "block": "admin",
+ "due": "2026-10-13",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "handover",
+ "order": 29,
+ "notes": "Melissa is sending Kelso your number on WhatsApp. Her forwarding rule from melissa@motionads to your Gmail is on. The login for melissa@ didn't work for sending, so ask Kelso for both mailboxes. Fallback: an out of office on melissa@ pointing people to accounts@. Fabi, Tristan, Ilan, John and Beverly email her directly.",
+ "createdAt": "2026-10-09T08:00:00Z"
+}

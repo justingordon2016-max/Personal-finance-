@@ -1,0 +1,12 @@
+{
+ "title": "Test the Xero sales invoice import: Claude fills the template from the HubSpot export",
+ "entity": "ixusa",
+ "block": "revenue",
+ "due": "2026-11-06",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "claude",
+ "notes": "Melissa's idea. Do it once the manual process is second nature.",
+ "createdAt": "2026-10-09T08:00:00Z"
+}

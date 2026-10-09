@@ -636,7 +636,8 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
           nd?el("div",{class:"hint",text:nd.title}):null),
         el("div",{},el("span",{class:"eyebrow",text:"Systems"}),
           el("div",{text:e.systems||""}),
-          e.login?el("div",{class:"hint",text:"Login: "+e.login}):null)));
+          e.login?el("div",{class:"hint",text:"Login: "+e.login}):null),
+        e.people?el("div",{},el("span",{class:"eyebrow",text:"Who's who"}),...e.people.map(x=>el("div",{class:"hint",text:x}))):null));
   }
   function renderDayPlan(today){
     const box=$("dayplan"); box.replaceChildren();

@@ -1,0 +1,12 @@
+{
+ "title": "Ask Danny to chase every unmatched receipt for this week",
+ "entity": "ixusa",
+ "block": "chase",
+ "due": "2026-10-12",
+ "queue": "today",
+ "must": true,
+ "status": "open",
+ "source": "me",
+ "notes": "Agreed with Melissa: receipt chasing moves to Danny.",
+ "createdAt": "2026-10-09T08:00:00Z"
+}
