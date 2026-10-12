@@ -94,10 +94,44 @@
    "title": "Start: Claude's brief, inbox and requests",
    "must": true,
    "confirm": false,
-   "how": "Read Claude's brief. Scan the Motion Ads mail now forwarded to your Gmail and the iX inbox. Supplier invoices go straight to that company's Dext address (Motion Ads, iX ZA or iX USA). Send the quick replies Claude drafted. Anything bigger becomes a request for later in the hour or tomorrow.",
+   "how": "Read Claude's brief. Scan the Motion Ads mail forwarded to your Gmail and the iX inbox. Send the quick replies Claude drafted and clear any requests waiting in the queue. Anything bigger becomes a request for tomorrow.",
    "time": "08:00",
    "end": "08:20",
    "fixed": "08:00"
+  },
+  {
+   "id": "processing",
+   "entity": "general",
+   "when": {
+    "type": "daily"
+   },
+   "block": "xero",
+   "mins": 10,
+   "prio": 0,
+   "title": "Processing: bank lines in Xero, all three companies",
+   "must": true,
+   "confirm": false,
+   "how": "Motion Ads: the feed doesn't link, so download the statement and import it, then code what you recognise. iX ZA: code new lines with the right VAT rate, unknowns to Suspense with a note, record the balance in the daily log. iX USA: the four feeds pull in automatically; code what you recognise. Leave anything unclear for the weekly session with Danny or the reviewer.",
+   "time": "08:10",
+   "end": "08:10",
+   "fixed": "08:10"
+  },
+  {
+   "id": "dext",
+   "entity": "general",
+   "when": {
+    "type": "daily"
+   },
+   "block": "xero",
+   "mins": 5,
+   "prio": 0,
+   "title": "Dext: forward new invoices and publish",
+   "must": true,
+   "confirm": false,
+   "how": "Forward any supplier invoice still sitting in your inbox to that company's Dext address (single or multiple). Then publish what Dext has ready in Motion Ads, iX ZA and iX USA after checking supplier, date, number, amount and VAT.",
+   "time": "08:20",
+   "end": "08:20",
+   "fixed": "08:20"
   },
   {
    "id": "hour-end",
@@ -117,70 +151,6 @@
    "fixed": "08:55"
   },
   {
-   "id": "motion-bank",
-   "entity": "motion",
-   "when": {
-    "type": "daily"
-   },
-   "block": "xero",
-   "mins": 5,
-   "prio": 3,
-   "title": "Motion Ads: bank statement into Xero",
-   "must": false,
-   "confirm": false,
-   "how": "The Motion Ads feed doesn't link to Xero: download the statement, import it and code what you recognise. Leave unknowns for Thursday.",
-   "time": "08:10",
-   "end": "08:20"
-  },
-  {
-   "id": "ix-bank",
-   "entity": "ix",
-   "when": {
-    "type": "daily"
-   },
-   "block": "xero",
-   "mins": 5,
-   "prio": 3,
-   "title": "iX ZA: bank lines and daily log",
-   "must": false,
-   "confirm": false,
-   "how": "Code new lines with the right VAT rate. Unknowns go to Suspense with a note for the reviewer. Record the balance in the daily log.",
-   "time": "08:10",
-   "end": "08:20"
-  },
-  {
-   "id": "ixusa-bank",
-   "entity": "ixusa",
-   "when": {
-    "type": "daily"
-   },
-   "block": "xero",
-   "mins": 5,
-   "prio": 3,
-   "title": "iX USA: bank feeds and Dext",
-   "must": false,
-   "confirm": false,
-   "how": "The four feeds pull in automatically. Code what you recognise and publish the Dext inbox.",
-   "time": "08:10",
-   "end": "08:20"
-  },
-  {
-   "id": "queue",
-   "entity": "general",
-   "when": {
-    "type": "daily"
-   },
-   "block": "xero",
-   "mins": 5,
-   "prio": 3,
-   "title": "Requests queue",
-   "must": false,
-   "confirm": false,
-   "how": "Clear the requests captured since yesterday, oldest first.",
-   "time": "08:10",
-   "end": "08:20"
-  },
-  {
    "id": "mon-plan",
    "entity": "general",
    "when": {
@@ -192,10 +162,10 @@
    "block": "review",
    "mins": 10,
    "prio": 1,
-   "title": "Plan the week",
+   "title": "Plan the week and review Claude's Mr H exceptions",
    "must": false,
    "confirm": false,
-   "how": "Open Week by company. Check aged payables and receivables for each company, note what falls due this week and anything that won't fit.",
+   "how": "Open Week by company. Check aged payables and receivables for each company and note what's due. Clear the Mr H exceptions Claude found on Friday, or note who to ask.",
    "time": "08:10",
    "end": "08:20"
   },
@@ -268,10 +238,10 @@
    "block": "chase",
    "mins": 5,
    "prio": 1,
-   "title": "iX USA: send Danny the missing receipts list",
+   "title": "iX USA: send Danny the missing receipts and unknown spend",
    "must": false,
    "confirm": false,
-   "how": "Claude lists card spend with no receipt, by cardholder. Send it to Danny; she chases the team. Attach receipts in Xero as they land.",
+   "how": "Claude lists card spend with no receipt, by cardholder, plus any lines you couldn't code this week. Send it to Danny; she chases the team and tells you what the spend was.",
    "time": "08:10",
    "end": "08:20"
   },
@@ -291,25 +261,6 @@
    "must": false,
    "confirm": false,
    "how": "Calculate from the incentive trackers. Check each payout against a booked and paid sale. Get approval (approver still to confirm), pay and record in Xero.",
-   "time": "08:10",
-   "end": "08:20"
-  },
-  {
-   "id": "ix-tue",
-   "entity": "ix",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     2
-    ]
-   },
-   "block": "xero",
-   "mins": 10,
-   "prio": 1,
-   "title": "iX ZA: bills and Dext",
-   "must": false,
-   "confirm": false,
-   "how": "Capture bills from valid tax invoices only, check for duplicates, and publish the Dext inbox.",
    "time": "08:10",
    "end": "08:20"
   },
@@ -342,7 +293,7 @@
     ]
    },
    "block": "payments",
-   "mins": 15,
+   "mins": 10,
    "prio": 0,
    "title": "iX ZA: prepare Thursday's payment list",
    "must": true,
@@ -380,31 +331,12 @@
     ]
    },
    "block": "debtors",
-   "mins": 15,
-   "prio": 1,
-   "title": "Motion Ads: Dext and debtors",
-   "must": false,
-   "confirm": false,
-   "how": "Publish the week's supplier invoices from Dext and match them to payments. Follow up any customer past due, starting with Kauai, Go Solar and Dog Stores.",
-   "time": "08:10",
-   "end": "08:20"
-  },
-  {
-   "id": "ixusa-thu",
-   "entity": "ixusa",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     4
-    ]
-   },
-   "block": "review",
    "mins": 10,
    "prio": 1,
-   "title": "iX USA: unknown spend with Danny",
+   "title": "Motion Ads: debtors",
    "must": false,
    "confirm": false,
-   "how": "Go through anything you can't code with Danny so Friday's Mr H run is clean.",
+   "how": "Follow up any customer past due, starting with Kauai, Go Solar and Dog Stores. Claude drafts the emails.",
    "time": "08:10",
    "end": "08:20"
   },
@@ -418,7 +350,7 @@
     ]
    },
    "block": "revenue",
-   "mins": 25,
+   "mins": 20,
    "prio": 1,
    "title": "iX USA: HubSpot batch, revenue, payments and payouts",
    "must": true,
@@ -437,31 +369,12 @@
     ]
    },
    "block": "payments",
-   "mins": 10,
+   "mins": 5,
    "prio": 1,
    "title": "Motion Ads: post Tristan's Payment Summary",
    "must": true,
    "confirm": false,
-   "how": "Match the payments Tristan loaded to their bills in Xero and send remittances. Reconcile PaySoft for the week.",
-   "time": "08:10",
-   "end": "08:20"
-  },
-  {
-   "id": "review-fri",
-   "entity": "general",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     5
-    ]
-   },
-   "block": "review",
-   "mins": 10,
-   "prio": 1,
-   "title": "Review Claude's Mr H exceptions and the iX weekly report",
-   "must": false,
-   "confirm": false,
-   "how": "Claude runs Mr H for Motion Ads and iX USA and drafts the iX weekly report before 08:00. Clear the exceptions you can; park the rest for Monday.",
+   "how": "Match the payments Tristan loaded to their bills in Xero and send remittances.",
    "time": "08:10",
    "end": "08:20"
   },
@@ -641,6 +554,25 @@
    "time": "10:00",
    "end": "08:20",
    "fixed": "10:00"
+  },
+  {
+   "id": "ix-report",
+   "entity": "ixusa",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     5
+    ]
+   },
+   "block": "review",
+   "mins": 5,
+   "prio": 1,
+   "title": "iX USA: check and send Claude's iX weekly report",
+   "must": false,
+   "confirm": false,
+   "how": "Claude drafts the iXperience weekly report before 08:00. Read it, fix anything off, and publish.",
+   "time": "08:25",
+   "end": "08:30"
   }
  ],
  "deadlines": [
@@ -869,7 +801,7 @@
  },
  "hour": {
   "start": "08:00",
-  "flexStart": "08:10",
+  "flexStart": "08:25",
   "flexEnd": "08:55",
   "end": "09:00"
  }
