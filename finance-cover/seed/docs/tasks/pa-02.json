@@ -1,0 +1,12 @@
+{
+ "title": "Rollee: pay the two open invoices Melissa said would go out the week of 6 Oct",
+ "entity": "motion",
+ "block": "payments",
+ "due": "2026-10-14",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "claude",
+ "notes": "Pierrick (Rollee) says F-2026-08-574 (July) is still open, plus one more. Euro invoices, previously paid by card. Check they haven't gone, then add them to Wednesday's sheet.",
+ "createdAt": "2026-10-12T08:00:00Z"
+}

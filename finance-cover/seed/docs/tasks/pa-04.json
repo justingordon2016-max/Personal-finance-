@@ -1,0 +1,12 @@
+{
+ "title": "Verge: get the corrected invoice INV0000001 (it was dated 2025), then pay",
+ "entity": "motion",
+ "block": "payments",
+ "due": "2026-10-16",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "claude",
+ "notes": "Melissa asked Mike on 9 Oct to have Verge redo it. Verge has a 30 day account.",
+ "createdAt": "2026-10-12T08:00:00Z"
+}

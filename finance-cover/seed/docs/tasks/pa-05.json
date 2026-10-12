@@ -1,0 +1,12 @@
+{
+ "title": "Forward the supplier invoices Melissa sent on 9 Oct to Motion Ads Dext",
+ "entity": "motion",
+ "block": "xero",
+ "due": "2026-10-13",
+ "queue": "xero",
+ "must": true,
+ "status": "open",
+ "source": "claude",
+ "notes": "Tribal Works (Aug to Sep), Printulu IN-011020262 and IN-011020261, Cartrack, CJ Wolf, Pioneer Plastics, VUMA costs, Rubbixmedia receipt and the Anthropic receipt. Statements (MAX, Pioneer) are for checking, not Dext. Claude can forward these for you if you say so.",
+ "createdAt": "2026-10-12T08:00:00Z"
+}

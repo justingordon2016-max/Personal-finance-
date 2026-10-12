@@ -209,6 +209,11 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
 }
 @media (min-width:901px){ .wk .wrow{display:contents} }
 
+.hourbar{display:flex;gap:2px;height:30px;border-radius:6px;overflow:hidden;margin:4px 0}
+.hourbar .seg{background:var(--c,var(--general));color:var(--surface);font:500 10px var(--mono);display:flex;align-items:center;padding-left:4px;min-width:0;overflow:hidden;opacity:.85}
+.hourbar .seg[data-e="motion"]{--c:var(--motion)} .hourbar .seg[data-e="ix"]{--c:var(--ix)} .hourbar .seg[data-e="ixusa"]{--c:var(--ixusa)} .hourbar .seg[data-e="country"]{--c:var(--country)}
+.hourbar .seg.on{opacity:1;outline:2px solid var(--ink);outline-offset:-2px}
+.hourbar .seg.dim{opacity:.25}
 /* Brief */
 .brief{font-size:14px;white-space:pre-wrap}
 .brief-meta{font-size:12px;color:var(--muted)}
@@ -268,7 +273,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
       </div>
     </div>
     <div class="wk" id="wk"></div>
-    <div class="hint">Every day also has 15 minutes of Xero per company from 16:00. Click a company to open its tab.</div>
+    <div class="hint">Every day starts 08:00 with Claude's brief and the inbox, and ends 08:55 with sign off. Short bank checks fill any spare minutes. Click a company to open its tab.</div>
   </section>
 
   <section class="panel" id="email-panel">
@@ -301,7 +306,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
         <textarea id="em-out" placeholder="Your reply appears here. Pick a template to start from one." aria-label="Draft reply"></textarea>
         <div class="line">
           <button class="ghost small" type="button" id="em-copy">Copy reply</button>
-          <button class="ghost small" type="button" id="em-queue">Add follow up to Xero hour</button>
+          <button class="ghost small" type="button" id="em-queue">Add follow up to queue</button>
         </div>
       </form>
     </div>
@@ -376,22 +381,22 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
           </div>
           <div class="line" style="align-items:center">
             <div class="seg" role="group" aria-label="Where it goes" id="cap-dest">
-              <button type="button" data-v="xero" aria-pressed="true">Xero hour</button>
+              <button type="button" data-v="xero" aria-pressed="true">Queue</button>
               <button type="button" data-v="today" aria-pressed="false">Today</button>
               <button type="button" data-v="later" aria-pressed="false">Later</button>
             </div>
             <label class="hint" style="display:flex;gap:6px;align-items:center;flex:0 1 auto"><input type="checkbox" id="cap-must"> Must do</label>
             <button class="primary" type="submit" style="flex:0 0 auto">Add</button>
           </div>
-          <div class="hint">Xero work waits for 16:00. Items with a due date also show on that day.</div>
+          <div class="hint">Queued requests are cleared in your 08:00 hour. Items with a due date also show on that day.</div>
         </form>
       </section>
 
       <section class="panel">
         <div class="panel-head">
           <div>
-            <div class="eyebrow">16:00 to 17:00</div>
-            <h2>Xero hour queue</h2>
+            <div class="eyebrow">Cleared in your 08:00 hour</div>
+            <h2>Requests queue</h2>
           </div>
           <span class="count" id="xero-count"></span>
         </div>
@@ -401,7 +406,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
       <section class="panel">
         <div class="panel-head">
           <div>
-            <div class="eyebrow">Found by Claude in Mercury and Xero</div>
+            <div class="eyebrow" id="miss-eyebrow">Found by Claude</div>
             <h2>Missing documents</h2>
           </div>
           <span class="count" id="miss-count"></span>
@@ -437,7 +442,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
       <section class="panel">
         <div class="panel-head">
           <div>
-            <div class="eyebrow">Parked outside the Xero hour</div>
+            <div class="eyebrow">Parked, not in the hour yet</div>
             <h2>Later</h2>
           </div>
           <span class="count" id="later-count"></span>
@@ -492,16 +497,26 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     if(t.type==="monthly_business_day") return nthBusiness(y,m,t.n)===s;
     return false;
   }
-  function blockOf(e){ const o=(S.blocks||{})[e]; return o&&o.start&&o.end ? o : (BRAIN.companyBlocks||{})[e]||null; }
-  function eff(r){ const b=blockOf(r.entity); return b && r.block!=="xero" ? Object.assign({},r,{time:b.start,end:b.end}) : r; }
-  function rulesFor(s){ return BRAIN.rhythm.filter(r=>ruleOn(r,s)).map(eff).sort((a,b)=>a.time.localeCompare(b.time)||(a.entity||"").localeCompare(b.entity||"")); }
+  const toMin=t=>{const [h,m]=t.split(":").map(Number);return h*60+m;};
+  const fromMin=n=>String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");
+  const _plan={};
+  function planFor(s){
+    if(_plan[s]) return _plan[s];
+    const H=BRAIN.hour, rs=BRAIN.rhythm.filter(r=>ruleOn(r,s));
+    const items=[], over=[], skipped=[];
+    rs.filter(r=>r.fixed).forEach(r=>items.push(Object.assign({},r,{time:r.fixed,end:fromMin(toMin(r.fixed)+r.mins)})));
+    let t=toMin(H.flexStart); const end=toMin(H.flexEnd);
+    rs.filter(r=>!r.fixed).map((r,i)=>({r,i})).sort((a,b)=>(a.r.prio-b.r.prio)||(a.i-b.i)).forEach(({r})=>{
+      if(t+r.mins<=end){ items.push(Object.assign({},r,{time:fromMin(t),end:fromMin(t+r.mins)})); t+=r.mins; }
+      else if(r.prio<3) over.push(r); else skipped.push(r);
+    });
+    items.sort((a,b)=>a.time.localeCompare(b.time));
+    return (_plan[s]={items,over,skipped});
+  }
+  function rulesFor(s){ return planFor(s).items; }
   const inEnt = e => S.ent==="all" || (e||"general")===S.ent;
   const COMPANIES = () => Object.keys(BRAIN.entities).filter(k=>k!=="general");
-  function slots(){
-    const out=(BRAIN.dayPlan||[]).map(x=>Object.assign({},x));
-    COMPANIES().forEach(k=>{ const b=blockOf(k); if(b) out.push({start:b.start,end:b.end,label:entName(k),e:k}); });
-    return out.sort((a,b)=>a.start.localeCompare(b.start));
-  }
+  function minsFor(k,s){ return rulesFor(s).filter(r=>r.entity===k && !r.fixed).reduce((a,r)=>a+r.mins,0); }
 
   // ---------- helpers ----------
   function el(tag, attrs, ...kids){
@@ -598,7 +613,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     const stat=(label,val,cls)=>stats.append(el("div",{class:"stat "+(cls||"")},el("span",{class:"eyebrow",text:label}),el("b",{text:String(val)})));
     if(nd){ const n=diffDays(today,nd.date); stat("Next SARS", nd.date===today?"Today":n+" days", n<=5?"alert":n<=14?"soon":""); }
     stat("Overdue", overdue, overdue?"alert":"");
-    stat("Xero queue", xero);
+    stat("Queue", xero);
     stat("Docs missing", miss, miss?"soon":"");
   }
 
@@ -614,14 +629,9 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     let what, how;
     if(!isBusiness(today)){ what=BRAIN.publicHolidays[today]?BRAIN.publicHolidays[today]+". Public holiday.":"Weekend."; how="Nothing scheduled. Check the week ahead before Monday."; }
     else if(cur){ what=cur.title; how=cur.how; }
-    else if(hm<"08:00"){ what="Before the day starts"; how="Open Claude's morning brief below, then start the inbox scrub at 08:00."; }
-    else if(hm>="17:10"){ what="Day closed"; how="Anything still open rolls to tomorrow."; }
-    else {
-      const sl=slots().find(x=>hm>=x.start && hm<x.end);
-      if(sl && sl.e){ what=sl.label+" block until "+sl.end; how="This block's rhythm is done. Work through "+sl.label+"'s open items, or capture anything for other companies."; }
-      else if(sl){ what=sl.label; how="Xero work waits for 16:00."; }
-      else { what="Focus time"; how="Answer emails and clear today's must dos. Xero work waits for 16:00."; }
-    }
+    else if(hm<BRAIN.hour.start){ what="Your hour starts at "+BRAIN.hour.start; how="Claude's brief and today's plan are below. Nothing to do before then."; }
+    else if(hm>=BRAIN.hour.end){ what="Hour done for today"; how="Capture anything new as a request. It goes into tomorrow's hour."; }
+    else { what="Your hour"; how="Everything planned is ticked. Clear the requests queue or get ahead on tomorrow."; }
     box.append(
       el("div",{class:"clock",text:hm}),
       el("div",{},el("div",{class:"what",text:what}),el("div",{class:"how",text:how})),
@@ -649,29 +659,23 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     const sel=nav.querySelector('[aria-selected="true"]');
     if(sel && nav.scrollWidth>nav.clientWidth) nav.scrollLeft=Math.max(0,sel.offsetLeft-nav.offsetLeft-16);
   }
-  function xeroSlot(k){ const r=BRAIN.rhythm.find(r=>r.entity===k && r.block==="xero"); return r?r.time+" to "+r.end:null; }
+
   function renderCompany(today){
     const box=$("company");
     if(S.ent==="all"){ box.hidden=true; box.replaceChildren(); return; }
-    const k=S.ent, e=BRAIN.entities[k]||{}, b=blockOf(k);
+    const k=S.ent, e=BRAIN.entities[k]||{};
     box.hidden=false; box.dataset.e=k; box.replaceChildren();
-    const st=el("input",{type:"time",value:b?b.start:"","aria-label":"Block start"}), en=el("input",{type:"time",value:b?b.end:"","aria-label":"Block end"});
-    const save=el("button",{class:"ghost small",type:"button",text:"Save times",onclick:()=>{
-      if(!st.value||!en.value||en.value<=st.value){ toast("End must be after start"); return; }
-      const next=Object.assign({},S.blocks,{[k]:{start:st.value,end:en.value}});
-      S.blocks=next; render(); write("state/blocks",next,"set").then(ok=>ok&&toast("Block saved"));
-    }});
+    const days=weekDays(today), per=days.map(d=>[d,minsFor(k,d)]), tot=per.reduce((a,x)=>a+x[1],0);
     const open=S.tasks.filter(t=>t.entity===k && t.status!=="done");
     const nd=BRAIN.deadlines.filter(d=>d.entity===k && d.date>=today && !(S.dlState[d.id]||{}).done).sort((a,b)=>a.date.localeCompare(b.date))[0];
     const miss=S.missing.filter(m=>m.entity===k).length;
-    const xs=xeroSlot(k);
+
     box.append(
       el("div",{class:"panel-head"},el("div",{},el("div",{class:"eyebrow",text:e.role||"Company"}),el("h2",{text:e.name||k}))),
       el("div",{class:"cgrid"},
-        el("div",{},el("span",{class:"eyebrow",text:"Blocked time, Mon to Fri"}),
-          el("div",{class:"big",text:b?b.start+" to "+b.end:"Not set"}),
-          xs?el("div",{class:"hint",text:"Plus Xero "+xs}):null,
-          el("div",{class:"btime"},st,el("span",{class:"hint",text:"to"}),en,save)),
+        el("div",{},el("span",{class:"eyebrow",text:k==="country"?"Outside your hour":"In your 08:00 hour this week"}),
+          el("div",{class:"big",text:k==="country"?"Mon 10:00":tot+" min"}),
+          k==="country"?el("div",{class:"hint",text:"Weekly FM check in. No SOP yet."}):el("div",{class:"hint",text:per.map(([d,m])=>DOW[parse(d).getDay()]+" "+m).join(" · ")})),
         el("div",{},el("span",{class:"eyebrow",text:"Open"}),
           el("div",{class:"big",text:open.length+" tasks"}),
           el("div",{class:"hint",text:miss?miss+" documents missing":"No documents missing"})),
@@ -702,18 +706,19 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     box.append(el("div",{class:"wh",text:"Company"}));
     days.forEach(d=>box.append(el("div",{class:"wh"+(d===today?" today":"")},el("span",{text:nice(d)}),d===today?el("span",{text:"Today"}):null)));
     ents.forEach(k=>{
-      const b=blockOf(k);
+      const tot=days.reduce((a,d)=>a+minsFor(k,d),0);
       const row=el("div",{class:"wrow",dataset:{e:k}});
-      row.append(el("div",{class:"wc",dataset:{e:k},title:"Open "+entName(k),onclick:()=>setEnt(k)},el("b",{text:entName(k)}),b?el("span",{text:b.start+" to "+b.end}):null));
+      row.append(el("div",{class:"wc",dataset:{e:k},title:"Open "+entName(k),onclick:()=>setEnt(k)},el("b",{text:entName(k)}),el("span",{text:k==="country"?"Outside your hour":tot+" min this week"})));
       days.forEach(d=>{
         const items=[];
         if(BRAIN.publicHolidays[d]) items.push(el("div",{class:"it none",text:BRAIN.publicHolidays[d]}));
         else{
-          rulesFor(d).filter(r=>r.entity===k && r.when.type!=="daily").forEach(r=>items.push(el("div",{class:"it",text:shortTitle(r.title,k)})));
+          rulesFor(d).filter(r=>r.entity===k && r.when.type!=="daily").forEach(r=>items.push(el("div",{class:"it",text:r.time+" "+shortTitle(r.title,k)+" ("+r.mins+"m)"})));
+          planFor(d).over.filter(r=>r.entity===k).forEach(r=>items.push(el("div",{class:"it dl",text:"Won't fit: "+shortTitle(r.title,k)})));
           BRAIN.deadlines.filter(x=>x.date===d && x.entity===k).forEach(x=>items.push(el("div",{class:"it dl",text:"Due: "+x.title})));
           S.tasks.filter(t=>t.due===d && t.entity===k && t.status!=="done").forEach(t=>items.push(el("div",{class:"it task",text:"Task: "+t.title})));
         }
-        if(!items.length) items.push(el("div",{class:"it none",text:"Open items, Xero"}));
+        if(!items.length) items.push(el("div",{class:"it none",text:k==="country"?"":"Bank check only"}));
         row.append(el("div",{class:"cell"+(d===today?" today":"")},el("span",{class:"dlabel",text:nice(d)}),...items));
       });
       box.append(row);
@@ -721,17 +726,15 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
   }
   function renderDayPlan(today){
     const box=$("dayplan"); box.replaceChildren();
-    if(S.ent!=="all" || !isBusiness(S.view)){ box.hidden=true; return; }
+    if(!isBusiness(S.view)){ box.hidden=true; return; }
     box.hidden=false;
-    const d=new Date(), hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
-    const live=S.view===today;
-    slots().forEach(x=>{
-      const on=live && hm>=x.start && hm<x.end;
-      const n=x.e?rulesFor(S.view).filter(r=>r.entity===x.e && r.block!=="xero" && !S.checks[r.id]).length:0;
-      const kids=[el("span",{class:"t",text:x.start+" to "+x.end}),el("b",{text:x.label}),x.e?el("span",{class:"n",text:n?n+" to do":"Open items"}):el("span")];
-      box.append(x.e?el("button",{type:"button",class:"slot"+(on?" on":""),dataset:{e:x.e},title:"Open "+x.label,onclick:()=>setEnt(x.e)},...kids)
-                    :el("div",{class:"slot"+(on?" on":"")},...kids));
-    });
+    const p=planFor(S.view), d=new Date(), hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+    const inHour=p.items.filter(r=>r.time>=BRAIN.hour.start && r.time<BRAIN.hour.end);
+    const bar=el("div",{class:"hourbar"});
+    inHour.forEach(r=>bar.append(el("div",{class:"seg"+(S.view===today && hm>=r.time && hm<r.end?" on":"")+(S.ent!=="all"&&r.entity!==S.ent&&r.entity!=="general"?" dim":""),dataset:{e:r.entity||"general"},style:"flex:"+r.mins,title:r.time+" "+r.title+" ("+r.mins+" min)"},el("span",{text:r.time}))));
+    const used=inHour.reduce((a,r)=>a+r.mins,0);
+    const legend=el("div",{class:"hint",text:COMPANIES().filter(k=>k!=="country").map(k=>{const m=inHour.filter(r=>r.entity===k).reduce((a,r)=>a+r.mins,0);return m?entName(k)+" "+m+" min":null;}).filter(Boolean).join(" · ")+(p.over.length?" · "+p.over.length+(p.over.length>1?" items don't":" item doesn't")+" fit":"")});
+    box.append(el("div",{class:"eyebrow",text:"Your hour, "+BRAIN.hour.start+" to "+BRAIN.hour.end+(used<60?" ("+(60-used)+" min spare)":"")}),bar,legend);
   }
   function taskRow(t, today, opts){
     const late=t.due && t.due<today && t.status!=="done";
@@ -767,8 +770,9 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
       total++; const ok=!!S.checks[r.id]; if(ok) done++;
       const active=isToday && hm>=r.time && hm<r.end && !ok;
       const extra=[];
-      if(r.id==="xero-hour"){ const q=S.tasks.filter(t=>t.queue==="xero"&&t.status!=="done").length; extra.push(el("span",{class:"pill",text:q+" in queue"})); }
-      if(r.id==="am-chase" && S.missing.length) extra.push(el("span",{class:"pill late",text:S.missing.length+" missing"}));
+      if(r.id==="queue"){ const q=S.tasks.filter(t=>t.queue==="xero"&&t.status!=="done").length; extra.push(el("span",{class:"pill",text:q+" in queue"})); }
+      if(r.id==="hour-start"){ const rp=S.replies.filter(x=>x.status==="ready").length; if(rp) extra.push(el("span",{class:"pill",text:rp+" replies drafted"})); }
+      extra.push(el("span",{class:"pill",text:r.mins+" min"}));
       list.append(el("div",{class:"row timed"+(ok?" done":"")+(active?" active":"")},
         el("span",{class:"t",text:r.time}),
         el("input",{type:"checkbox",class:"chk",checked:ok,"aria-label":"Done",onchange:e=>toggleRule(r.id,e.target.checked)}),
@@ -779,6 +783,13 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
         el("span")));
     });
 
+    const ov=planFor(v).over.filter(r=>inEnt(r.entity));
+    if(ov.length){
+      list.append(el("div",{class:"eyebrow",style:"padding-top:12px;color:var(--warn)",text:"Doesn't fit in today's hour: do tomorrow or take a second hour"}));
+      ov.forEach(r=>list.append(el("div",{class:"row timed"},el("span",{class:"t",text:r.mins+"m"}),el("span"),
+        el("div",{},el("div",{class:"title",text:r.title}),el("div",{class:"meta"},entPill(r.entity),blockPill(r.block),r.must?el("span",{class:"pill must",text:"Must"}):null),
+          el("details",{},el("summary",{text:"How"}),el("div",{text:r.how}))),el("span"))));
+    }
     // deadlines on this day
     BRAIN.deadlines.filter(d=>d.date===v && inEnt(d.entity)).forEach(d=>{
       const ok=!!(S.dlState[d.id]||{}).done; total++; if(ok) done++;
@@ -801,7 +812,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     } else if(isBusiness(v) && S.ent!=="all") {
       list.append(el("div",{class:"empty",style:"padding-top:12px",text:"No tasks due for "+entName(S.ent)+". Use the block for open items below."}));
     } else if(isBusiness(v)) {
-      list.append(el("div",{class:"empty",style:"padding-top:12px",text:"No extra tasks due. Captured requests go to the Xero hour unless you send them to today."}));
+      list.append(el("div",{class:"empty",style:"padding-top:12px",text:"No extra tasks due. Captured requests wait in the queue for tomorrow's hour."}));
     }
     $("today-progress").style.width=(total?Math.round(done/total*100):0)+"%";
   }
@@ -867,7 +878,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
       .sort((a,b)=>(a.status==="done")-(b.status==="done") || (b.must?1:0)-(a.must?1:0) || (a.entity||"").localeCompare(b.entity||"") || (a.createdAt||"").localeCompare(b.createdAt||""));
     const open=q.filter(t=>t.status!=="done").length;
     $("xero-count").textContent=open+" open";
-    if(!q.length) box.append(el("div",{class:"empty",text:"Queue is clear. Add requests above as they come in during the day."}));
+    if(!q.length) box.append(el("div",{class:"empty",text:"Queue is clear. Add requests above as they come in; they wait for tomorrow's hour."}));
     q.forEach(t=>box.append(taskRow(t,today,{moveToday:true})));
   }
 
@@ -886,11 +897,13 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
   function renderMissing(){
     const box=$("miss-list"); box.replaceChildren();
     const ALL=S.missing.filter(m=>inEnt(m.entity));
+    const src=S.ent==="ixusa"?"Mercury and Xero":S.ent==="all"?"Mercury (iX USA) and Xero":"Xero";
+    $("miss-eyebrow").textContent="Found by Claude in "+src;
     $("miss-count").textContent=ALL.length+" missing";
     const st=S.missState;
     $("miss-checked").textContent=st&&st.checkedAt?"Last checked "+new Date(st.checkedAt).toLocaleString("en-ZA",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+(st.sources?" in "+st.sources.join(", "):"")+".":"";
     if(!ALL.length){
-      box.append(el("div",{class:"empty",text:st&&st.checkedAt?"Nothing missing. Every card transaction has a receipt.":"Not checked yet. Claude checks Mercury for card spend without a receipt and Xero for payments without an invoice, then lists them here by person."}));
+      box.append(el("div",{class:"empty",text:st&&st.checkedAt?"Nothing missing for "+(S.ent==="all"?"any company":entName(S.ent))+".":(S.ent==="ixusa"?"Not checked yet. Claude checks Mercury card spend for missing receipts and lists them here by person.":"Not checked yet. Claude checks Xero for payments without an invoice or slip and lists them here by person.")}));
       return;
     }
     const byEnt={};
@@ -954,7 +967,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
       must:$("cap-must").checked, status:"open", source:"me", createdAt:new Date().toISOString()};
     if(S.dest==="today" && !t.due) t.due=ymd(new Date());
     S.tasks.push(Object.assign({id},t)); render();
-    write("tasks/"+id,t,"set").then(ok=>ok&&toast(S.dest==="xero"?"Added to the Xero hour":S.dest==="today"?"Added to today":"Parked for later"));
+    write("tasks/"+id,t,"set").then(ok=>ok&&toast(S.dest==="xero"?"Added to the queue":S.dest==="today"?"Added to today":"Parked for later"));
     $("cap-title").value=""; $("cap-due").value=""; $("cap-must").checked=false; $("cap-title").focus();
   });
   $("wk-prev").addEventListener("click",()=>{S.wkOff--;render();});
@@ -1014,7 +1027,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
   const fillSign=b=>b.replace("[Signoff]",EM.signoff+",\n[Your name]");
   emTpl.addEventListener("change",()=>{ const t=EM.templates.find(x=>x.id===emTpl.value); if(t){ $("em-out").value=fillSign(t.body); } });
   let emFollow="", emCtl=null, sampleFn=null;
-  function payDay(){ return "Motion Ads payments are prepared and loaded on Wednesdays and go out on Fridays. iX ZA payments are released by the reviewer after approval"; }
+  function payDay(){ return "Motion Ads: the payments sheet goes to Mike on Wednesday, Tristan loads the payments and they go out on Friday. iX ZA payments are released by the reviewer on Thursday"; }
   function buildPrompt(email, ent, note, tpl){
     const today=ymd(new Date());
     const dls=BRAIN.deadlines.filter(d=>d.date>=today && !(S.dlState[d.id]||{}).done).slice(0,4).map(d=>d.date+": "+d.title).join("\n");
@@ -1024,7 +1037,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
       "Tone rules:\n"+EM.tone.map(t=>"* "+t).join("\n"),
       "Risk rules. If one applies, add its flag name to flags and follow its instruction in the reply:\n"+EM.rules.map(r=>"* "+r.flag+": when "+r.match+". "+r.do).join("\n"),
       "Reply templates you may adapt (keep the substance, fit the details to the email):\n"+EM.templates.map(t=>"["+t.name+"] "+t.body.replace(/\n/g," / ")).join("\n"),
-      "Working context today ("+nice(today)+"): Xero work is done 16:00 to 17:00 daily. "+payDay()+". Upcoming deadlines:\n"+(dls||"none")+"\nDocuments still missing:\n"+slips,
+      "Working context today ("+nice(today)+"): finance work is done in one hour, 08:00 to 09:00 on weekdays. "+payDay()+". Upcoming deadlines:\n"+(dls||"none")+"\nDocuments still missing:\n"+slips,
       "Entity this email is for: "+entName(ent)+".",
       tpl?"Start from this template: "+tpl.name+".":"",
       note?"What the sender of the reply wants to say: "+note:"No specific instruction. Choose the most sensible reply. Use [placeholders] for any fact you do not know, such as an invoice number, amount or date.",
@@ -1059,7 +1072,7 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     const title=emFollow||($("em-note").value.trim()?"Email follow up: "+$("em-note").value.trim():"");
     if(!title){ toast("Draft a reply first, or type what needs doing above."); return; }
     const id=uid(); const t={title,entity:emEnt.value,block:"xero",due:null,queue:"xero",must:false,status:"open",source:"me",createdAt:new Date().toISOString()};
-    S.tasks.push(Object.assign({id},t)); render(); write("tasks/"+id,t,"set").then(ok=>ok&&toast("Added to the Xero hour"));
+    S.tasks.push(Object.assign({id},t)); render(); write("tasks/"+id,t,"set").then(ok=>ok&&toast("Added to the queue"));
     emFollow="";
   });
   (async()=>{ try{ sampleFn=window.claude&&window.claude.use?await window.claude.use("sample"):null; }catch(e){ sampleFn=null; } if(!sampleFn){ $("em-go").hidden=true; $("em-status").textContent="Templates work here. Drafting with Claude works when the desk is opened on claude.ai."; } })();
@@ -1092,7 +1105,6 @@ button.slot:hover{border-color:var(--line);border-left-color:var(--c)}
     db.collection("missing").onSnapshot(s=>{ S.missing=mapDocs(s); render(); },fail);
     db.doc("state/missing").onSnapshot(s=>{ S.missState=s.exists?s.data():null; render(); },fail);
     db.collection("replies").where("status","==","ready").onSnapshot(s=>{ S.replies=mapDocs(s); render(); },fail);
-    db.doc("state/blocks").onSnapshot(s=>{ S.blocks=s.exists?Object.assign({},s.data()):{}; render(); },fail);
     db.doc("state/deadlines").onSnapshot(s=>{ S.dlState=s.exists?Object.assign({},s.data()):{}; render(); },fail);
     db.collection("briefs").orderBy("date","desc").limit(1).onSnapshot(s=>{ S.brief=s.empty?null:s.docs[0].data(); render(); },fail);
     subscribeChecks();

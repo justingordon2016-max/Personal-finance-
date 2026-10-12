@@ -1,0 +1,12 @@
+{
+ "title": "Viro Packaging: amend the 6 invoices once Jon sends the client's details",
+ "entity": "motion",
+ "block": "debtors",
+ "due": null,
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "claude",
+ "notes": "1 production and 5 rental invoices. A 3 month campaign paid over 5 months. Jon to revert.",
+ "createdAt": "2026-10-12T08:00:00Z"
+}

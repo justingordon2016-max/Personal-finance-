@@ -15,10 +15,11 @@
    },
    "login": "ronell@motionads.co.za (password in your password manager)",
    "people": [
-    "Mike or Tristan: own the PO sheet (you update it weekly)",
-    "Mark: confirms work is complete before supplier payments",
+    "Mike: approves the weekly payments sheet",
+    "Tristan: loads the payments and sends the Payment Summary",
+    "Jon: co-founder, asks for client invoices",
     "Erin, John, Elan: chase for slips",
-    "Fabi, Tristan, Ilan, John, Beverly: email Melissa directly",
+    "Fabi, Ilan, Beverly, Emma, Ferdi: email Melissa directly",
     "Kelso: IT, mailbox access"
    ]
   },
@@ -30,7 +31,10 @@
     "multiple": "melissa.lemmer.ixperience.pty.ltd@multiple.dext.cc",
     "single": "melissa.lemmer.ixperience.pty.ltd@dext.cc"
    },
-   "login": "melissa@ixperience.co (password in your password manager)"
+   "login": "melissa@ixperience.co (password in your password manager)",
+   "people": [
+    "Danny (Danielle): also handles CIPC and SARB figures"
+   ]
   },
   "ixusa": {
    "name": "iX USA",
@@ -42,7 +46,7 @@
    },
    "login": "melissa@ixperience.co (password in your password manager)",
    "people": [
-    "Danny: loads Mercury payments, chases receipts, knows what spend was for",
+    "Danny (Danielle): loads Mercury payments, chases receipts, knows what spend was for",
     "Erin and the US trip team: Mercury receipts"
    ]
   },
@@ -59,7 +63,7 @@
  "blocks": {
   "email": "Inbox",
   "chase": "Chasing",
-  "xero": "Xero hour",
+  "xero": "Xero",
   "payments": "Payment run",
   "debtors": "Debtors",
   "payroll": "Payroll",
@@ -79,560 +83,564 @@
  },
  "rhythm": [
   {
-   "id": "am-inbox",
-   "title": "Morning inbox, all entities",
+   "id": "hour-start",
    "entity": "general",
+   "when": {
+    "type": "daily"
+   },
    "block": "email",
+   "mins": 10,
+   "prio": 0,
+   "title": "Start: Claude's brief, inbox and requests",
+   "must": true,
+   "confirm": false,
+   "how": "Read Claude's brief. Scan the Motion Ads mail now forwarded to your Gmail and the iX inbox. Supplier invoices go straight to that company's Dext address (Motion Ads, iX ZA or iX USA). Send the quick replies Claude drafted. Anything bigger becomes a request for later in the hour or tomorrow.",
    "time": "08:00",
-   "end": "08:45",
-   "when": {
-    "type": "daily"
-   },
-   "must": true,
-   "how": "Read Claude's brief and the draft replies first. Send or fix the drafts. Anything needing Xero goes into the capture box for the Xero hour. Log ad hoc requests from the Motion Ads team and follow them until closed."
+   "end": "08:20",
+   "fixed": "08:00"
   },
   {
-   "id": "am-chase",
-   "title": "Chase missing documents and unknown transactions",
+   "id": "hour-end",
    "entity": "general",
-   "block": "chase",
-   "time": "08:45",
-   "end": "09:00",
    "when": {
     "type": "daily"
    },
-   "must": true,
-   "how": "Open Missing documents. Claude has already built the list from Mercury and Xero, grouped by person. Copy each chase message and send it. Unknown bank lines sit in Suspense with a note until someone answers."
-  },
-  {
-   "id": "xero-motion",
-   "title": "Motion Ads: bank feeds, supplier and sales invoices, anomalies, reconcile",
-   "entity": "motion",
-   "block": "xero",
-   "time": "16:00",
-   "end": "16:15",
-   "when": {
-    "type": "daily"
-   },
-   "must": true,
-   "how": "The Motion Ads bank feed doesn't link, so download the statement from the bank and import it into Xero (daily, or every second day at worst). Code new lines, match supplier invoices to payments, process any sale against its client contract, look for unusual or duplicate lines, and reconcile to the statement balance. Card spend with no slip: chase Erin, John or Elan."
-  },
-  {
-   "id": "xero-ix",
-   "title": "iX ZA: bank lines, balance check, bills and sales invoices, daily log",
-   "entity": "ix",
-   "block": "xero",
-   "time": "16:15",
-   "end": "16:30",
-   "when": {
-    "type": "daily"
-   },
-   "must": true,
-   "how": "Every feed line matched or coded with the right VAT rate and a document attached. Unknowns go to Suspense and to the reviewer today. Agree each Xero balance to the bank and record it in the daily log (date, account, balance, initials). Capture bills only from valid tax invoices, check for duplicates."
-  },
-  {
-   "id": "xero-ixusa",
-   "title": "iX USA: four feeds and the Dext inbox",
-   "entity": "ixusa",
-   "block": "xero",
-   "time": "16:30",
-   "end": "16:45",
-   "when": {
-    "type": "daily"
-   },
-   "must": true,
-   "how": "Reconcile Mercury main, Chase main, Chase credit card and Aaron's Mercury card, with account and tracking category. Publish Dext items after checking supplier, date, number, amount, currency and tax. Match bills already paid to the bank line."
-  },
-  {
-   "id": "xero-hour",
-   "title": "Xero queue: requests captured today",
-   "entity": "general",
-   "block": "xero",
-   "time": "16:45",
-   "end": "17:00",
-   "when": {
-    "type": "daily"
-   },
-   "must": true,
-   "how": "Work the queue top down. Anything not finished rolls to tomorrow."
-  },
-  {
-   "id": "wrap",
-   "title": "Daily sign off and tomorrow's musts",
-   "entity": "general",
    "block": "admin",
-   "time": "17:00",
-   "end": "17:10",
+   "mins": 5,
+   "prio": 0,
+   "title": "Close: tick off and set tomorrow's musts",
+   "must": true,
+   "confirm": false,
+   "how": "Tick what's done. Anything open rolls to tomorrow; mark tomorrow's must dos. Stop at 09:00.",
+   "time": "08:55",
+   "end": "08:20",
+   "fixed": "08:55"
+  },
+  {
+   "id": "motion-bank",
+   "entity": "motion",
    "when": {
     "type": "daily"
    },
+   "block": "xero",
+   "mins": 5,
+   "prio": 3,
+   "title": "Motion Ads: bank statement into Xero",
    "must": false,
-   "how": "All feeds processed, balances agree, bills and invoices captured, Suspense items sent to the reviewer. Mark tomorrow's musts."
+   "confirm": false,
+   "how": "The Motion Ads feed doesn't link to Xero: download the statement, import it and code what you recognise. Leave unknowns for Thursday.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ix-bank",
+   "entity": "ix",
+   "when": {
+    "type": "daily"
+   },
+   "block": "xero",
+   "mins": 5,
+   "prio": 3,
+   "title": "iX ZA: bank lines and daily log",
+   "must": false,
+   "confirm": false,
+   "how": "Code new lines with the right VAT rate. Unknowns go to Suspense with a note for the reviewer. Record the balance in the daily log.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ixusa-bank",
+   "entity": "ixusa",
+   "when": {
+    "type": "daily"
+   },
+   "block": "xero",
+   "mins": 5,
+   "prio": 3,
+   "title": "iX USA: bank feeds and Dext",
+   "must": false,
+   "confirm": false,
+   "how": "The four feeds pull in automatically. Code what you recognise and publish the Dext inbox.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "queue",
+   "entity": "general",
+   "when": {
+    "type": "daily"
+   },
+   "block": "xero",
+   "mins": 5,
+   "prio": 3,
+   "title": "Requests queue",
+   "must": false,
+   "confirm": false,
+   "how": "Clear the requests captured since yesterday, oldest first.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "mon-plan",
-   "title": "Plan the week: aged receivables and payables per entity",
    "entity": "general",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     1
+    ]
+   },
    "block": "review",
-   "time": "09:00",
-   "end": "09:30",
+   "mins": 10,
+   "prio": 1,
+   "title": "Plan the week",
+   "must": false,
+   "confirm": false,
+   "how": "Open Week by company. Check aged payables and receivables for each company, note what falls due this week and anything that won't fit.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ix-mon-za",
+   "entity": "ix",
    "when": {
     "type": "weekly",
     "dow": [
      1
     ]
    },
-   "must": true,
-   "how": "Ask Claude for the aged lists per org. Anything over 30 days gets a follow up. Note what is due in this week's payment runs."
-  },
-  {
-   "id": "country-fm",
-   "title": "Country Hotels FM check in",
-   "entity": "country",
-   "block": "admin",
-   "time": "09:30",
-   "end": "10:30",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     1
-    ]
-   },
-   "must": true,
-   "confirm": true,
-   "how": "No SOP yet. Cover the FM basics: cash position, payables due, payroll inputs, anything waiting on sign off."
-  },
-  {
-   "id": "ixusa-weekly",
-   "title": "iX USA HubSpot batch: revenue invoices, payments and payouts",
-   "entity": "ixusa",
-   "block": "revenue",
-   "time": "09:00",
-   "end": "10:30",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     5
-    ]
-   },
+   "block": "payments",
+   "mins": 10,
+   "prio": 1,
+   "title": "iX ZA: post last week's payments",
    "must": true,
    "confirm": false,
-   "how": "Pick one day and stick to it; catching up later is painful. 1) Revenue: in HubSpot Invoices find the last number already in Xero, export the newer ones to Excel. Skip any still 'open' (the payment never went through). Raise each in Xero: new contact for the student, invoice date, HubSpot invoice number as reference, the programme line (e.g. Premed Cape Town deposit), channel tracking. 2) Payments: HubSpot Payments, status 'succeeded'. Export, keep date, amount and name, save as CSV, import as a statement into the 'HubSpot payments' bank account in Xero, and match each to its invoice. 3) Payouts: Payments, Payouts and reports. For each payout to Mercury, code the payout to the HubSpot control account and the HubSpot fee to the city expense account (Cape Town, Lisbon, Online, New York). The Mercury receipt also goes to the HubSpot control account, so the control account nets to zero. A 'duplicate' warning on import means it is already in."
+   "how": "Post every payment made last week against its bill so aged payables is right for the week.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ix-mon-payments",
+   "entity": "ixusa",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     1
+    ]
+   },
+   "block": "payments",
+   "mins": 10,
+   "prio": 1,
+   "title": "iX USA: post last week's payments",
+   "must": true,
+   "confirm": false,
+   "how": "Danny loads the Mercury payments. Post each one against its bill in Xero so aged payables is right for the week.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "motion-chase",
+   "entity": "motion",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     2
+    ]
+   },
+   "block": "chase",
+   "mins": 10,
+   "prio": 1,
+   "title": "Motion Ads: chase missing slips",
+   "must": false,
+   "confirm": false,
+   "how": "List the card and EFT spend with no slip and send each person their list (Erin, John, Elan). Note who still owes what.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "ixusa-receipts",
-   "title": "iX USA: send Danny the missing receipts list",
    "entity": "ixusa",
-   "block": "chase",
-   "time": "10:30",
-   "end": "10:45",
    "when": {
     "type": "weekly",
     "dow": [
      2
     ]
    },
-   "must": true,
-   "how": "Claude lists card spend without a receipt by cardholder. Danny owns the chase: send her the list and she follows up with the team (Erin and the US trip team). Attach the receipts in Xero once they land. Danny loads Mercury payments but doesn't process in Xero; she knows what most spend was for (subscriptions, team lunches), so ask her before coding unknowns."
+   "block": "chase",
+   "mins": 5,
+   "prio": 1,
+   "title": "iX USA: send Danny the missing receipts list",
+   "must": false,
+   "confirm": false,
+   "how": "Claude lists card spend with no receipt, by cardholder. Send it to Danny; she chases the team. Attach receipts in Xero as they land.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "ixusa-bd",
-   "title": "iX USA: BD incentive and referral payouts",
    "entity": "ixusa",
-   "block": "payments",
-   "time": "10:45",
-   "end": "11:30",
    "when": {
     "type": "weekly",
     "dow": [
      2
     ]
    },
-   "must": true,
-   "confirm": true,
-   "how": "Calculate from the incentive trackers. Check each payout against a booked and paid sale. Get approval (approver still to confirm), pay and record in Xero."
+   "block": "payments",
+   "mins": 15,
+   "prio": 1,
+   "title": "iX USA: BD and referral payouts",
+   "must": false,
+   "confirm": false,
+   "how": "Calculate from the incentive trackers. Check each payout against a booked and paid sale. Get approval (approver still to confirm), pay and record in Xero.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ix-tue",
+   "entity": "ix",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     2
+    ]
+   },
+   "block": "xero",
+   "mins": 10,
+   "prio": 1,
+   "title": "iX ZA: bills and Dext",
+   "must": false,
+   "confirm": false,
+   "how": "Capture bills from valid tax invoices only, check for duplicates, and publish the Dext inbox.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "motion-pay",
-   "title": "Motion Ads: prepare supplier payments and load for Friday",
    "entity": "motion",
-   "block": "payments",
-   "time": "10:00",
-   "end": "11:00",
    "when": {
     "type": "weekly",
     "dow": [
      3
     ]
    },
+   "block": "payments",
+   "mins": 20,
+   "prio": 0,
+   "title": "Motion Ads: update the payments sheet and send it to Mike",
    "must": true,
-   "how": "From aged payables, list the supplier invoices due this week (mostly 30 days from invoice date; a few need a 50% deposit upfront). Send Mark the list and ask him to confirm the work is complete before paying. Check each bill isn't already paid and bank details match the supplier record, then load the batch so it goes out on Friday."
+   "confirm": false,
+   "how": "Update the weekly payments sheet: each supplier invoice received (invoice date and number) and what is due by Friday. Email it to Mike to confirm. Tristan loads the payments and sends the Payment Summary.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ix-wed",
+   "entity": "ix",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     3
+    ]
+   },
+   "block": "payments",
+   "mins": 15,
+   "prio": 0,
+   "title": "iX ZA: prepare Thursday's payment list",
+   "must": true,
+   "confirm": false,
+   "how": "List what is due, check each bill is approved and the bank details match, and send the list to the reviewer to approve.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "ix-weekly",
-   "title": "iX ZA weekly: supplier payments and Mr H review",
    "entity": "ix",
-   "block": "payments",
-   "time": "09:00",
-   "end": "11:00",
    "when": {
     "type": "weekly",
     "dow": [
      4
     ]
    },
+   "block": "payments",
+   "mins": 20,
+   "prio": 0,
+   "title": "iX ZA: payment run and Mr H review",
    "must": true,
-   "confirm": true,
-   "how": "Aged payables: list bills due by end of next week. Check approved, not paid, bank details match. Send the list with total and available balance to the reviewer, load once approved (reviewer releases), send remittances. Then confirm the daily sign offs, export the week's GL, bills and invoices to the Mr H folder raw subfolder and run Mr H. Correct or explain every flag."
+   "confirm": false,
+   "how": "The reviewer releases the approved payments. Post them in Xero, then review Claude's Mr H exceptions and clear Suspense or send it to the reviewer.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "motion-thu",
+   "entity": "motion",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     4
+    ]
+   },
+   "block": "debtors",
+   "mins": 15,
+   "prio": 1,
+   "title": "Motion Ads: Dext and debtors",
+   "must": false,
+   "confirm": false,
+   "how": "Publish the week's supplier invoices from Dext and match them to payments. Follow up any customer past due, starting with Kauai, Go Solar and Dog Stores.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ixusa-thu",
+   "entity": "ixusa",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     4
+    ]
+   },
+   "block": "review",
+   "mins": 10,
+   "prio": 1,
+   "title": "iX USA: unknown spend with Danny",
+   "must": false,
+   "confirm": false,
+   "how": "Go through anything you can't code with Danny so Friday's Mr H run is clean.",
+   "time": "08:10",
+   "end": "08:20"
+  },
+  {
+   "id": "ixusa-weekly",
+   "entity": "ixusa",
+   "when": {
+    "type": "weekly",
+    "dow": [
+     5
+    ]
+   },
+   "block": "revenue",
+   "mins": 25,
+   "prio": 1,
+   "title": "iX USA: HubSpot batch, revenue, payments and payouts",
+   "must": true,
+   "confirm": false,
+   "how": "Pick one day and stick to it; catching up later is painful. 1) Revenue: in HubSpot Invoices find the last number already in Xero, export the newer ones to Excel. Skip any still 'open' (the payment never went through). Raise each in Xero: new contact for the student, invoice date, HubSpot invoice number as reference, the programme line (e.g. Premed Cape Town deposit), channel tracking. 2) Payments: HubSpot Payments, status 'succeeded'. Export, keep date, amount and name, save as CSV, import as a statement into the 'HubSpot payments' bank account in Xero, and match each to its invoice. 3) Payouts: Payments, Payouts and reports. For each payout to Mercury, code the payout to the HubSpot control account and the HubSpot fee to the city expense account (Cape Town, Lisbon, Online, New York). The Mercury receipt also goes to the HubSpot control account, so the control account nets to zero. A 'duplicate' warning on import means it is already in.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "motion-fri",
-   "title": "Motion Ads: payments out, remittances, Mr H, missing invoices, PaySoft recon",
    "entity": "motion",
-   "block": "review",
-   "time": "09:00",
-   "end": "10:30",
    "when": {
     "type": "weekly",
     "dow": [
      5
     ]
    },
+   "block": "payments",
+   "mins": 10,
+   "prio": 1,
+   "title": "Motion Ads: post Tristan's Payment Summary",
    "must": true,
-   "how": "Confirm Wednesday's batch released and send proofs of payment. Run Mr H on the week and fix what it flags. Request any supplier invoices still missing. Reconcile PaySoft for the week."
+   "confirm": false,
+   "how": "Match the payments Tristan loaded to their bills in Xero and send remittances. Reconcile PaySoft for the week.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
-   "id": "ixusa-mrh",
-   "title": "iX USA: Mr H weekly run",
-   "entity": "ixusa",
-   "block": "review",
-   "time": "10:30",
-   "end": "11:15",
+   "id": "review-fri",
+   "entity": "general",
    "when": {
     "type": "weekly",
     "dow": [
      5
     ]
    },
-   "must": true,
-   "how": "Once HubSpot, receipts and payouts are posted, run Mr H and clear the exceptions."
-  },
-  {
-   "id": "ix-report",
-   "title": "iXperience weekly financial report",
-   "entity": "ixusa",
    "block": "review",
-   "time": "11:15",
-   "end": "12:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     5
-    ]
-   },
+   "mins": 10,
+   "prio": 1,
+   "title": "Review Claude's Mr H exceptions and the iX weekly report",
    "must": false,
-   "confirm": true,
-   "how": "Ask Claude to run the iX weekly report, review the draft, then publish."
+   "confirm": false,
+   "how": "Claude runs Mr H for Motion Ads and iX USA and drafts the iX weekly report before 08:00. Clear the exceptions you can; park the rest for Monday.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "motion-statements",
-   "title": "Motion Ads: send statements and this month's invoices",
    "entity": "motion",
-   "block": "debtors",
-   "time": "09:00",
-   "end": "11:00",
    "when": {
     "type": "monthly",
     "day": 1,
     "shift": "next_business"
    },
+   "block": "debtors",
+   "mins": 25,
+   "prio": 0,
+   "title": "Motion Ads: statements and this month's invoices",
    "must": true,
-   "how": "On the 1st (or the following Monday if it falls on a weekend). Pull aged receivables. Customers who are up to date get only the new month's invoice. Anyone behind gets their statement plus the new invoice, with a note on what is past due. Start with the problem accounts: Dog Stores (backdated items), Go Solar (overdue since about July) and Kauai (unpaid, and needs a PO before you can invoice them)."
+   "confirm": false,
+   "how": "On the 1st (or the following Monday if it falls on a weekend). Pull aged receivables. Customers who are up to date get only the new month's invoice. Anyone behind gets their statement plus the new invoice, with a note on what is past due. Start with the problem accounts: Dog Stores (backdated items), Go Solar (overdue since about July) and Kauai (unpaid; they need their order number on the invoice).",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "ix-emp201",
-   "title": "iX ZA: EMP201 to reviewer, then submit and pay",
    "entity": "ix",
-   "block": "sars",
-   "time": "09:00",
-   "end": "11:00",
    "when": {
     "type": "sars_internal",
     "day": 7
    },
+   "block": "sars",
+   "mins": 15,
+   "prio": 0,
+   "title": "iX ZA: EMP201 to reviewer, then submit and pay",
    "must": true,
-   "how": "Internal deadline, one business day ahead of SARS. Payroll final, pull PAYE, UIF and SDL, agree to the control accounts, prepare on eFiling, send to the reviewer with the payroll report. Once approved, submit and pay with the PRN. Post the payment in Xero."
+   "confirm": false,
+   "how": "Internal deadline, one business day ahead of SARS. Payroll final, pull PAYE, UIF and SDL, agree to the control accounts, prepare on eFiling, send to the reviewer with the payroll report. Once approved, submit and pay with the PRN. Post the payment in Xero.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "motion-payroll-info",
-   "title": "Motion Ads: collect payroll changes and send to Justin and Ilan",
    "entity": "motion",
-   "block": "payroll",
-   "time": "09:00",
-   "end": "10:00",
    "when": {
     "type": "monthly",
     "day": 15,
     "shift": "prev_business"
    },
+   "block": "payroll",
+   "mins": 10,
+   "prio": 0,
+   "title": "Motion Ads: payroll changes to Justin and Ilan",
    "must": true,
-   "how": "Gather leave, overtime, new starters and leavers for the month."
+   "confirm": false,
+   "how": "Gather leave, overtime, new starters and leavers for the month.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "motion-reminders",
-   "title": "Motion Ads: payment reminders to all customers",
    "entity": "motion",
-   "block": "debtors",
-   "time": "09:00",
-   "end": "10:00",
    "when": {
     "type": "monthly",
     "day": 20,
     "shift": "prev_business"
    },
-   "must": true,
-   "how": "Between the 20th and 22nd, send each customer a short reminder: invoice sent on the 1st, due on the 25th or 30th. Claude can draft these."
+   "block": "debtors",
+   "mins": 10,
+   "prio": 0,
+   "title": "Motion Ads: payment reminders (Claude drafts)",
+   "must": false,
+   "confirm": false,
+   "how": "Between the 20th and 22nd, send each customer a short reminder: invoice sent on the 1st, due on the 25th or 30th. Claude can draft these.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "motion-payroll",
-   "title": "Motion Ads: pay payroll",
    "entity": "motion",
-   "block": "payroll",
-   "time": "09:00",
-   "end": "10:30",
    "when": {
     "type": "monthly",
     "day": 25,
     "shift": "prev_business"
    },
+   "block": "payroll",
+   "mins": 10,
+   "prio": 0,
+   "title": "Motion Ads: pay payroll",
    "must": true,
-   "how": "Process salary payments."
+   "confirm": false,
+   "how": "Process salary payments.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "ix-vat-payroll",
-   "title": "iX ZA: payroll and VAT201",
    "entity": "ix",
-   "block": "sars",
-   "time": "10:30",
-   "end": "12:30",
    "when": {
     "type": "monthly",
     "day": 25,
     "shift": "prev_business"
    },
+   "block": "sars",
+   "mins": 20,
+   "prio": 0,
+   "title": "iX ZA: payroll and VAT201",
    "must": true,
-   "how": "Confirm the period's invoices are captured and banks reconciled. Run the Xero VAT report, check output VAT, input VAT only on valid tax invoices, zero rated and exempt coding. Agree to the VAT control account. Send to the reviewer stating payment or refund and the amount. Submit once approved. SARS deadline is the last business day of the month."
+   "confirm": false,
+   "how": "Confirm the period's invoices are captured and banks reconciled. Run the Xero VAT report, check output VAT, input VAT only on valid tax invoices, zero rated and exempt coding. Agree to the VAT control account. Send to the reviewer stating payment or refund and the amount. Submit once approved. SARS deadline is the last business day of the month.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "motion-close",
-   "title": "Motion Ads month end: PaySoft journal, supplier invoices, VAT close off, royalty recon",
    "entity": "motion",
-   "block": "close",
-   "time": "09:00",
-   "end": "12:00",
    "when": {
     "type": "monthly_last_business"
    },
+   "block": "close",
+   "mins": 30,
+   "prio": 0,
+   "title": "Motion Ads month end",
    "must": true,
-   "how": "Post the PaySoft journal. Request invoices that don't arrive by themselves, such as rentals. Close VAT off every month: agree the VAT control account to the Xero VAT report. Royalty recon with Tristan. Update the campaign payments sheet (which campaigns have paid) and send it on so monday.com can be updated for John and Elan."
+   "confirm": false,
+   "how": "Post the PaySoft journal. Close VAT off every month: agree the VAT control account to the Xero VAT report. Royalty recon with Tristan. Update the campaign payments sheet (which campaigns have paid) and send it on so monday.com can be updated for John and Elan.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "ixusa-close",
-   "title": "iX USA month end with Mr H, ready for management accounts",
    "entity": "ixusa",
-   "block": "close",
-   "time": "09:00",
-   "end": "12:00",
    "when": {
     "type": "monthly_business_day",
     "n": 3
    },
+   "block": "close",
+   "mins": 25,
+   "prio": 0,
+   "title": "iX USA month end with Mr H",
    "must": true,
-   "how": "Four accounts reconciled to statements, Suspense cleared, aged payables and receivables reviewed, every Mercury card line has a receipt. HubSpot agrees to Xero by channel. BD, referral and Danny's offshore payments checked. Cost review. Run Mr H month end and hand over for management accounts."
+   "confirm": false,
+   "how": "Four accounts reconciled to statements, Suspense cleared, aged payables and receivables reviewed, every Mercury card line has a receipt. HubSpot agrees to Xero by channel. BD, referral and Danny's offshore payments checked. Cost review. Run Mr H month end and hand over for management accounts.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
    "id": "ix-close",
-   "title": "iX ZA month end with Mr H",
    "entity": "ix",
-   "block": "close",
-   "time": "12:00",
-   "end": "13:00",
    "when": {
     "type": "monthly_business_day",
     "n": 3
    },
+   "block": "close",
+   "mins": 20,
+   "prio": 0,
+   "title": "iX ZA month end with Mr H",
    "must": true,
-   "how": "Run Mr H month end on iX ZA. Clear exceptions before management accounts."
+   "confirm": false,
+   "how": "Run Mr H month end on iX ZA. Clear exceptions before management accounts.",
+   "time": "08:10",
+   "end": "08:20"
   },
   {
-   "id": "ix-mon-payments",
-   "entity": "ixusa",
-   "time": "09:00",
-   "end": "10:00",
+   "id": "country-fm",
+   "entity": "country",
    "when": {
     "type": "weekly",
     "dow": [
      1
     ]
    },
-   "block": "payments",
-   "title": "iX USA: post last week's payments",
-   "must": true,
-   "confirm": false,
-   "how": "Danny loads the Mercury payments. Post each one against its bill in Xero so aged payables is right for the week."
-  },
-  {
-   "id": "motion-mon",
-   "entity": "motion",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     1
-    ]
-   },
-   "block": "review",
-   "title": "Motion Ads: inbox sweep and plan the week",
+   "block": "admin",
+   "mins": 60,
+   "prio": 0,
+   "title": "Country Hotels FM check in (outside your hour)",
    "must": false,
    "confirm": false,
-   "how": "Clear accounts@ of supplier invoices (forward each to Dext). Look at aged payables and receivables and note what's due this week. Download and import the bank statement if it's behind."
-  },
-  {
-   "id": "motion-po",
-   "entity": "motion",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     2
-    ]
-   },
-   "block": "payments",
-   "title": "Motion Ads: update the PO sheet",
-   "must": true,
-   "confirm": false,
-   "how": "Against each PO, add the invoice date and number for every supplier invoice received this week and mark what has been paid. Do it before Wednesday's payment run so the list for Mark is right."
-  },
-  {
-   "id": "motion-thu",
-   "entity": "motion",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     4
-    ]
-   },
-   "block": "debtors",
-   "title": "Motion Ads: Dext and debtors",
-   "must": false,
-   "confirm": false,
-   "how": "Publish the week's supplier invoices from Dext and match them to payments. Follow up any customer who has gone past due, starting with Kauai, Go Solar and Dog Stores."
-  },
-  {
-   "id": "ix-mon-za",
-   "entity": "ix",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     1
-    ]
-   },
-   "block": "payments",
-   "title": "iX ZA: post last week's payments",
-   "must": true,
-   "confirm": false,
-   "how": "Post every payment made last week against its bill so aged payables is right for the week."
-  },
-  {
-   "id": "ix-tue",
-   "entity": "ix",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     2
-    ]
-   },
-   "block": "xero",
-   "title": "iX ZA: bills and Dext",
-   "must": false,
-   "confirm": false,
-   "how": "Capture bills from valid tax invoices only, check for duplicates, and publish the Dext inbox."
-  },
-  {
-   "id": "ix-wed",
-   "entity": "ix",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     3
-    ]
-   },
-   "block": "payments",
-   "title": "iX ZA: prepare Thursday's payment list",
-   "must": false,
-   "confirm": false,
-   "how": "List what is due, check each bill is approved and the bank details match, and send the list to the reviewer to approve for Thursday's run."
-  },
-  {
-   "id": "ix-fri",
-   "entity": "ix",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     5
-    ]
-   },
-   "block": "review",
-   "title": "iX ZA: Suspense and daily log check",
-   "must": false,
-   "confirm": false,
-   "how": "Clear Suspense or send what is left to the reviewer. Check the daily log has a balance for every day this week."
-  },
-  {
-   "id": "ixusa-wed",
-   "entity": "ixusa",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     3
-    ]
-   },
-   "block": "xero",
-   "title": "iX USA: Dext and the Chase credit card",
-   "must": false,
-   "confirm": false,
-   "how": "Publish the Dext inbox and reconcile the Chase credit card with the right tracking category."
-  },
-  {
-   "id": "ixusa-thu",
-   "entity": "ixusa",
-   "time": "09:00",
-   "end": "10:00",
-   "when": {
-    "type": "weekly",
-    "dow": [
-     4
-    ]
-   },
-   "block": "review",
-   "title": "iX USA: unknown spend with Danny",
-   "must": false,
-   "confirm": false,
-   "how": "Go through anything you can't code with Danny and clear it, so Friday's Mr H run is clean."
+   "how": "No SOP yet. Cover the FM basics: cash position, payables due, payroll inputs, anything waiting on sign off.",
+   "time": "10:00",
+   "end": "08:20",
+   "fixed": "10:00"
   }
  ],
  "deadlines": [
@@ -673,6 +681,14 @@
    "kind": "SARS",
    "title": "EMP501 interim reconciliation, March to August 2026",
    "note": "Not in any SOP. Confirm with Melissa it is filed for iX ZA and Motion Ads before she leaves."
+  },
+  {
+   "id": "paye-arrears",
+   "date": "2026-10-30",
+   "entity": "ix",
+   "kind": "SARS",
+   "title": "iX ZA: final PAYE arrears instalment debits today",
+   "note": "Melissa loaded it on 8 Oct (execution date 30 Oct). Check it went off and the SARS statement clears."
   },
   {
    "id": "emp201-oct",
@@ -851,49 +867,10 @@
    }
   ]
  },
- "companyBlocks": {
-  "motion": {
-   "start": "09:30",
-   "end": "11:00"
-  },
-  "ix": {
-   "start": "11:00",
-   "end": "12:30"
-  },
-  "country": {
-   "start": "13:30",
-   "end": "14:30"
-  },
-  "ixusa": {
-   "start": "14:30",
-   "end": "16:00"
-  }
- },
- "dayPlan": [
-  {
-   "start": "08:00",
-   "end": "09:00",
-   "label": "Inbox and chasing, all companies"
-  },
-  {
-   "start": "09:00",
-   "end": "09:30",
-   "label": "Replies. Mondays: plan the week"
-  },
-  {
-   "start": "12:30",
-   "end": "13:30",
-   "label": "Lunch"
-  },
-  {
-   "start": "16:00",
-   "end": "17:00",
-   "label": "Xero hour, 15 minutes per company"
-  },
-  {
-   "start": "17:00",
-   "end": "17:10",
-   "label": "Sign off"
-  }
- ]
+ "hour": {
+  "start": "08:00",
+  "flexStart": "08:10",
+  "flexEnd": "08:55",
+  "end": "09:00"
+ }
 }

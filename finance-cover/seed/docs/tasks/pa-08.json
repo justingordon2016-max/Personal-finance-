@@ -1,0 +1,12 @@
+{
+ "title": "Subscriptions sheet: check everyone added their username",
+ "entity": "motion",
+ "block": "admin",
+ "due": "2026-10-16",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "claude",
+ "notes": "Melissa shared Subscriptions_Aug_Sep_2026_Summary on 30 Sep with the team.",
+ "createdAt": "2026-10-12T08:00:00Z"
+}

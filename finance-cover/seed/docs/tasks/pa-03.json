@@ -1,0 +1,12 @@
+{
+ "title": "Refund Elan R3,456 for the laptop charger",
+ "entity": "motion",
+ "block": "payments",
+ "due": "2026-10-14",
+ "queue": "later",
+ "must": false,
+ "status": "open",
+ "source": "claude",
+ "notes": "Elan asked on 7 Oct to be paid on Friday. Add to Wednesday's sheet with his slip.",
+ "createdAt": "2026-10-12T08:00:00Z"
+}

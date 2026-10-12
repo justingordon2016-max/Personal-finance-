@@ -1,0 +1,12 @@
+{
+ "title": "One Eleven: pay Motion invoice 246 by Fri 16 Oct, as Melissa promised Ross",
+ "entity": "motion",
+ "block": "payments",
+ "due": "2026-10-14",
+ "queue": "later",
+ "must": true,
+ "status": "open",
+ "source": "claude",
+ "notes": "Put it on Wednesday's payments sheet for Mike. Ross confirmed on 12 Oct.",
+ "createdAt": "2026-10-12T08:00:00Z"
+}

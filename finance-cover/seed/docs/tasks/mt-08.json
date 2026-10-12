@@ -1,5 +1,5 @@
 {
- "title": "Motion Ads debtors: Kauai (unpaid, needs a PO before invoicing), Go Solar (overdue since about July), Dog Stores (backdated)",
+ "title": "Motion Ads debtors: Kauai (unpaid; needs their order number on the invoice), Go Solar (overdue since about July), Dog Stores (backdated)",
  "entity": "motion",
  "block": "debtors",
  "due": "2026-10-20",
@@ -7,5 +7,5 @@
  "must": true,
  "status": "open",
  "source": "me",
- "createdAt": "2026-10-09T08:00:00Z"
+ "createdAt": "2026-10-12T08:00:00Z"
 }
