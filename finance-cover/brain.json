@@ -745,15 +745,15 @@
     "id": "xero-work",
     "flag": "Xero work",
     "match": "bill, invoice, credit note or statement request",
-    "do": "Acknowledge now with the holding template. Do the work in the 16:00 Xero hour."
+    "do": "Acknowledge now with the holding template. Do the work in tomorrow's 08:00 hour."
    }
   ],
   "templates": [
    {
     "id": "holding",
-    "name": "Received, doing it today",
+    "name": "Received, doing it tomorrow morning",
     "when": "Anything that needs Xero",
-    "body": "Hi [Name],\n\nThanks, received. I'll process this in this afternoon's Xero session and send it through by 17:00 today.\n\n[Signoff]"
+    "body": "Hi [Name],\n\nThanks, received. I'll process this first thing tomorrow morning and come back to you by 10:00.\n\n[Signoff]"
    },
    {
     "id": "when-paid",
