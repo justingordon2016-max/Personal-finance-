@@ -1,5 +1,5 @@
 {
- "title": "Verge: get the corrected invoice INV0000001 (it was dated 2025), then pay",
+ "title": "Verge: remove the 2025 dated invoice and the duplicate from Dext, then pay",
  "entity": "motion",
  "block": "payments",
  "due": "2026-10-16",
@@ -7,6 +7,6 @@
  "must": false,
  "status": "open",
  "source": "claude",
- "notes": "Melissa asked Mike on 9 Oct to have Verge redo it. Verge has a 30 day account.",
+ "notes": "Corrected invoice received 12 Oct and forwarded to Dext. Delete INV0000001 and one INV0000037 in Dext, then put INV0000035 and INV0000037 on Wednesday's payments sheet.",
  "createdAt": "2026-10-12T08:00:00Z"
 }
