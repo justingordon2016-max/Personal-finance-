@@ -19,7 +19,7 @@
         "Tristan: loads the payments and sends the Payment Summary",
         "Jon: co-founder, asks for client invoices",
         "Erin, John, Elan: chase for slips",
-        "Fabi, Ilan, Beverly, Emma, Ferdi: email Melissa directly",
+        "Fabi, Elan, Beverly, Emma, Ferdi: email Melissa directly",
         "Kelso: IT, mailbox access"
       ]
     },
@@ -82,23 +82,6 @@
     "2027-03-22": "Human Rights Day (observed)"
   },
   "rhythm": [
-    {
-      "id": "hour-start",
-      "entity": "general",
-      "when": {
-        "type": "daily"
-      },
-      "block": "email",
-      "mins": 10,
-      "prio": 0,
-      "title": "Start: Claude's brief, inbox and requests",
-      "must": true,
-      "confirm": false,
-      "how": "Read Claude's brief. Scan the Motion Ads mail forwarded to your Gmail and the iX inbox. Send the quick replies Claude drafted and clear any requests waiting in the queue. Anything bigger becomes a request for tomorrow.",
-      "time": "08:00",
-      "end": "08:20",
-      "fixed": "08:00"
-    },
     {
       "id": "processing",
       "entity": "general",
@@ -430,7 +413,7 @@
       "block": "payroll",
       "mins": 10,
       "prio": 0,
-      "title": "Motion Ads: payroll changes to Justin and Ilan",
+      "title": "Motion Ads: payroll changes to Justin and Elan",
       "must": true,
       "confirm": false,
       "how": "Gather leave, overtime, new starters and leavers for the month.",
