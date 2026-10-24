@@ -15,7 +15,6 @@
       },
       "login": "ronell@motionads.co.za (password in your password manager)",
       "people": [
-        "Mike: approves the weekly payments sheet",
         "Tristan: loads the payments and sends the Payment Summary",
         "Jon: co-founder, asks for client invoices",
         "Erin, John, Elan: chase for slips",
@@ -268,7 +267,7 @@
       "title": "Motion Ads: plan payments and PaySoft for next week",
       "must": true,
       "confirm": false,
-      "how": "Update the payments sheet with what is due by next Friday and email it to Mike. Tristan loads the payments and sends the Payment Summary. Then load next week's PaySoft changes.",
+      "how": "Update the payments sheet with everything at 30 days from invoice date by Friday and email it to Tristan. Tristan loads the payments and sends the Payment Summary. Then load next week's PaySoft changes.",
       "time": "08:10",
       "end": "08:20"
     },
